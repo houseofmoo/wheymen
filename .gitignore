@@ -1,7 +1,7 @@
-wheymen_svelte/.vscode/
-wheymen_svelte/node_modules/
-wheymen_surreal/target
-wheymen_surreal/dist
+client/.vscode/
+client/node_modules/
+server/target
+server/dist
+server/.env
 launch_surreal_db.bat
 db
-wheymen_surreal/.env
