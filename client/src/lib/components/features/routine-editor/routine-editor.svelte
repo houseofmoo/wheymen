@@ -1,0 +1,204 @@
+<script lang="ts">
+    import { onMount } from "svelte";
+    import { push } from "svelte-spa-router";
+    import type { Routine, RoutineRow } from "../../../models/routine";
+    import type { Workout } from "../../../models/workout";
+    import { insertRoutine, updateRoutine } from "../../../api/routine";
+    import { RequestPath, getAll, del } from "../../../api/shared";
+    import { UserStore } from "../../../stores/user-store";
+    import { getUnrelatedWorkouts } from "../../../api/workout";
+    import DaySelector from "./day-selector.svelte";
+    import WorkoutSelector from "./workout-selector.svelte";
+    import Remove from "../../display/icons/remove.svelte";
+    import UpArrow from "../../display/icons/up-arrow.svelte";
+    import DownArrow from "../../display/icons/down-arrow.svelte";
+    import IconButton from "../../display/icon-button.svelte";
+
+    export let routine: Routine;
+    let allWorkouts: Workout[] = [];
+
+    onMount(async () => {
+        if (routine && routine.id) {
+            const resp = await getUnrelatedWorkouts(routine.id, $UserStore);
+            if (resp.result !== null) {
+                allWorkouts = resp.result;
+            }
+        } else {
+            const resp = await getAll<Workout>(
+                RequestPath.GetAllWorkouts,
+                $UserStore
+            );
+            if (resp.result !== null) {
+                allWorkouts = resp.result;
+            }
+        }
+    });
+
+    async function saveRoutine() {
+        const workoutIds = routine.workouts.map((x) => x.id);
+        let routine_row: RoutineRow = {
+            id: routine.id,
+            user_id: $UserStore.id,
+            name: routine.name,
+            days: routine.days,
+            last_completed: routine.last_completed,
+            note: routine.note,
+        };
+
+        if (routine_row.id === null) {
+            const routineRes = await insertRoutine(
+                $UserStore,
+                routine_row,
+                workoutIds
+            );
+
+            if (routineRes.result !== null) {
+                routine = routineRes.result;
+                push("/profile");
+            } else {
+                // TODO: handle insert failed
+                console.log("error inserting routine");
+            }
+        } else {
+            const routineRes = await updateRoutine(
+                $UserStore,
+                routine_row,
+                workoutIds
+            );
+
+            if (routineRes.result !== null) {
+                routine = routineRes.result;
+                push("/profile");
+            } else {
+                // TODO: handle update failed
+                console.log("error inserting routine");
+            }
+        }
+    }
+
+    async function deleteRoutine() {
+        await del(RequestPath.DeleteRoutine, routine.id, $UserStore);
+        push("/profile");
+        // TODO: handle delete failed
+    }
+
+    function addWorkout(e: any) {
+        const workout = e.detail;
+        routine.workouts = [...routine.workouts, workout];
+        const filtered = allWorkouts.filter((x) => x.id !== workout.id);
+        allWorkouts = [...filtered];
+    }
+
+    function removeWorkout(workout: Workout) {
+        allWorkouts = [...allWorkouts, workout];
+        const filtered = routine.workouts.filter((x) => x.id !== workout.id);
+        routine.workouts = [...filtered];
+    }
+
+    function shift(from: number, to: number) {
+        if (to === -1 || to >= routine.workouts.length) {
+            return;
+        }
+
+	    // capture from and to lifts
+        const fromWorkout = routine.workouts[from];
+		const toWorkout = routine.workouts[to];
+
+		// place back at others position
+		routine.workouts[to] = fromWorkout;
+		routine.workouts[from] = toWorkout;
+    }
+</script>
+
+{#if routine}
+    <div class="page">
+        <div class="content">
+            <input placeholder="Routine Name" bind:value={routine.name} />
+            <DaySelector bind:days={routine.days} />
+            <textarea placeholder="Notes" bind:value={routine.note} />
+            <div class="action-buttons">
+                <button on:click={saveRoutine}>save</button>
+                <button on:click={() => push("/profile")}>cancel</button>
+                {#if routine.id !== null}
+                    <button on:click={deleteRoutine}>delete</button>
+                {/if}
+            </div>
+            <WorkoutSelector
+                bind:workouts={allWorkouts}
+                on:workout-selected={addWorkout}
+            />
+            {#each routine.workouts as workout, i}
+                <div class="workouts">
+                    <p>{workout.name}</p>
+                    <IconButton icon={DownArrow} on:click={() => shift(i, i+1)} />
+                    <IconButton icon={UpArrow} on:click={() => shift(i, i-1)} />
+                    <IconButton icon={Remove} on:click={() => removeWorkout(workout)} />
+                </div>
+            {/each}
+        </div>
+    </div>
+{/if}
+
+<style>
+    .page {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content {
+        display: grid;
+        grid: 1fr / 1fr;
+        grid-gap: 1em;
+        margin: 1em auto auto auto;
+        max-width: 37em;
+        place-items: center;
+        place-content: center;
+    }
+
+    input {
+        padding: 0.25em;
+        width: fit-content;
+        width: 100%;
+        margin: 0;
+        border: 1px solid black;
+    }
+
+    textarea {
+        box-sizing: border-box;
+        border: 1px solid black;
+        padding: 0.25em;
+        resize: none;
+        margin: 0;
+        height: 5em;
+        width: 100%;
+    }
+
+    .action-buttons {
+        display: grid;
+        grid: auto / repeat(3, 1fr);
+        grid-gap: 1em;
+        width: 100%;
+    }
+
+    .action-buttons > button {
+        width: 100%;
+    }
+
+    .workouts {
+        display: grid;
+        grid: auto / 2fr repeat(3, 1fr);
+        background-color: var(--lightgrey);
+        border: 1px solid black;
+        place-items: center;
+        width: 100%;
+        height: 4em;
+        font-size: 0.9em;
+    }
+
+    .workouts > p {
+        width: 100%;
+        font-size: 0.9em;
+        margin-left: 2em;
+    }
+</style>

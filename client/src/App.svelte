@@ -1,0 +1,66 @@
+<script lang="ts">
+    import { onMount } from "svelte";
+    import { push } from 'svelte-spa-router'
+    import { getSessionFromLocalToken, getSession } from "./lib/api/auth";
+    import { UserStore } from "./lib/stores/user-store";
+    import LandingPage from "./lib/pages/landing-page.svelte";
+    import ProfilePage from "./lib/pages/profile-page.svelte";
+    import Router from "svelte-spa-router";
+    import LoginPage from "./lib/pages/login-page.svelte";
+    import SignupPage from "./lib/pages/sign-up-page.svelte";
+    import LogoutPage from "./lib/pages/logout-page.svelte";
+    import CreateRoutinePage from "./lib/pages/create-routine-page.svelte";
+    import CreateWorkoutPage from "./lib/pages/create-workout-page.svelte";
+    import AccountPage from "./lib/pages/account-page.svelte";
+    import AccountRecoveryPage from "./lib/pages/account-recovery-page.svelte";
+    import EditRoutine from "./lib/pages/edit-routine.svelte";
+
+    const routes = {
+        '/': LandingPage,
+        '/signup': SignupPage,
+        '/login': LoginPage,
+        '/account-recovery': AccountRecoveryPage,
+        '/logout': LogoutPage,
+        '/profile': ProfilePage,
+        '/create-routine': CreateRoutinePage,
+        '/create-workout': CreateWorkoutPage,
+        '/edit-routine/:id': EditRoutine,
+        '/account': AccountPage,
+        '*': LandingPage
+    }
+
+    onMount(async () => {
+        $UserStore = await getSession();
+        if ($UserStore == null) {
+            $UserStore = await getSessionFromLocalToken();
+        }
+
+        if ($UserStore !== null) {
+            push('/profile');
+        }
+    });
+
+ 
+</script>
+
+<main class="content">
+    <Router {routes} />
+</main>
+
+<style>
+    .content {
+        display: flex;
+        margin: auto;
+        padding: 1em;
+        max-width: 55em;
+        background-color: var(--darkgrey);
+        border: 1px solid black;
+        border-radius: 0.5em;
+    }
+
+    @media (max-width: 37em) {
+        .content {
+            min-width: 19em;
+        }
+    }
+</style>

@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&display=swap');
+
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+
+  color: rgba(255, 255, 255, 0.75);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  padding: 0;
+  margin: 0;
+
+  --lightgrey: #242424;
+  --darkgrey: #1A1A1A;
+  --orange: #cc5827;
+  --text-color: rgba(255, 255, 255, 0.75);
+  --font-size: 16px;
+}
+
+h1, h2, h3 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+a {
+  font-weight: 500;
+  color: var(--orange);
+  text-decoration: inherit;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: var(--orange);
+}
+
+button {
+  font-size: var(--font-size);
+  background-color: var(--lightgrey);
+  color: var(--text-color);
+  margin: 0.5rem;
+  padding: 0.75rem;
+  border: solid 1px black;
+  cursor: pointer;
+  transition: border 0.25s;
+}
+
+button:hover {
+  border: solid 1px var(--orange);
+}
+
+.button-fit {
+  font-size: var(--font-size);
+  background-color: var(--lightgrey);
+  color: var(--text-color);
+  margin: 0.5rem;
+  padding: 0.75rem;
+  border: solid 1px black;
+  cursor: pointer;
+  transition: border 0.25s;
+  width:fit-content;
+}
+
+.button-fit:hover {
+  border: solid 1px white;
+}
+
+input, textarea {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.small-text {
+  font-size: 0.8em;
+}
+
+.large-text {
+  font-size: 1.1em;
+}
