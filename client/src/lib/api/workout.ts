@@ -3,7 +3,7 @@ import type { User } from '../models/user';
 import type { Workout } from '../models/workout';
 import { postReqeust, RequestPath, getAll, get, del } from "./shared";
 
-export async function insertWorkout(user: User, row: Workout): Promise<StatusItem<Workout>> {
+export async function insertWorkout(user: User, row: Workout) {
     return await insertOrUpdateWorkout(RequestPath.InsertWorkout, user, row);
 }
 
