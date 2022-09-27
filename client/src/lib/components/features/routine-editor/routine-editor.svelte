@@ -3,8 +3,9 @@
     import { push } from "svelte-spa-router";
     import type { Routine, RoutineRow } from "../../../models/routine";
     import type { Workout } from "../../../models/workout";
-    import { insertRoutine, updateRoutine } from "../../../api/routine";
-    import { RequestPath, getAll, del } from "../../../api/shared";
+    import { insertRoutine, updateRoutine, deleteRoutine } from "../../../api/routine";
+    import { RequestPath } from "../../../api/shared";
+    import { getAllWorkouts } from "../../../api/workout";
     import { UserStore } from "../../../stores/user-store";
     import { getUnrelatedWorkouts } from "../../../api/workout";
     import DaySelector from "./day-selector.svelte";
@@ -24,10 +25,7 @@
                 allWorkouts = resp.result;
             }
         } else {
-            const resp = await getAll<Workout>(
-                RequestPath.GetAllWorkouts,
-                $UserStore
-            );
+            const resp = await getAllWorkouts($UserStore);
             if (resp.result !== null) {
                 allWorkouts = resp.result;
             }
@@ -76,8 +74,8 @@
         }
     }
 
-    async function deleteRoutine() {
-        await del(RequestPath.DeleteRoutine, routine.id, $UserStore);
+    async function deleteThisRoutine() {
+        await deleteRoutine(routine.id, $UserStore);
         push("/profile");
         // TODO: handle delete failed
     }
@@ -120,7 +118,7 @@
                 <button on:click={saveRoutine}>save</button>
                 <button on:click={() => push("/profile")}>cancel</button>
                 {#if routine.id !== null}
-                    <button on:click={deleteRoutine}>delete</button>
+                    <button on:click={deleteThisRoutine}>delete</button>
                 {/if}
             </div>
             <WorkoutSelector

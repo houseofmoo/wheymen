@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
-    import { RequestPath, get } from "../api/shared";
+    import { getRoutine } from "../api/routine";
     import { UserStore } from "../stores/user-store";
     import type { Routine } from "../models/routine";
     import RoutineEditor from "../components/features/routine-editor/routine-editor.svelte"
@@ -18,8 +18,7 @@
             return;
         }
 
-        // get users routines
-        const resp = await get<Routine>(RequestPath.GetRoutine, routine_id, $UserStore);
+        const resp = await getRoutine(routine_id, $UserStore);
         if (resp.count > 0) {
             routine = resp.result;
         } else {

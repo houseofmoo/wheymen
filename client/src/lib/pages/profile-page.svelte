@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { push, link } from "svelte-spa-router";
     import { UserStore } from "../stores/user-store";
-    import { RequestPath, getAll } from "../api/shared";
+    import { getAllRoutines } from "../api/routine";
     import type { Routine } from "../models/routine";
     import RoutineCard from "../components/routine-card.svelte";
     import Title from "../components/display/title.svelte";
@@ -16,7 +16,7 @@
         }
 
         // get users routines
-        const resp = await getAll<Routine>(RequestPath.GetAllRoutines, $UserStore);
+        const resp = await getAllRoutines($UserStore);
         if (resp.count > 0) {
             routines = resp.result;
         } else {

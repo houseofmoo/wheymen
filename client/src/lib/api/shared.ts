@@ -2,17 +2,17 @@ import type { User } from '../models/user';
 import type { StatusItem } from '../models/status-item'
 
 export enum RequestPath {
+    InsertRoutine = `/api/routines/insert`,
+    UpdateRoutine = `/api/routines/update`,
     GetAllRoutines = `/api/routines/get-all`,
-    GetAllWorkouts = `/api/workouts/get-all`,
-    GetUnrelatedWorkouts = `/api/workouts/get-all/unrelated`,
+    GetRoutine = `/api/routines/get`,
     DeleteRoutine = `api/routines/delete`,
 
-    InsertRoutine = `/api/routines/insert`,
     InsertWorkout = `/api/workouts/insert`,
-
-    UpdateRoutine = `api/routines/update`,
-
-    GetRoutine = `/api/routines/get`,
+    UpdateWorkout = `/api/workout/update`,
+    GetAllWorkouts = `/api/workouts/get-all`,
+    GetUnrelatedWorkouts = `/api/workouts/get-all/unrelated`,
+    DeleteWorkout = `/api/workouts/delete`,
 }
 
 export function postReqeust(jwt: string, content: any) {
@@ -94,7 +94,7 @@ export async function get<T>(url: RequestPath, id: string, user: User): Promise<
     }
 }
 
-export async function del<T>(url: RequestPath, id: string, user: User) {
+export async function del(url: RequestPath, id: string, user: User) {
     if (user === null) {
         return {
             result: null,
