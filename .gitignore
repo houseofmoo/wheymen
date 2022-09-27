@@ -1,0 +1,7 @@
+wheymen_svelte/.vscode/
+wheymen_svelte/node_modules/
+wheymen_surreal/target
+wheymen_surreal/dist
+launch_surreal_db.bat
+db
+wheymen_surreal/.env
