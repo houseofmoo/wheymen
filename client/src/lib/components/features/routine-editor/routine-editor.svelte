@@ -8,7 +8,7 @@
     import { UserStore } from "../../../stores/user-store";
     import { getUnrelatedWorkouts } from "../../../api/workout";
     import DaySelector from "./day-selector.svelte";
-    import WorkoutModal from "./workout-modal.svelte";
+    import WorkoutSelectorModal from "./workout-selector-modal.svelte";
     import Remove from "../../display/icons/remove.svelte";
     import UpArrow from "../../display/icons/up-arrow.svelte";
     import DownArrow from "../../display/icons/down-arrow.svelte";
@@ -123,7 +123,7 @@
                 <button on:click={() => push("/profile")}>cancel</button>
                 <button on:click={deleteThisRoutine}>delete</button>
             </div>
-            <WorkoutModal bind:workouts={allWorkouts} on:workout-selected={addWorkout} />
+            <WorkoutSelectorModal bind:workouts={allWorkouts} on:workout-selected={addWorkout} />
             {#each routine.workouts as workout, i}
                 <div class="workouts">
                     <p>{workout.name}</p>

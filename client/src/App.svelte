@@ -3,29 +3,31 @@
     import { push } from 'svelte-spa-router'
     import { getSessionFromLocalToken, getSession } from "./lib/api/auth";
     import { UserStore } from "./lib/stores/user-store";
-    import LandingPage from "./lib/pages/landing-page.svelte";
-    import ProfilePage from "./lib/pages/profile-page.svelte";
     import Router from "svelte-spa-router";
-    import LoginPage from "./lib/pages/login-page.svelte";
-    import SignupPage from "./lib/pages/sign-up-page.svelte";
-    import LogoutPage from "./lib/pages/logout-page.svelte";
-    import CreateRoutinePage from "./lib/pages/create-routine-page.svelte";
-    import CreateWorkoutPage from "./lib/pages/create-workout-page.svelte";
     import AccountPage from "./lib/pages/account-page.svelte";
     import AccountRecoveryPage from "./lib/pages/account-recovery-page.svelte";
+    import CreateRoutinePage from "./lib/pages/create-routine-page.svelte";
+    import CreateWorkoutPage from "./lib/pages/create-workout-page.svelte";
     import EditRoutine from "./lib/pages/edit-routine.svelte";
+    import EditWorkout from "./lib/pages/edit-workout.svelte";
+    import LandingPage from "./lib/pages/landing-page.svelte";
+    import LoginPage from "./lib/pages/login-page.svelte";
+    import LogoutPage from "./lib/pages/logout-page.svelte";
+    import ProfilePage from "./lib/pages/profile-page.svelte";
+    import SignupPage from "./lib/pages/sign-up-page.svelte";
 
     const routes = {
         '/': LandingPage,
-        '/signup': SignupPage,
-        '/login': LoginPage,
+        '/account': AccountPage,
         '/account-recovery': AccountRecoveryPage,
-        '/logout': LogoutPage,
-        '/profile': ProfilePage,
         '/create-routine': CreateRoutinePage,
         '/create-workout': CreateWorkoutPage,
         '/edit-routine/:id': EditRoutine,
-        '/account': AccountPage,
+        '/edit-workout/:id': EditWorkout,
+        '/login': LoginPage,
+        '/logout': LogoutPage,
+        '/profile': ProfilePage,
+        '/signup': SignupPage,
         '*': LandingPage
     }
 

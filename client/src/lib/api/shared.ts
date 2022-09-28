@@ -11,6 +11,7 @@ export enum RequestPath {
     InsertWorkout = `/api/workouts/insert`,
     UpdateWorkout = `/api/workout/update`,
     GetAllWorkouts = `/api/workouts/get-all`,
+    GetWorkout = `/api/workouts/get`,
     GetUnrelatedWorkouts = `/api/workouts/get-all/unrelated`,
     DeleteWorkout = `/api/workouts/delete`,
 }

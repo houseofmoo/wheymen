@@ -16,7 +16,7 @@ export async function getAllWorkouts(user: User) {
 }
 
 export async function getWorkout(id: string, user: User) {
-    return await get<Workout>(RequestPath.GetAllWorkouts, id, user);
+    return await get<Workout>(RequestPath.GetWorkout, id, user);
 
 }
 

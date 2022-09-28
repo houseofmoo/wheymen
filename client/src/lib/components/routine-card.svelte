@@ -1,7 +1,6 @@
 <script lang="ts">
     import { push } from "svelte-spa-router";
     import type { Routine } from "../models/routine";
-    import { cardClicked } from "../utils/actions";
 
     export let routine: Routine = null;
 

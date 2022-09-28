@@ -1,12 +1,11 @@
 <script lang="ts">
-    import { Category } from "../../models/category";
+    import { Category } from "../../../models/category";
 
-    export let filter = "all";
+    export let selected = "arms";
 </script>
 
 <div class="category-selector">
-    <select bind:value={filter}>
-        <option value="all">show all</option>
+    <select bind:value={selected}>
         {#each Object.values(Category) as category}
             <option value={category}>{category}</option>
         {/each}
@@ -14,7 +13,8 @@
 </div>
 
 <style>
-    .category-selector {
+    .category-selector, select {
+        width: 100%;
         margin: 0;
         padding: 0;
     }

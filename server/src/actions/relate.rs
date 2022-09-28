@@ -1,3 +1,4 @@
+use crate::model::data::Workout;
 use crate::model::db::Relationship;
 use crate::model::{data::Routine, error::LocalError, shared_types::DbResult};
 use crate::resource::client::DbClient;
@@ -25,7 +26,7 @@ pub async fn create_relationship(
     }
 }
 
-pub async fn create_many_relationships(
+pub async fn create_many_routine_relationships(
     routine_id: &String,
     workout_ids: &Vec<String>,
     client: &DbClient,
@@ -39,11 +40,34 @@ pub async fn create_many_relationships(
     Ok(None)
 }
 
+pub async fn create_many_workout_relationships(
+    workout_id: &String,
+    routine_ids: &Vec<String>,
+    client: &DbClient,
+) -> DbResult<Workout> {
+    for routine_id in routine_ids {
+        match create_relationship(&routine_id, &workout_id, &client).await {
+            Ok(_) => (),
+            Err(e) => return Err(e),
+        }
+    }
+    Ok(None)
+}
+
 pub async fn delete_all_routine_relationships(
     routine_id: &String,
     client: &DbClient,
 ) -> DbResult<Routine> {
     let query = format!("DELETE workout WHERE in=\"{}\";", routine_id);
+    client.send_query::<Relationship>(query).await?;
+    Ok(None)
+}
+
+pub async fn delete_all_workout_relationships(
+    workout_id: &String,
+    client: &DbClient,
+) -> DbResult<Routine> {
+    let query = format!("DELETE workout WHERE out=\"{}\";", workout_id);
     client.send_query::<Relationship>(query).await?;
     Ok(None)
 }

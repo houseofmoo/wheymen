@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::shared_types::{RelationshipRef, RoutineRef, UserRef, WorkoutRef};
+use super::{shared_types::{RelationshipRef, RoutineRef, UserRef, WorkoutRef}, data::Workout};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct DbResponse<T> {
@@ -38,6 +38,18 @@ pub struct InsertRoutine {
 pub struct UpdateRoutine {
     pub routine: RoutineRow,
     pub workout_ids: Vec<String>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct InsertWorkout {
+    pub workout: InsertWorkoutRow,
+    pub routine_ids: Vec<String>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct UpdateWorkout {
+    pub workout: Workout,
+    pub routine_ids: Vec<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]

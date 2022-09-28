@@ -1,10 +1,9 @@
-use super::helper::{get_all_results, get_first_result};
+use super::{helper::{get_all_results, get_first_result}, relate};
 use crate::{
     model::{data::Workout, db::InsertWorkoutRow, error::LocalError, shared_types::DbResult},
     resource::client::DbClient,
 };
 
-// Get all workouts related to a user ID
 pub async fn get_all_workouts(user_id: &String, client: &DbClient) -> DbResult<Vec<Workout>> {
     let query = format!(
         "SELECT * FROM workouts WHERE user_id=\"{}\" ORDER BY category FETCH routines;",
@@ -18,7 +17,6 @@ pub async fn get_all_workouts(user_id: &String, client: &DbClient) -> DbResult<V
     }
 }
 
-// Get all workouts related to a user id that are NOT related to a routine id
 pub async fn get_all_unrelated_workouts(
     user_id: &String,
     routine_id: &String,
@@ -36,7 +34,6 @@ pub async fn get_all_unrelated_workouts(
     }
 }
 
-// Get a specific workout
 pub async fn get_workout(
     user_id: &String,
     workout_id: &String,
@@ -51,22 +48,46 @@ pub async fn get_workout(
     }
 }
 
-// Insert a new workout
 pub async fn insert_workout(
+    user_id: &String,
     workout_row: &InsertWorkoutRow,
+    routine_ids: &Vec<String>,
     client: &DbClient,
 ) -> DbResult<Workout> {
     let json = serde_json::json!(workout_row);
     let query = format!("INSERT INTO workouts {};", json);
     let result = client.send_query::<Workout>(query).await?;
 
-    match get_first_result::<Workout>(result) {
-        Some(r) => Ok(Some(r)),
-        None => Err(LocalError::InsertFailed),
-    }
+    let id = match get_first_result::<Workout>(result) {
+        Some(r) => r.id,
+        None => return Err(LocalError::InsertFailed),
+    };
+
+    relate::delete_all_workout_relationships(&id, &client).await?;
+    relate::create_many_workout_relationships(&id, &routine_ids, &client).await?;
+    get_workout(&user_id, &id, &client).await
 }
 
-// Delete a workout
+pub async fn update_workout(
+    user_id: &String,
+    workout_row: &Workout,
+    routine_ids: &Vec<String>,
+    client: &DbClient,
+) -> DbResult<Workout> {
+    let json = serde_json::json!(workout_row);
+    let query = format!("UPDATE {} CONTENT {}", workout_row.id, json);
+    let result = client.send_query::<Workout>(query).await?;
+
+    let id = match get_first_result::<Workout>(result) {
+        Some(r) => r.id,
+        None => return Err(LocalError::InsertFailed),
+    };
+
+    relate::delete_all_workout_relationships(&id, &client).await?;
+    relate::create_many_workout_relationships(&id, &routine_ids, &client).await?;
+    get_workout(&user_id, &id, &client).await
+}
+
 pub async fn delete_workout(
     user_id: &String,
     workout_id: &String,

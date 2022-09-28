@@ -1,13 +1,16 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { push, link } from "svelte-spa-router";
+    import { push } from "svelte-spa-router";
+    import { getAllWorkouts } from "../api/workout";
     import { UserStore } from "../stores/user-store";
     import { getAllRoutines } from "../api/routine";
     import type { Routine } from "../models/routine";
+    import type { Workout } from "../models/workout";
     import RoutineCard from "../components/routine-card.svelte";
     import Title from "../components/display/title.svelte";
 
     let routines: Routine[] = [];
+    let workouts: Workout[] = [];
 
     onMount(async () => {
         // if user landed here without being logged in, send them away
@@ -16,11 +19,18 @@
         }
 
         // get users routines
-        const resp = await getAllRoutines($UserStore);
-        if (resp.count > 0) {
-            routines = resp.result;
+        const routine_res = await getAllRoutines($UserStore);
+        if (routine_res.count > 0) {
+            routines = routine_res.result;
         } else {
             // TODO: maybe no routines, maybe error occured
+        }
+
+        const workout_res = await getAllWorkouts($UserStore);
+        if (workout_res.count > 0) {
+            workouts = workout_res.result;
+        } else {
+            // TODO: maybe no workouts, maybe error occured
         }
     });
 
@@ -37,6 +47,10 @@
         </div>
         {#each routines as routine}
             <RoutineCard routine={routine} />
+        {/each}
+
+        {#each workouts as workout}
+            <button on:click={() => push(`/edit-workout/${workout.id}`)}>{workout.name}</button>
         {/each}
     </div>
 {/if}
