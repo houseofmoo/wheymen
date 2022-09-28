@@ -4,12 +4,11 @@
     import type { Routine, RoutineRow } from "../../../models/routine";
     import type { Workout } from "../../../models/workout";
     import { insertRoutine, updateRoutine, deleteRoutine } from "../../../api/routine";
-    import { RequestPath } from "../../../api/shared";
     import { getAllWorkouts } from "../../../api/workout";
     import { UserStore } from "../../../stores/user-store";
     import { getUnrelatedWorkouts } from "../../../api/workout";
     import DaySelector from "./day-selector.svelte";
-    import WorkoutSelector from "./workout-selector.svelte";
+    import WorkoutModal from "./workout-modal.svelte";
     import Remove from "../../display/icons/remove.svelte";
     import UpArrow from "../../display/icons/up-arrow.svelte";
     import DownArrow from "../../display/icons/down-arrow.svelte";
@@ -75,6 +74,13 @@
     }
 
     async function deleteThisRoutine() {
+        // TODO: confirmation box
+        
+        if (routine.id === null) {
+            push("/profile");
+            return;
+        }
+
         await deleteRoutine(routine.id, $UserStore);
         push("/profile");
         // TODO: handle delete failed
@@ -98,11 +104,9 @@
             return;
         }
 
-	    // capture from and to lifts
         const fromWorkout = routine.workouts[from];
 		const toWorkout = routine.workouts[to];
 
-		// place back at others position
 		routine.workouts[to] = fromWorkout;
 		routine.workouts[from] = toWorkout;
     }
@@ -117,14 +121,9 @@
             <div class="action-buttons">
                 <button on:click={saveRoutine}>save</button>
                 <button on:click={() => push("/profile")}>cancel</button>
-                {#if routine.id !== null}
-                    <button on:click={deleteThisRoutine}>delete</button>
-                {/if}
+                <button on:click={deleteThisRoutine}>delete</button>
             </div>
-            <WorkoutSelector
-                bind:workouts={allWorkouts}
-                on:workout-selected={addWorkout}
-            />
+            <WorkoutModal bind:workouts={allWorkouts} on:workout-selected={addWorkout} />
             {#each routine.workouts as workout, i}
                 <div class="workouts">
                     <p>{workout.name}</p>

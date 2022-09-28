@@ -79,3 +79,7 @@ input, textarea {
 .large-text {
   font-size: 1.1em;
 }
+
+.center-text {
+  text-align: center;
+}
