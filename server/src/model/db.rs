@@ -10,12 +10,6 @@ pub struct DbResponse<T> {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Upsert<T> {
-    pub row: T,
-    pub ids: Vec<String>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
 pub struct RoutineRow {
     pub id: RoutineRef,
     pub user_id: UserRef,
@@ -23,6 +17,7 @@ pub struct RoutineRow {
     pub days: Vec<String>,
     pub last_completed: String,
     pub note: String,
+    pub workouts: Vec<WorkoutRef>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -32,6 +27,7 @@ pub struct InsertRoutineRow {
     pub days: Vec<String>,
     pub last_completed: String,
     pub note: String,
+    pub workouts: Vec<WorkoutRef>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -51,6 +47,8 @@ pub struct InsertWorkoutRow {
     pub note: String,
 }
 
+// What a graph edge (relationship) looks like
+#[allow(dead_code)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Relationship {
     pub id: RelationshipRef,

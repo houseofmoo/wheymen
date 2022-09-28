@@ -37,17 +37,8 @@
     });
 
     async function saveWorkout() {
-        const workout_row: Workout = {
-            id: workout.id,
-            user_id: $UserStore.id,
-            name: workout.name,
-            category: workout.category,
-            note: workout.note,
-        }
-
-        if (workout_row.id === null) {
-            const workoutRes = await insertWorkout($UserStore, workout_row);
-
+        if (workout.id === null) {
+            const workoutRes = await insertWorkout($UserStore, workout);
             if (workoutRes.result !== null) {
                 workout = workoutRes.result;
                 push("/profile");
@@ -56,8 +47,7 @@
                 console.log("error inserting routine");
             }
         } else {
-            const workoutRes = await updateWorkout($UserStore, workout_row);
-
+            const workoutRes = await updateWorkout($UserStore, workout);
             if (workoutRes.result !== null) {
                 workout = workoutRes.result;
                 push("/profile");
@@ -65,6 +55,13 @@
                 // TODO: handle update failed
                 console.log("error inserting routine");
             }
+        }
+
+        if (selected_routines.length > 0) {
+            // update routines in selected_routines since they now have
+            // another workout in them
+            // TODO: have to update any routine that exists in "selected_routines" since
+            // this workout may have been added to it
         }
     }
 

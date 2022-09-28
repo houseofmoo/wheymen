@@ -17,13 +17,14 @@ export class RoutineRow {
     days: string[];
     last_completed: string;
     note: string;
+    workouts: string[];
 }
 
-export class RoutineHistory {
-    id: string;
+export class InsertRoutineRow {
     user_id: string;
-    routine_id: string;
+    name: string;
+    days: string[];
+    last_completed: string;
+    note: string;
     workouts: string[];
-    date: string;
-    duration_in_sec: number;
 }

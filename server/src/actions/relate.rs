@@ -2,6 +2,9 @@ use crate::model::db::{Relationship, WorkoutRow};
 use crate::model::{data::Routine, error::LocalError, shared_types::DbResult};
 use crate::resource::client::DbClient;
 
+use super::helper::{get_all_results, get_first_result};
+
+#[allow(dead_code)]
 pub async fn create_relationship(
     user_id: &String,
     routine_id: &String,
@@ -30,6 +33,7 @@ pub async fn create_relationship(
     }
 }
 
+#[allow(dead_code)]
 pub async fn create_many_routine_relationships(
     user_id: &String,
     routine_id: &String,
@@ -45,6 +49,7 @@ pub async fn create_many_routine_relationships(
     Ok(None)
 }
 
+#[allow(dead_code)]
 pub async fn create_many_workout_relationships(
     user_id: &String,
     workout_id: &String,
@@ -60,6 +65,7 @@ pub async fn create_many_workout_relationships(
     Ok(None)
 }
 
+#[allow(dead_code)]
 pub async fn delete_all_routine_relationships(
     user_id: &String,
     routine_id: &String,
@@ -73,6 +79,7 @@ pub async fn delete_all_routine_relationships(
     Ok(None)
 }
 
+#[allow(dead_code)]
 pub async fn delete_all_workout_relationships(
     user_id: &String,
     workout_id: &String,
@@ -86,6 +93,7 @@ pub async fn delete_all_workout_relationships(
     Ok(None)
 }
 
+#[allow(dead_code)]
 async fn does_relationship_exist(
     user_id: &String,
     routine_id: &String,
@@ -98,4 +106,57 @@ async fn does_relationship_exist(
     );
     let result = client.send_query::<Relationship>(query).await?;
     return Ok(result.len() > 0 && result[0].result.len() > 0);
+}
+
+// Example of getting all routines and their related workouts
+#[allow(dead_code)]
+pub async fn get_all_routines(user_id: &String, client: &DbClient) -> DbResult<Vec<Routine>> {
+    let query = format!(
+        "SELECT *, ->workout->workouts AS workouts FROM routines WHERE user_id=\"{}\" FETCH workouts;",
+        user_id
+    );
+    let result = client.send_query::<Routine>(query).await?;
+
+    match get_all_results::<Routine>(result) {
+        Some(r) => Ok(Some(r)),
+        None => Ok(None),
+    }
+}
+
+// Example of getting a routine and the related workouts
+#[allow(dead_code)]
+pub async fn get_routine(
+    user_id: &String,
+    routine_id: &String,
+    client: &DbClient,
+) -> DbResult<Routine> {
+    let query = format!(
+        "SELECT *, ->workout->workouts AS workouts FROM {} WHERE user_id=\"{}\" FETCH workouts;",
+        routine_id, user_id
+    );
+    let result = client.send_query::<Routine>(query).await?;
+
+    match get_first_result::<Routine>(result) {
+        Some(r) => Ok(Some(r)),
+        None => Ok(None),
+    }
+}
+
+// return all workouts that a routine does not contain using relationships
+#[allow(dead_code)]
+pub async fn get_all_unrelated_workouts(
+    user_id: &String,
+    routine_id: &String,
+    client: &DbClient,
+) -> DbResult<Vec<WorkoutRow>> {
+    let query = format!(
+        "SELECT * FROM workouts WHERE user_id=\"{}\" AND <-workout<-routines.id CONTAINSNOT \"{}\" ORDER BY category;",
+        user_id, routine_id
+    );
+    let result = client.send_query::<WorkoutRow>(query).await?;
+
+    match get_all_results::<WorkoutRow>(result) {
+        Some(r) => Ok(Some(r)),
+        None => Ok(None),
+    }
 }

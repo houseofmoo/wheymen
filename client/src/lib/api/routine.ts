@@ -1,14 +1,31 @@
-import type { Routine, RoutineRow } from "../models/routine";
+import type { Routine, RoutineRow, InsertRoutineRow } from "../models/routine";
 import type { StatusItem } from "../models/status-item";
 import type { User } from "../models/user";
 import { postReqeust, RequestPath, getAll, get, del } from "./shared";
 
-export async function insertRoutine(user: User, row: RoutineRow, workoutIds: string[]) {
-    return await insertOrUpdateRoutine(RequestPath.InsertRoutine, user, row, workoutIds);
+export async function insertRoutine(user: User, routine: Routine) {
+    const routine_row: InsertRoutineRow = {
+        user_id: routine.user_id,
+        name: routine.name,
+        days: routine.days,
+        last_completed: routine.last_completed,
+        note: routine.note,
+        workouts: routine.workouts.map(x => x.id),
+    }
+    return await insertOrUpdateRoutine(RequestPath.InsertRoutine, user, routine_row);
 }
 
-export async function updateRoutine(user: User, row: RoutineRow, workoutIds: string[]) {
-    return await insertOrUpdateRoutine(RequestPath.UpdateRoutine, user, row, workoutIds);
+export async function updateRoutine(user: User, routine: Routine) {
+    const routine_row: RoutineRow = {
+        id: routine.id,
+        user_id: routine.user_id,
+        name: routine.name,
+        days: routine.days,
+        last_completed: routine.last_completed,
+        note: routine.note,
+        workouts: routine.workouts.map(x => x.id),
+    }
+    return await insertOrUpdateRoutine(RequestPath.UpdateRoutine, user, routine_row);
 }
 
 export async function getAllRoutines(user: User) {
@@ -23,7 +40,7 @@ export async function deleteRoutine(id: string, user: User) {
     return await del(RequestPath.DeleteRoutine, id, user);
 }
 
-async function insertOrUpdateRoutine(url: string, user: User, row: RoutineRow, workout_ids: string[]): Promise<StatusItem<Routine>> {
+async function insertOrUpdateRoutine<T>(url: string, user: User, routine_row: T): Promise<StatusItem<Routine>> {
     if (user === null) {
         return {
             result: null,
@@ -33,7 +50,7 @@ async function insertOrUpdateRoutine(url: string, user: User, row: RoutineRow, w
     }
 
     const { token } = user;
-    const resp = await fetch(url, postReqeust(token, { row: row, ids: workout_ids }));
+    const resp = await fetch(url, postReqeust(token, routine_row));
 
     if (resp.status === 200) {
         const obj: Routine = await resp.json()

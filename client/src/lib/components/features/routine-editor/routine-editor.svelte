@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
-    import type { Routine, RoutineRow } from "../../../models/routine";
+    import type { Routine } from "../../../models/routine";
     import type { Workout } from "../../../models/workout";
     import { insertRoutine, updateRoutine, deleteRoutine } from "../../../api/routine";
     import { getAllWorkouts } from "../../../api/workout";
@@ -15,40 +15,25 @@
     import IconButton from "../../display/icon-button.svelte";
 
     export let routine: Routine;
-    let allWorkouts: Workout[] = [];
+    let unselected_workouts: Workout[] = [];
 
     onMount(async () => {
         if (routine && routine.id) {
             const resp = await getUnrelatedWorkouts(routine.id, $UserStore);
             if (resp.result !== null) {
-                allWorkouts = resp.result;
+                unselected_workouts = resp.result;
             }
         } else {
             const resp = await getAllWorkouts($UserStore);
             if (resp.result !== null) {
-                allWorkouts = resp.result;
+                unselected_workouts = resp.result;
             }
         }
     });
 
     async function saveRoutine() {
-        const workoutIds = routine.workouts.map((x) => x.id);
-        let routine_row: RoutineRow = {
-            id: routine.id,
-            user_id: $UserStore.id,
-            name: routine.name,
-            days: routine.days,
-            last_completed: routine.last_completed,
-            note: routine.note,
-        };
-
-        if (routine_row.id === null) {
-            const routineRes = await insertRoutine(
-                $UserStore,
-                routine_row,
-                workoutIds
-            );
-
+        if (routine.id === null) {
+            const routineRes = await insertRoutine($UserStore, routine);
             if (routineRes.result !== null) {
                 routine = routineRes.result;
                 push("/profile");
@@ -57,12 +42,7 @@
                 console.log("error inserting routine");
             }
         } else {
-            const routineRes = await updateRoutine(
-                $UserStore,
-                routine_row,
-                workoutIds
-            );
-
+            const routineRes = await updateRoutine($UserStore, routine);
             if (routineRes.result !== null) {
                 routine = routineRes.result;
                 push("/profile");
@@ -89,12 +69,12 @@
     function addWorkout(e: any) {
         const workout = e.detail;
         routine.workouts = [...routine.workouts, workout];
-        const filtered = allWorkouts.filter((x) => x.id !== workout.id);
-        allWorkouts = [...filtered];
+        const filtered = unselected_workouts.filter((x) => x.id !== workout.id);
+        unselected_workouts = [...filtered];
     }
 
     function removeWorkout(workout: Workout) {
-        allWorkouts = [...allWorkouts, workout];
+        unselected_workouts = [...unselected_workouts, workout];
         const filtered = routine.workouts.filter((x) => x.id !== workout.id);
         routine.workouts = [...filtered];
     }
@@ -123,7 +103,7 @@
                 <button on:click={() => push("/profile")}>cancel</button>
                 <button on:click={deleteThisRoutine}>delete</button>
             </div>
-            <WorkoutSelectorModal bind:workouts={allWorkouts} on:workout-selected={addWorkout} />
+            <WorkoutSelectorModal bind:workouts={unselected_workouts} on:workout-selected={addWorkout} />
             {#each routine.workouts as workout, i}
                 <div class="workouts">
                     <p>{workout.name}</p>
