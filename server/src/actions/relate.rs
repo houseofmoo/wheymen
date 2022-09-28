@@ -8,7 +8,7 @@ pub async fn create_relationship(
     workout_id: &String,
     client: &DbClient,
 ) -> DbResult<Routine> {
-    match does_relationship_exist(routine_id, workout_id, client).await {
+    match does_relationship_exist(routine_id, workout_id, &user_id, &client).await {
         Ok(exists) => {
             if exists {
                 return Ok(None);
@@ -17,8 +17,12 @@ pub async fn create_relationship(
         Err(e) => return Err(e),
     };
 
-    let query = format!("RELATE {}->workout->{} SET user_id={};", routine_id, workout_id, user_id);
+    let query = format!(
+        "RELATE {}->workout->{} SET user_id=\"{}\";",
+        routine_id, workout_id, user_id
+    );
     let result = client.send_query::<Relationship>(query).await?;
+
     if result.len() > 0 && result[0].result.len() > 0 {
         Ok(None)
     } else {
@@ -61,7 +65,10 @@ pub async fn delete_all_routine_relationships(
     routine_id: &String,
     client: &DbClient,
 ) -> DbResult<Routine> {
-    let query = format!("DELETE workout WHERE in=\"{}\" AND user_id=\"{}\";", routine_id, user_id);
+    let query = format!(
+        "DELETE workout WHERE in=\"{}\" AND user_id=\"{}\";",
+        routine_id, user_id
+    );
     client.send_query::<Relationship>(query).await?;
     Ok(None)
 }
@@ -71,19 +78,23 @@ pub async fn delete_all_workout_relationships(
     workout_id: &String,
     client: &DbClient,
 ) -> DbResult<Routine> {
-    let query = format!("DELETE workout WHERE out=\"{}\" AND user_id=\"{}\";", workout_id, user_id);
+    let query = format!(
+        "DELETE workout WHERE out=\"{}\" AND user_id=\"{}\";",
+        workout_id, user_id
+    );
     client.send_query::<Relationship>(query).await?;
     Ok(None)
 }
 
 async fn does_relationship_exist(
+    user_id: &String,
     routine_id: &String,
     workout_id: &String,
     client: &DbClient,
 ) -> Result<bool, LocalError> {
     let query = format!(
-        "SELECT * FROM workout WHERE in=\"{}\" AND out=\"{}\";",
-        routine_id, workout_id
+        "SELECT * FROM workout WHERE in=\"{}\" AND out=\"{}\" AND user_id=\"{}\";",
+        routine_id, workout_id, user_id
     );
     let result = client.send_query::<Relationship>(query).await?;
     return Ok(result.len() > 0 && result[0].result.len() > 0);

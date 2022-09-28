@@ -23,7 +23,7 @@ export async function deleteRoutine(id: string, user: User) {
     return await del(RequestPath.DeleteRoutine, id, user);
 }
 
-async function insertOrUpdateRoutine(url: string, user: User, row: RoutineRow, workoutIds: string[]): Promise<StatusItem<Routine>> {
+async function insertOrUpdateRoutine(url: string, user: User, row: RoutineRow, workout_ids: string[]): Promise<StatusItem<Routine>> {
     if (user === null) {
         return {
             result: null,
@@ -33,7 +33,7 @@ async function insertOrUpdateRoutine(url: string, user: User, row: RoutineRow, w
     }
 
     const { token } = user;
-    const resp = await fetch(url, postReqeust(token, { routine: row, workout_ids: workoutIds }));
+    const resp = await fetch(url, postReqeust(token, { row: row, ids: workout_ids }));
 
     if (resp.status === 200) {
         const obj: Routine = await resp.json()

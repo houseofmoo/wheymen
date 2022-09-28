@@ -3,12 +3,12 @@ import type { User } from '../models/user';
 import type { Workout } from '../models/workout';
 import { postReqeust, RequestPath, getAll, get, del } from "./shared";
 
-export async function insertWorkout(user: User, row: Workout) {
-    return await insertOrUpdateWorkout(RequestPath.InsertWorkout, user, row);
+export async function insertWorkout(user: User, row: Workout, routine_ids: string[]) {
+    return await insertOrUpdateWorkout(RequestPath.InsertWorkout, user, row, routine_ids);
 }
 
-export async function updateWorkout(user: User, row: Workout) {
-    return await insertOrUpdateWorkout(RequestPath.UpdateWorkout, user, row);
+export async function updateWorkout(user: User, row: Workout, routine_ids: string[]) {
+    return await insertOrUpdateWorkout(RequestPath.UpdateWorkout, user, row, routine_ids);
 }
 
 export async function getAllWorkouts(user: User) {
@@ -59,7 +59,7 @@ export async function getUnrelatedWorkouts(id: string, user: User) {
     }
 }
 
-async function insertOrUpdateWorkout(url: string, user: User, row: Workout): Promise<StatusItem<Workout>> {
+async function insertOrUpdateWorkout(url: string, user: User, row: Workout, routine_ids: string[]): Promise<StatusItem<Workout>> {
     if (user === null) {
         return {
             result: null,
@@ -69,7 +69,7 @@ async function insertOrUpdateWorkout(url: string, user: User, row: Workout): Pro
     }
 
     const { token } = user;
-    const resp = await fetch(url, postReqeust(token, row));
+    const resp = await fetch(url, postReqeust(token, { row: row, ids: routine_ids }));
 
     if (resp.status === 200) {
         const obj: Workout = await resp.json()

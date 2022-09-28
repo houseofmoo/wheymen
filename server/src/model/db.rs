@@ -58,4 +58,5 @@ pub struct Relationship {
     pub routine_in: RoutineRef,
     #[serde(alias = "out")]
     pub workout_out: WorkoutRef,
+    pub user_id: UserRef,
 }
