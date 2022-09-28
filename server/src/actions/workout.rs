@@ -70,8 +70,8 @@ pub async fn insert_workout(
         None => return Err(LocalError::InsertFailed),
     };
 
-    relate::delete_all_workout_relationships(&id, &client).await?;
-    relate::create_many_workout_relationships(&id, &routine_ids, &client).await?;
+    relate::delete_all_workout_relationships(&user_id, &id, &client).await?;
+    relate::create_many_workout_relationships(&user_id, &id, &routine_ids, &client).await?;
     get_workout(&user_id, &id, &client).await
 }
 
@@ -90,8 +90,8 @@ pub async fn update_workout(
         None => return Err(LocalError::InsertFailed),
     };
 
-    relate::delete_all_workout_relationships(&id, &client).await?;
-    relate::create_many_workout_relationships(&id, &routine_ids, &client).await?;
+    relate::delete_all_workout_relationships(&user_id, &id, &client).await?;
+    relate::create_many_workout_relationships(&user_id, &id, &routine_ids, &client).await?;
     get_workout(&user_id, &id, &client).await
 }
 

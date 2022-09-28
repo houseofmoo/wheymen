@@ -51,8 +51,8 @@ pub async fn insert_routine(
         None => return Err(LocalError::InsertFailed),
     };
 
-    relate::delete_all_routine_relationships(&id, &client).await?;
-    relate::create_many_routine_relationships(&id, &workout_ids, client).await?;
+    relate::delete_all_routine_relationships(&user_id, &id, &client).await?;
+    relate::create_many_routine_relationships(&user_id, &id, &workout_ids, client).await?;
     get_routine(&user_id, &id, &client).await
 }
 
@@ -71,8 +71,8 @@ pub async fn update_routine(
         None => return Err(LocalError::UpdateFailed),
     };
 
-    relate::delete_all_routine_relationships(&id, &client).await?;
-    relate::create_many_routine_relationships(&id, &workout_ids, client).await?;
+    relate::delete_all_routine_relationships(&user_id, &id, &client).await?;
+    relate::create_many_routine_relationships(&user_id, &id, &workout_ids, client).await?;
     get_routine(&user_id, &id, &client).await // return routine with updated workout list
 }
 
