@@ -29,7 +29,7 @@ pub async fn get_routine(
         routine_id, user_id
     );
     let result = client.send_query::<Routine>(query).await?;
- 
+
     match get_first_result::<Routine>(result) {
         Some(r) => Ok(Some(r)),
         None => Ok(None),

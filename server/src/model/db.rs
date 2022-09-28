@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::{shared_types::{RelationshipRef, RoutineRef, UserRef, WorkoutRef}};
+use super::shared_types::{RelationshipRef, RoutineRef, UserRef, WorkoutRef};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct DbResponse<T> {

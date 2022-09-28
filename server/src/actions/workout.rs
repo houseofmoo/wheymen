@@ -1,6 +1,13 @@
-use super::{helper::{get_all_results, get_first_result}, relate};
+use super::{
+    helper::{get_all_results, get_first_result},
+    relate,
+};
 use crate::{
-    model::{db::{InsertWorkoutRow, WorkoutRow}, error::LocalError, shared_types::DbResult},
+    model::{
+        db::{InsertWorkoutRow, WorkoutRow},
+        error::LocalError,
+        shared_types::DbResult,
+    },
     resource::client::DbClient,
 };
 

@@ -1,6 +1,6 @@
 use crate::{
     actions,
-    model::db::{Upsert, InsertRoutineRow, RoutineRow},
+    model::db::{InsertRoutineRow, RoutineRow, Upsert},
     resource::auth::Authorized,
     resource::client::DbClient,
 };
@@ -47,9 +47,7 @@ async fn insert_routine(
         return HttpResponse::Unauthorized().body("invalid user id".to_string());
     }
 
-    match actions::routine::insert_routine(&auth.user_id, &insert.row, &insert.ids, &db)
-        .await
-    {
+    match actions::routine::insert_routine(&auth.user_id, &insert.row, &insert.ids, &db).await {
         Ok(r) => match r {
             Some(r) => HttpResponse::Ok().json(r),
             None => HttpResponse::NoContent().body(""),
@@ -68,9 +66,7 @@ async fn update_routine(
         return HttpResponse::Unauthorized().body("invalid user id".to_string());
     }
 
-    match actions::routine::update_routine(&auth.user_id, &update.row, &update.ids, &db)
-        .await
-    {
+    match actions::routine::update_routine(&auth.user_id, &update.row, &update.ids, &db).await {
         Ok(r) => match r {
             Some(r) => HttpResponse::Ok().json(r),
             None => HttpResponse::NoContent().body(""),
