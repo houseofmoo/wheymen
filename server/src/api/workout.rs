@@ -1,6 +1,6 @@
 use crate::{
     actions,
-    model::db::{InsertWorkoutRow, InsertWorkout, UpdateWorkout},
+    model::db::{Upsert, InsertWorkoutRow, WorkoutRow},
     resource::{auth::Authorized, client::DbClient},
 };
 use actix_web::{post, web, HttpResponse, Responder};
@@ -60,13 +60,13 @@ async fn get_workout(
 async fn insert_workout(
     auth: Authorized,
     db: web::Data<DbClient>,
-    insert: web::Json<InsertWorkout>,
+    insert: web::Json<Upsert<InsertWorkoutRow>>,
 ) -> impl Responder {
-    if !auth.user_id.eq(&insert.workout.user_id) {
+    if !auth.user_id.eq(&insert.row.user_id) {
         return HttpResponse::Unauthorized().body("invalid user id".to_string());
     }
 
-    match actions::workout::insert_workout(&auth.user_id, &insert.workout, &insert.routine_ids, &db).await {
+    match actions::workout::insert_workout(&auth.user_id, &insert.row, &insert.ids, &db).await {
         Ok(r) => match r {
             Some(r) => HttpResponse::Ok().json(r),
             None => HttpResponse::NoContent().body(""),
@@ -79,13 +79,13 @@ async fn insert_workout(
 async fn update_workout(
     auth: Authorized,
     db: web::Data<DbClient>,
-    update: web::Json<UpdateWorkout>,
+    update: web::Json<Upsert<WorkoutRow>>,
 ) -> impl Responder {
-    if !auth.user_id.eq(&update.workout.user_id) {
+    if !auth.user_id.eq(&update.row.user_id) {
         return HttpResponse::Unauthorized().body("invalid user id".to_string());
     }
 
-    match actions::workout::update_workout(&auth.user_id, &update.workout, &update.routine_ids, &db).await {
+    match actions::workout::update_workout(&auth.user_id, &update.row, &update.ids, &db).await {
         Ok(r) => match r {
             Some(r) => HttpResponse::Ok().json(r),
             None => HttpResponse::NoContent().body(""),

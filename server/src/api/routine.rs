@@ -1,6 +1,6 @@
 use crate::{
     actions,
-    model::db::{InsertRoutine, UpdateRoutine},
+    model::db::{Upsert, InsertRoutineRow, RoutineRow},
     resource::auth::Authorized,
     resource::client::DbClient,
 };
@@ -41,13 +41,13 @@ async fn get_routine(
 async fn insert_routine(
     auth: Authorized,
     db: web::Data<DbClient>,
-    insert: web::Json<InsertRoutine>,
+    insert: web::Json<Upsert<InsertRoutineRow>>,
 ) -> impl Responder {
-    if !auth.user_id.eq(&insert.routine.user_id) {
+    if !auth.user_id.eq(&insert.row.user_id) {
         return HttpResponse::Unauthorized().body("invalid user id".to_string());
     }
 
-    match actions::routine::insert_routine(&auth.user_id, &insert.routine, &insert.workout_ids, &db)
+    match actions::routine::insert_routine(&auth.user_id, &insert.row, &insert.ids, &db)
         .await
     {
         Ok(r) => match r {
@@ -62,13 +62,13 @@ async fn insert_routine(
 async fn update_routine(
     auth: Authorized,
     db: web::Data<DbClient>,
-    update: web::Json<UpdateRoutine>,
+    update: web::Json<Upsert<RoutineRow>>,
 ) -> impl Responder {
-    if !auth.user_id.eq(&update.routine.user_id) {
+    if !auth.user_id.eq(&update.row.user_id) {
         return HttpResponse::Unauthorized().body("invalid user id".to_string());
     }
 
-    match actions::routine::update_routine(&auth.user_id, &update.routine, &update.workout_ids, &db)
+    match actions::routine::update_routine(&auth.user_id, &update.row, &update.ids, &db)
         .await
     {
         Ok(r) => match r {

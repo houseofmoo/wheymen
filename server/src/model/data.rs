@@ -1,4 +1,4 @@
-use super::shared_types::{RoutineHistoryRef, RoutineRef, UserRef, WorkoutHistoryRef, WorkoutRef};
+use super::{shared_types::{RoutineHistoryRef, RoutineRef, UserRef, WorkoutHistoryRef, WorkoutRef}};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Default)]

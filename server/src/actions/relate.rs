@@ -1,5 +1,4 @@
-use crate::model::data::Workout;
-use crate::model::db::Relationship;
+use crate::model::db::{Relationship, WorkoutRow};
 use crate::model::{data::Routine, error::LocalError, shared_types::DbResult};
 use crate::resource::client::DbClient;
 
@@ -44,7 +43,7 @@ pub async fn create_many_workout_relationships(
     workout_id: &String,
     routine_ids: &Vec<String>,
     client: &DbClient,
-) -> DbResult<Workout> {
+) -> DbResult<WorkoutRow> {
     for routine_id in routine_ids {
         match create_relationship(&routine_id, &workout_id, &client).await {
             Ok(_) => (),
