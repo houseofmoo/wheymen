@@ -125,16 +125,21 @@ pub async fn delete_workout(
         Ok(r) => match r {
             Some(r) => {
                 // remove workout id from routines then delete workout
-                let routine_ids= r.into_iter().map(|r| r.id).collect();
-                super::routine::remove_workout_from_many_routines(&routine_ids, &workout_id, &client).await?;
+                let routine_ids = r.into_iter().map(|r| r.id).collect();
+                super::routine::remove_workout_from_many_routines(
+                    &routine_ids,
+                    &workout_id,
+                    &client,
+                )
+                .await?;
                 client.send_query::<WorkoutRow>(query).await?;
                 Ok(None)
-            },
+            }
             None => {
                 // just delete workout
                 client.send_query::<WorkoutRow>(query).await?;
                 Ok(None)
-            },
+            }
         },
         Err(e) => Err(e),
     }

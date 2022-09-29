@@ -19,8 +19,10 @@
     <div class="workout-selector">
         {#each workouts as workout}
             <button class="workout-button" on:click={() => workoutSelected(workout)}>
-                <p class="center-text large-text">{workout.name}</p>
-                <p class="center-text small-text">{workout.category}</p>
+                <div class="workout-info">
+                    <p class="large-text">{workout.name}</p>
+                    <p class="right-text small-text">{workout.category}</p>
+                </div>
             </button>
         {/each}
     </div>
@@ -64,5 +66,15 @@
 
     .workout-button, .control-button {
         width: 100%;
+    }
+
+    .workout-info {
+        display: grid;
+        grid: 1fr / 1fr 1fr;
+        place-items: center;
+    }
+
+    .right-text {
+        text-align: right;
     }
 </style>

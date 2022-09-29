@@ -1,6 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
+    import { fade } from "svelte/transition";
+    import { flip } from 'svelte/animate';
     import { getAllRoutines } from "../../../api/routine";
     import type { Workout } from "../../../models/workout";
     import type { Routine } from "../../../models/routine";
@@ -98,8 +100,8 @@
                 <button on:click={deleteThisWorkout}>delete</button>
             </div>
             <RoutineSelectorModal bind:routines={unselected_routines} on:routine-selected={addRoutine} />
-            {#each selected_routines as routine}
-            <div class="routines">
+            {#each selected_routines as routine (routine.id)}
+            <div class="routines" transition:fade="{{duration: 150}}" animate:flip="{{duration: 200}}">
                 <p>{routine.name}</p>
                 <IconButton icon={Remove} on:click={() => removeRoutine(routine)} />
             </div>

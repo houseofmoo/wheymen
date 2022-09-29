@@ -1,6 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
+    import { fade } from "svelte/transition";
+    import { flip } from 'svelte/animate';
     import type { Routine } from "../../../models/routine";
     import type { Workout } from "../../../models/workout";
     import { insertRoutine, updateRoutine, deleteRoutine } from "../../../api/routine";
@@ -13,6 +15,7 @@
     import UpArrow from "../../display/icons/up-arrow.svelte";
     import DownArrow from "../../display/icons/down-arrow.svelte";
     import IconButton from "../../display/icon-button.svelte";
+    
 
     export let routine: Routine;
     let unselected_workouts: Workout[] = [];
@@ -104,8 +107,8 @@
                 <button on:click={deleteThisRoutine}>delete</button>
             </div>
             <WorkoutSelectorModal bind:workouts={unselected_workouts} on:workout-selected={addWorkout} />
-            {#each routine.workouts as workout, i}
-                <div class="workouts">
+            {#each routine.workouts as workout, i (workout.id)}
+                <div class="workouts" transition:fade="{{duration: 150}}" animate:flip="{{duration: 200}}">
                     <p>{workout.name}</p>
                     <IconButton icon={DownArrow} on:click={() => shift(i, i+1)} />
                     <IconButton icon={UpArrow} on:click={() => shift(i, i-1)} />
