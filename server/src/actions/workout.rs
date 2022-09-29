@@ -23,22 +23,40 @@ pub async fn get_all_workouts(user_id: &String, client: &DbClient) -> DbResult<V
     }
 }
 
-pub async fn get_all_workout_unrelated_to_routine(
+pub async fn get_all_workouts_unrelated_to_routine(
     user_id: &String,
     routine_id: &String,
     client: &DbClient,
 ) -> DbResult<Vec<WorkoutRow>> {
-    // get the routine then filter manually?
+    // get the routine
+    let routine = match super::routine::get_routine_row(&user_id, &routine_id, &client).await {
+        Ok(r) => match r {
+            Some(r) => r,
+            None => return get_all_workouts(&user_id, &client).await,
+        },
+        Err(e) => return Err(e),
+    };
 
-    let query = format!(
-        "SELECT * FROM workouts WHERE user_id=\"{}\" AND <-workout<-routines.id CONTAINSNOT \"{}\" ORDER BY category;",
-        user_id, routine_id
-    );
-    let result = client.send_query::<WorkoutRow>(query).await?;
+    // get all workouts
+    let workouts = match get_all_workouts(&user_id, &client).await {
+        Ok(w) => match w {
+            Some(w) => w,
+            None => return Ok(None),
+        },
+        Err(e) => return Err(e),
+    };
 
-    match get_all_results::<WorkoutRow>(result) {
-        Some(r) => Ok(Some(r)),
-        None => Ok(None),
+    // filter workouts that exist in the routine
+    let filtered: Vec<WorkoutRow> = workouts
+                                    .into_iter()
+                                    .filter(|w| !routine.workouts.contains(&w.id))
+                                    .collect();
+
+    // return the filtered collection
+    if filtered.len() > 0 {
+        Ok(Some(filtered))
+    } else {
+        Ok(None)
     }
 }
 

@@ -34,6 +34,23 @@ pub async fn get_routine(
     }
 }
 
+pub async fn get_routine_row(
+    user_id: &String,
+    routine_id: &String,
+    client: &DbClient,
+) -> DbResult<RoutineRow> {
+    let query = format!(
+        "SELECT * FROM {} WHERE user_id=\"{}\";",
+        routine_id, user_id
+    );
+    let result = client.send_query::<RoutineRow>(query).await?;
+
+    match get_first_result::<RoutineRow>(result) {
+        Some(r) => Ok(Some(r)),
+        None => Ok(None),
+    }
+}
+
 pub async fn insert_routine(
     user_id: &String,
     routine_row: &InsertRoutineRow,

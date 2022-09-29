@@ -27,7 +27,7 @@ async fn get_all_unrelated_workouts(
         return HttpResponse::BadRequest().body("no workout id provided".to_string());
     }
 
-    match actions::workout::get_all_unrelated_workouts(&auth.user_id, &routine_id, &db).await {
+    match actions::workout::get_all_workouts_unrelated_to_routine(&auth.user_id, &routine_id, &db).await {
         Ok(r) => match r {
             Some(r) => HttpResponse::Ok().json(r),
             None => HttpResponse::NoContent().body(""),
