@@ -54,7 +54,7 @@
 </div>
 
 <style>
-    .page {
+   .page {
         text-align: center;
         width: 100%;
         margin: 0;
@@ -64,14 +64,10 @@
     .form-sheet {
         display: grid;
         grid: 1fr / 1fr 1fr;
-        margin: auto;
-        padding: 0;
+        place-items: start center;
     }
 
     .form-info {
-        display: grid;
-        grid: 1fr / auto;
-        margin: auto;
         padding: 1rem;
         text-align: left;
     }
@@ -79,13 +75,11 @@
     form {
         display: grid;
         grid: 1fr / auto;
-        margin: auto;
-        width: 250px;
-        padding: 0;
+        width: 100%;
     }
 
     @media (max-width: 600px) {
-        .form-sheet{
+        .form-sheet {
             grid: 1fr / auto;
         }
     }

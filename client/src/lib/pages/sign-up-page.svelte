@@ -115,14 +115,10 @@
     .form-sheet {
         display: grid;
         grid: 1fr / 1fr 1fr;
-        margin: auto;
-        padding: 0;
+        place-items: start center;
     }
 
     .form-info {
-        display: grid;
-        grid: 1fr / auto;
-        margin: auto;
         padding: 1rem;
         text-align: left;
     }
@@ -130,9 +126,7 @@
     form {
         display: grid;
         grid: 1fr / auto;
-        margin: auto;
-        width: 250px;
-        padding: 0;
+        width: 100%;
     }
 
     @media (max-width: 600px) {
