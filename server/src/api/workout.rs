@@ -1,6 +1,6 @@
 use crate::{
     actions,
-    model::db::{WorkoutRow, InsertWorkoutRow},
+    model::db::{InsertWorkoutRow, UpsertWorkoutRow, WorkoutRow},
     resource::{auth::Authorized, client::DbClient},
 };
 use actix_web::{post, web, HttpResponse, Responder};
@@ -27,7 +27,9 @@ async fn get_all_unrelated_workouts(
         return HttpResponse::BadRequest().body("no workout id provided".to_string());
     }
 
-    match actions::workout::get_all_workouts_unrelated_to_routine(&auth.user_id, &routine_id, &db).await {
+    match actions::workout::get_all_workouts_unrelated_to_routine(&auth.user_id, &routine_id, &db)
+        .await
+    {
         Ok(r) => match r {
             Some(r) => HttpResponse::Ok().json(r),
             None => HttpResponse::NoContent().body(""),
@@ -60,13 +62,20 @@ async fn get_workout(
 async fn insert_workout(
     auth: Authorized,
     db: web::Data<DbClient>,
-    workout_row: web::Json<InsertWorkoutRow>,
+    upsert: web::Json<UpsertWorkoutRow<InsertWorkoutRow>>,
 ) -> impl Responder {
-    if !auth.user_id.eq(&workout_row.user_id) {
+    if !auth.user_id.eq(&upsert.workout_row.user_id) {
         return HttpResponse::Unauthorized().body("invalid user id".to_string());
     }
 
-    match actions::workout::insert_workout(&workout_row, &db).await {
+    match actions::workout::insert_workout(
+        &upsert.workout_row,
+        &upsert.selected_routine_ids,
+        &upsert.unselected_routine_ids,
+        &db,
+    )
+    .await
+    {
         Ok(r) => match r {
             Some(r) => HttpResponse::Ok().json(r),
             None => HttpResponse::NoContent().body(""),
@@ -79,13 +88,20 @@ async fn insert_workout(
 async fn update_workout(
     auth: Authorized,
     db: web::Data<DbClient>,
-    workout_row: web::Json<WorkoutRow>,
+    upsert: web::Json<UpsertWorkoutRow<WorkoutRow>>,
 ) -> impl Responder {
-    if !auth.user_id.eq(&workout_row.user_id) {
+    if !auth.user_id.eq(&upsert.workout_row.user_id) {
         return HttpResponse::Unauthorized().body("invalid user id".to_string());
     }
 
-    match actions::workout::update_workout(&workout_row, &db).await {
+    match actions::workout::update_workout(
+        &upsert.workout_row,
+        &upsert.selected_routine_ids,
+        &upsert.unselected_routine_ids,
+        &db,
+    )
+    .await
+    {
         Ok(r) => match r {
             Some(r) => HttpResponse::Ok().json(r),
             None => HttpResponse::NoContent().body(""),

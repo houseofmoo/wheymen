@@ -22,3 +22,9 @@ export class InsertWorkoutRow {
     category: Category;
     note: string;
 }
+
+export class UpsertWorkoutRow<T> {
+    workout_row: T;
+    selected_routine_ids: string[];
+    unselected_routine_ids: string[];
+}

@@ -37,31 +37,27 @@
     });
 
     async function saveWorkout() {
+        const selected_ids = selected_routines.map(x => x.id);
+        const unseleced_ids = unselected_routines.map(x => x.id);
+        console.log(workout);
         if (workout.id === null) {
-            const workoutRes = await insertWorkout($UserStore, workout);
+            const workoutRes = await insertWorkout($UserStore, workout, selected_ids, unseleced_ids);
             if (workoutRes.result !== null) {
                 workout = workoutRes.result;
-                push("/profile");
+                push('/profile');
             } else {
                 // TODO: handle insert failed
-                console.log("error inserting routine");
+                console.log("error inserting workout");
             }
         } else {
-            const workoutRes = await updateWorkout($UserStore, workout);
+            const workoutRes = await updateWorkout($UserStore, workout, selected_ids, unseleced_ids);
             if (workoutRes.result !== null) {
                 workout = workoutRes.result;
-                push("/profile");
+                push('/profile');
             } else {
                 // TODO: handle update failed
-                console.log("error inserting routine");
+                console.log("error updating workout");
             }
-        }
-
-        if (selected_routines.length > 0) {
-            // update routines in selected_routines since they now have
-            // another workout in them
-            // TODO: have to update any routine that exists in "selected_routines" since
-            // this workout may have been added to it
         }
     }
 
@@ -80,11 +76,13 @@
 
     function addRoutine(e: any) {
         const routine = e.detail;
-        // from unselected to selected
+        selected_routines = [...selected_routines, routine];
+        unselected_routines = unselected_routines.filter(r => r.id !== routine.id);
     }
 
     function removeRoutine(routine: Routine) {
-        // from selected to unselected
+        unselected_routines = [...unselected_routines, routine];
+        selected_routines = selected_routines.filter(r => r.id !== routine.id);
     }
 </script>
 

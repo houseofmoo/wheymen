@@ -47,6 +47,13 @@ pub struct InsertWorkoutRow {
     pub note: String,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct UpsertWorkoutRow<T> {
+    pub workout_row: T,
+    pub selected_routine_ids: Vec<String>,
+    pub unselected_routine_ids: Vec<String>,
+}
+
 // What a graph edge (relationship) looks like
 #[allow(dead_code)]
 #[derive(Debug, Deserialize, Serialize)]

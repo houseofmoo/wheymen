@@ -1,6 +1,6 @@
 use super::helper::{get_all_results, get_first_result};
 use crate::model::{
-    data::Routine, db::RoutineRow, db::InsertRoutineRow, error::LocalError, shared_types::DbResult,
+    data::Routine, db::InsertRoutineRow, db::RoutineRow, error::LocalError, shared_types::DbResult,
 };
 use crate::resource::client::DbClient;
 
@@ -75,7 +75,7 @@ pub async fn update_routine(
     let query = format!("UPDATE {} CONTENT {};", routine_row.id, json);
     let result = client.send_query::<RoutineRow>(query).await?;
 
-     match get_first_result::<RoutineRow>(result) {
+    match get_first_result::<RoutineRow>(result) {
         Some(r) => get_routine(&user_id, &r.id, &client).await,
         None => Err(LocalError::UpdateFailed),
     }
@@ -88,5 +88,41 @@ pub async fn delete_routine(
 ) -> DbResult<Routine> {
     let query = format!("DELETE {} WHERE user_id=\"{}\";", routine_id, user_id);
     client.send_query::<Routine>(query).await?;
+    Ok(None)
+}
+
+pub async fn add_workout_to_many_routines(
+    routine_ids: &Vec<String>,
+    workout_id: &String,
+    client: &DbClient,
+) -> DbResult<RoutineRow> {
+    if routine_ids.len() <= 0 {
+        return Ok(None);
+    }
+
+    let routine_ids_str = routine_ids.join(",");
+    let query = format!(
+        "UPDATE {} SET workouts += [\"{}\"];",
+        routine_ids_str, workout_id,
+    );
+    client.send_query::<RoutineRow>(query).await?;
+    Ok(None)
+}
+
+pub async fn remove_workout_from_many_routines(
+    routine_ids: &Vec<String>,
+    workout_id: &String,
+    client: &DbClient,
+) -> DbResult<RoutineRow> {
+    if routine_ids.len() <= 0 {
+        return Ok(None);
+    }
+
+    let routine_ids_str = routine_ids.join(",");
+    let query = format!(
+        "UPDATE {} SET workouts -= [\"{}\"];",
+        routine_ids_str, workout_id,
+    );
+    client.send_query::<RoutineRow>(query).await?;
     Ok(None)
 }

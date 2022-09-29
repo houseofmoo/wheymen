@@ -1,27 +1,35 @@
 import type { StatusItem } from '../models/status-item';
 import type { User } from '../models/user';
-import type { Workout, WorkoutRow, InsertWorkoutRow } from '../models/workout';
+import type { Workout, WorkoutRow, InsertWorkoutRow, UpsertWorkoutRow } from '../models/workout';
 import { postReqeust, RequestPath, getAll, get, del } from "./shared";
 
-export async function insertWorkout(user: User, workout: Workout) {
-    const workout_row: InsertWorkoutRow =  {
-        user_id: workout.user_id,
-        name: workout.name,
-        category: workout.category,
-        note: workout.note,
-    }
-    return await insertOrUpdateWorkout(RequestPath.InsertWorkout, user, workout_row);
+export async function insertWorkout(user: User, workout: Workout, selected_routine_ids: string[], unselected_routine_ids: string[]) {
+    const upsert: UpsertWorkoutRow<InsertWorkoutRow> = {
+        workout_row: {
+            user_id: workout.user_id,
+            name: workout.name,
+            category: workout.category,
+            note: workout.note,
+        },
+        selected_routine_ids, 
+        unselected_routine_ids 
+    };
+    return await insertOrUpdateWorkout(RequestPath.InsertWorkout, user, upsert);
 }
 
-export async function updateWorkout(user: User, workout: Workout) {
-    const workout_row: WorkoutRow =  {
-        id: workout.id,
-        user_id: workout.user_id,
-        name: workout.name,
-        category: workout.category,
-        note: workout.note,
-    }
-    return await insertOrUpdateWorkout(RequestPath.UpdateWorkout, user, workout_row);
+export async function updateWorkout(user: User, workout: Workout, selected_routine_ids: string[], unselected_routine_ids: string[]) {
+    const upsert: UpsertWorkoutRow<WorkoutRow> = {
+        workout_row: {
+            id: workout.id,
+            user_id: workout.user_id,
+            name: workout.name,
+            category: workout.category,
+            note: workout.note,
+        },
+        selected_routine_ids, 
+        unselected_routine_ids 
+    };
+    return await insertOrUpdateWorkout(RequestPath.UpdateWorkout, user, upsert);
 }
 
 export async function getAllWorkouts(user: User) {
@@ -72,7 +80,7 @@ export async function getUnrelatedWorkouts(id: string, user: User) {
     }
 }
 
-async function insertOrUpdateWorkout<T>(url: string, user: User, workout_row: T): Promise<StatusItem<Workout>> {
+async function insertOrUpdateWorkout<T>(url: string, user: User, upsert: T): Promise<StatusItem<Workout>> {
     if (user === null) {
         return {
             result: null,
@@ -82,7 +90,7 @@ async function insertOrUpdateWorkout<T>(url: string, user: User, workout_row: T)
     }
 
     const { token } = user;
-    const resp = await fetch(url, postReqeust(token, workout_row));
+    const resp = await fetch(url, postReqeust(token, upsert));
 
     if (resp.status === 200) {
         const obj: Workout = await resp.json()

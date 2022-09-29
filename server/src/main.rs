@@ -48,6 +48,7 @@ async fn main() -> std::io::Result<()> {
                             .service(api::workout::get_all_unrelated_workouts)
                             .service(api::workout::get_workout)
                             .service(api::workout::insert_workout)
+                            .service(api::workout::update_workout)
                             .service(api::workout::delete_workout),
                     ),
             )

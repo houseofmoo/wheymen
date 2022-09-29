@@ -9,7 +9,7 @@ export enum RequestPath {
     DeleteRoutine = `api/routines/delete`,
 
     InsertWorkout = `/api/workouts/insert`,
-    UpdateWorkout = `/api/workout/update`,
+    UpdateWorkout = `/api/workouts/update`,
     GetAllWorkouts = `/api/workouts/get-all`,
     GetWorkout = `/api/workouts/get`,
     GetUnrelatedWorkouts = `/api/workouts/get-all/unrelated`,
