@@ -6,80 +6,80 @@
 
     let email = "";
     let password = "";
-    let verifyPassword = "";
-    let pageState: "signup" | "complete" | "exists" = "signup";
-    let statusMessage = null;
+    let verify_pass = "";
+    let page_state: "signup" | "complete" | "exists" = "signup";
+    let status_msg = null;
 
     $: {
-        if (verifyPassword && verifyPassword.length > 0) {
-            if (verifyPassword.length < 6) {
-                statusMessage = "Passwords do not match";
-            } else if (password !== verifyPassword) {
-                statusMessage = "Passwords do not match";
+        if (verify_pass && verify_pass.length > 0) {
+            if (verify_pass.length < 6) {
+                status_msg = "Passwords do not match";
+            } else if (password !== verify_pass) {
+                status_msg = "Passwords do not match";
             }
             else {
-                statusMessage = null;
+                status_msg = null;
             }
         } else {
-            statusMessage = null;
+            status_msg = null;
         }
     }
 
     async function onSubmit() {
-        statusMessage = null;
+        status_msg = null;
 
         if (email.length <= 0) {
-            statusMessage = "Please enter a valud email";
+            status_msg = "Please enter a valud email";
             return;
         }
 
         if (password.length < 6) {
-            statusMessage = "Password must be at least 6 characters long";
+            status_msg = "Password must be at least 6 characters long";
             return;
         }
 
-        if (password !== verifyPassword) {
-            statusMessage = "Passwords do not match"
+        if (password !== verify_pass) {
+            status_msg = "Passwords do not match"
         }
 
         // is user already signed up
         const userExists = await doesUserExist(email);
         if (userExists) {
-            statusMessage = `User with ${email} already exists`;
-            pageState = "exists";
+            status_msg = `User with ${email} already exists`;
+            page_state = "exists";
             email = "";
             password = "";
-            verifyPassword = "";
+            verify_pass = "";
             return;
         }
 
         // send sign up request to auth
         const signUpResp = await signUp(email, password);
         if (signUpResp.status !== 200) {
-            statusMessage = "Error while signing up. Please try again";
-            pageState = "signup";
+            status_msg = "Error while signing up. Please try again";
+            page_state = "signup";
             email = "";
             password = "";
-            verifyPassword = "";
+            verify_pass = "";
             return;
         }
 
         email = "";
         password = "";
-        verifyPassword = "";
-        pageState = "complete";
+        verify_pass = "";
+        page_state = "complete";
     }
 </script>
 
 <div class="page">
     <Title subtitle={"sign up"} />
-    {#if pageState === "signup"}
-        <ErrorMessage errorMsg={statusMessage} />
+    {#if page_state === "signup"}
+        <ErrorMessage errorMsg={status_msg} />
         <div class="form-sheet">
             <form on:submit|preventDefault={onSubmit}>
                 <input class="account-input" type="email" placeholder="email" bind:value={email} />
                 <input class="account-input" type="password" placeholder="password" bind:value={password} />
-                <input class="account-input" type="password" placeholder="verify password" bind:value={verifyPassword} />
+                <input class="account-input" type="password" placeholder="verify password" bind:value={verify_pass} />
                 <button type="submit">sign up</button>
             </form>
             <div class="form-info">
@@ -89,12 +89,12 @@
                 <p>Please don't use your banking password. It's just a workout tracker, not financial information bro.</p>
             </div>
         </div>
-    {:else if pageState === "complete"}
+    {:else if page_state === "complete"}
         <div>
             <p>Check out your email at {email} to complete sign up!</p>
             <p>This page can be closed</p>
         </div>
-    {:else if pageState === "exists"}
+    {:else if page_state === "exists"}
         <div>
             <p>A user with email {email} exists. You can <a href="/login" use:link>login</a> or <a href="/account-recovery" use:link>recover your password</a></p>
         </div>
