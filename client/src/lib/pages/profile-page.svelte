@@ -53,19 +53,24 @@
         </div>
 
         {#if current_tab === "routines"}
-            <button on:click={() => push('/create-routine')}>+routine</button>
-            {#each routines as routine}
-                <RoutineCard routine={routine} />
-            {/each}
+            <div>
+                {#each routines as routine}
+                    <RoutineCard routine={routine} />
+                {/each}
+                <button class="create-button" on:click={() => push('/create-routine')}>create routine</button>
+            </div>
         {:else if current_tab === "workouts"}
-            <button on:click={() => push('/create-workout')}>+workout</button>
-            {#each workouts as workout}
-                <button on:click={() => push(`/edit-workout/${workout.id}`)}>{workout.name}</button>
-            {/each}
+            <div>
+                {#each workouts as workout}
+                    <button class="workout-button" on:click={() => push(`/edit-workout/${workout.id}`)}>{workout.name}</button>
+                {/each}
+                <button class="create-button" on:click={() => push('/create-workout')}>create workout</button>
+                
+            </div>
         {:else}
             <div>
-                <p>Hello {$UserStore.email}</p>
-                <button on:click={() => push('/logout')}>logout</button>
+                <p style="text-align: center">{$UserStore.email}</p>
+                <button class="create-button" on:click={() => push('/logout')}>logout</button>
             </div>
         {/if}
 
@@ -108,5 +113,15 @@
         color: var(--orange);
     }
 
-    
+    .create-button {
+        font-family: 'Space Grotesk', sans-serif;
+        width: 100%;
+        color: var(--orange);
+        margin: 0;
+    }
+
+    .workout-button {
+        width: 100%;
+        margin: 0.25em 0;
+    }
 </style>
