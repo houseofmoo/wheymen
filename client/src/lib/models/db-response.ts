@@ -1,4 +1,4 @@
-export class StatusItem<T> {
+export class DbResponse<T> {
     result: T;
     count: number;
     status: string;

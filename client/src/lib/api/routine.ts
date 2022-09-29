@@ -1,5 +1,5 @@
 import type { Routine, RoutineRow, InsertRoutineRow } from "../models/routine";
-import type { StatusItem } from "../models/status-item";
+import type { DbResponse } from "../models/db-response";
 import type { User } from "../models/user";
 import { postReqeust, RequestPath, getAll, get, del } from "./shared";
 
@@ -40,7 +40,7 @@ export async function deleteRoutine(id: string, user: User) {
     return await del(RequestPath.DeleteRoutine, id, user);
 }
 
-async function insertOrUpdateRoutine<T>(url: string, user: User, routine_row: T): Promise<StatusItem<Routine>> {
+async function insertOrUpdateRoutine<T>(url: string, user: User, routine_row: T): Promise<DbResponse<Routine>> {
     if (user === null) {
         return {
             result: null,

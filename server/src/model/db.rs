@@ -1,57 +1,11 @@
-use serde::{Deserialize, Serialize};
-
 use super::shared_types::{RelationshipRef, RoutineRef, UserRef, WorkoutRef};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct DbResponse<T> {
     pub time: String,
     pub status: String,
     pub result: Vec<T>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct RoutineRow {
-    pub id: RoutineRef,
-    pub user_id: UserRef,
-    pub name: String,
-    pub days: Vec<String>,
-    pub last_completed: String,
-    pub note: String,
-    pub workouts: Vec<WorkoutRef>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct InsertRoutineRow {
-    pub user_id: UserRef,
-    pub name: String,
-    pub days: Vec<String>,
-    pub last_completed: String,
-    pub note: String,
-    pub workouts: Vec<WorkoutRef>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct WorkoutRow {
-    pub id: WorkoutRef,
-    pub user_id: UserRef,
-    pub name: String,
-    pub category: String,
-    pub note: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct InsertWorkoutRow {
-    pub user_id: UserRef,
-    pub name: String,
-    pub category: String,
-    pub note: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct UpsertWorkoutRow<T> {
-    pub workout_row: T,
-    pub selected_routine_ids: Vec<String>,
-    pub unselected_routine_ids: Vec<String>,
 }
 
 // What a graph edge (relationship) looks like

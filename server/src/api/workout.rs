@@ -1,6 +1,6 @@
 use crate::{
     actions,
-    model::db::{InsertWorkoutRow, UpsertWorkoutRow, WorkoutRow},
+    model::workout::{InsertWorkoutRow, UpsertWorkoutRow, WorkoutRow},
     resource::{auth::Authorized, client::DbClient},
 };
 use actix_web::{post, web, HttpResponse, Responder};

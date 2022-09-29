@@ -1,6 +1,6 @@
 use crate::{
     actions,
-    model::db::{InsertRoutineRow, RoutineRow},
+    model::routine::{InsertRoutineRow, RoutineRow},
     resource::auth::Authorized,
     resource::client::DbClient,
 };

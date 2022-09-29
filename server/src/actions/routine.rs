@@ -1,6 +1,8 @@
 use super::helper::{get_all_results, get_first_result};
 use crate::model::{
-    data::Routine, db::InsertRoutineRow, db::RoutineRow, error::LocalError, shared_types::DbResult,
+    error::LocalError,
+    routine::{InsertRoutineRow, Routine, RoutineRow},
+    shared_types::DbResult,
 };
 use crate::resource::client::DbClient;
 

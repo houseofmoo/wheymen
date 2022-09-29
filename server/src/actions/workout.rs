@@ -1,9 +1,9 @@
 use super::helper::{get_all_results, get_first_result};
 use crate::{
     model::{
-        db::{InsertWorkoutRow, WorkoutRow},
         error::LocalError,
         shared_types::DbResult,
+        workout::{InsertWorkoutRow, WorkoutRow},
     },
     resource::client::DbClient,
 };

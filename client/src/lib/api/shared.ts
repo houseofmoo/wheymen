@@ -1,5 +1,5 @@
 import type { User } from '../models/user';
-import type { StatusItem } from '../models/status-item'
+import type { DbResponse } from '../models/db-response';
 
 export enum RequestPath {
     InsertRoutine = `/api/routines/insert`,
@@ -27,7 +27,7 @@ export function postReqeust(jwt: string, content: any) {
     };
 }
 
-export async function getAll<T>(url: RequestPath, user: User): Promise<StatusItem<T[]>> {
+export async function getAll<T>(url: RequestPath, user: User): Promise<DbResponse<T[]>> {
     if (user === null) {
         return {
             result: null,
@@ -60,7 +60,7 @@ export async function getAll<T>(url: RequestPath, user: User): Promise<StatusIte
     }
 }
 
-export async function get<T>(url: RequestPath, id: string, user: User): Promise<StatusItem<T>> {
+export async function get<T>(url: RequestPath, id: string, user: User): Promise<DbResponse<T>> {
     if (user === null) {
         return {
             result: null,

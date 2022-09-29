@@ -1,5 +1,7 @@
-use crate::model::db::{Relationship, WorkoutRow};
-use crate::model::{data::Routine, error::LocalError, shared_types::DbResult};
+use crate::model::db::Relationship;
+use crate::model::{
+    error::LocalError, routine::Routine, shared_types::DbResult, workout::WorkoutRow,
+};
 use crate::resource::client::DbClient;
 
 use super::helper::{get_all_results, get_first_result};

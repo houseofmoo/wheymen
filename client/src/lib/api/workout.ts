@@ -1,4 +1,4 @@
-import type { StatusItem } from '../models/status-item';
+import type { DbResponse } from '../models/db-response';
 import type { User } from '../models/user';
 import type { Workout, WorkoutRow, InsertWorkoutRow, UpsertWorkoutRow } from '../models/workout';
 import { postReqeust, RequestPath, getAll, get, del } from "./shared";
@@ -80,7 +80,7 @@ export async function getUnrelatedWorkouts(id: string, user: User) {
     }
 }
 
-async function insertOrUpdateWorkout<T>(url: string, user: User, upsert: T): Promise<StatusItem<Workout>> {
+async function insertOrUpdateWorkout<T>(url: string, user: User, upsert: T): Promise<DbResponse<Workout>> {
     if (user === null) {
         return {
             result: null,
