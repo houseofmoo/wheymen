@@ -4,7 +4,6 @@
     import { getSessionFromLocalToken, getSession } from "./lib/api/auth";
     import { UserStore } from "./lib/stores/user-store";
     import Router from "svelte-spa-router";
-    import AccountPage from "./lib/pages/account-page.svelte";
     import AccountRecoveryPage from "./lib/pages/account-recovery-page.svelte";
     import CreateRoutinePage from "./lib/pages/create-routine-page.svelte";
     import CreateWorkoutPage from "./lib/pages/create-workout-page.svelte";
@@ -18,7 +17,6 @@
 
     const routes = {
         '/': LandingPage,
-        '/account': AccountPage,
         '/account-recovery': AccountRecoveryPage,
         '/create-routine': CreateRoutinePage,
         '/create-workout': CreateWorkoutPage,

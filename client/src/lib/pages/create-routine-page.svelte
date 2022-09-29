@@ -30,7 +30,7 @@
 
 {#if $UserStore}
     <div class="page">
-        <Title subtitle={"edit routine"} />
+        <Title subtitle={"create routine"} />
         <RoutineEditor 
             bind:routine={newRoutine} />
     </div>

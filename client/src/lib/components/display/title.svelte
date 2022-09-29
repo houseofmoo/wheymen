@@ -36,7 +36,7 @@
         margin: auto;
         width: 100%;
         grid-gap: 0.3em;
-        margin-top: -10px;
+        margin-top: -8px;
     }
 
     hr {

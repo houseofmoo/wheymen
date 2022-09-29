@@ -11,6 +11,8 @@
 
     let routines: Routine[] = [];
     let workouts: Workout[] = [];
+    let subtitle = "routines";
+    let current_tab: "routines" | "workouts" | "account" = "routines";
 
     onMount(async () => {
         // if user landed here without being logged in, send them away
@@ -35,24 +37,38 @@
         }
     });
 
- 
+    function changeTab(tab: "routines" | "workouts" | "account") {
+        current_tab = tab;
+        subtitle = tab;
+    }
 </script>
 
 {#if $UserStore}
     <div class="page">
-        <Title subtitle={"profile"} />
-        <div class="action-buttons">
-            <button on:click={() => push('/account')}>account</button>
-            <button on:click={() => push('/create-routine')}>+routine</button>
-            <button on:click={() => push('/create-workout')}>+workout</button>
+        <Title {subtitle} />
+        <div class="action-buttons-grid">
+            <button class={current_tab === "routines" ? "action-button-selected" : "action-button"} on:click={() => changeTab("routines")}>routines</button>
+            <button class={current_tab === "workouts" ? "action-button-selected" : "action-button"} on:click={() => changeTab("workouts")}>workouts</button>
+            <button class={current_tab === "account" ? "action-button-selected" : "action-button"} on:click={() => changeTab("account")}>account</button>
         </div>
-        {#each routines as routine}
-            <RoutineCard routine={routine} />
-        {/each}
 
-        {#each workouts as workout}
-            <button on:click={() => push(`/edit-workout/${workout.id}`)}>{workout.name}</button>
-        {/each}
+        {#if current_tab === "routines"}
+            <button on:click={() => push('/create-routine')}>+routine</button>
+            {#each routines as routine}
+                <RoutineCard routine={routine} />
+            {/each}
+        {:else if current_tab === "workouts"}
+            <button on:click={() => push('/create-workout')}>+workout</button>
+            {#each workouts as workout}
+                <button on:click={() => push(`/edit-workout/${workout.id}`)}>{workout.name}</button>
+            {/each}
+        {:else}
+            <div>
+                <p>Hello {$UserStore.email}</p>
+                <button on:click={() => push('/logout')}>logout</button>
+            </div>
+        {/if}
+
     </div>
 {/if}
 
@@ -63,16 +79,34 @@
         padding: 0;
     }
 
-    .action-buttons {
+    .action-buttons-grid {
         display: grid;
         grid: 1fr / repeat(3, 1fr);
         place-content: center;
         place-items: center;
         grid-gap: 1em;
+        margin-top: -0.5em;
+        margin-bottom: 1em;
     }
 
-    .action-buttons > button {
+    .action-button {
+        font-family: 'Space Grotesk', sans-serif;
+        background-color: var(--darkgrey);
         width: 100%;
+        padding: 0;
         margin: 0;
+        border: 0;
     }
+
+    .action-button-selected {
+        font-family: 'Space Grotesk', sans-serif;
+        background-color: var(--darkgrey);
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        color: var(--orange);
+    }
+
+    
 </style>
