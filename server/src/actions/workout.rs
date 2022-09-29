@@ -26,7 +26,7 @@ pub async fn get_all_workouts_unrelated_to_routine(
     routine_id: &String,
     client: &DbClient,
 ) -> DbResult<Vec<WorkoutRow>> {
-    // get the routine
+    // get the routine, if cannot find this routine just return all workouts
     let routine = match super::routine::get_routine_row(&user_id, &routine_id, &client).await {
         Ok(r) => match r {
             Some(r) => r,
@@ -35,7 +35,7 @@ pub async fn get_all_workouts_unrelated_to_routine(
         Err(e) => return Err(e),
     };
 
-    // get all workouts
+    // get all workouts for the user
     let workouts = match get_all_workouts(&user_id, &client).await {
         Ok(w) => match w {
             Some(w) => w,
@@ -120,6 +120,22 @@ pub async fn delete_workout(
     client: &DbClient,
 ) -> DbResult<WorkoutRow> {
     let query = format!("DELETE {} WHERE user_id=\"{}\";", workout_id, user_id);
-    client.send_query::<WorkoutRow>(query).await?;
-    Ok(None)
+
+    match super::routine::get_all_routine_rows(&user_id, &client).await {
+        Ok(r) => match r {
+            Some(r) => {
+                // remove workout id from routines then delete workout
+                let routine_ids= r.into_iter().map(|r| r.id).collect();
+                super::routine::remove_workout_from_many_routines(&routine_ids, &workout_id, &client).await?;
+                client.send_query::<WorkoutRow>(query).await?;
+                Ok(None)
+            },
+            None => {
+                // just delete workout
+                client.send_query::<WorkoutRow>(query).await?;
+                Ok(None)
+            },
+        },
+        Err(e) => Err(e),
+    }
 }

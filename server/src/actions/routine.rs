@@ -17,6 +17,19 @@ pub async fn get_all_routines(user_id: &String, client: &DbClient) -> DbResult<V
     }
 }
 
+pub async fn get_all_routine_rows(user_id: &String, client: &DbClient) -> DbResult<Vec<RoutineRow>> {
+    let query = format!(
+        "SELECT * FROM routines WHERE user_id=\"{}\";",
+        user_id
+    );
+    let result = client.send_query::<RoutineRow>(query).await?;
+
+    match get_all_results::<RoutineRow>(result) {
+        Some(r) => Ok(Some(r)),
+        None => Ok(None),
+    }
+}
+
 pub async fn get_routine(
     user_id: &String,
     routine_id: &String,
