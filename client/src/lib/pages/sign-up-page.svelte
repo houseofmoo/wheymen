@@ -75,16 +75,16 @@
     <Title subtitle={"sign up"} />
     {#if pageState === "signup"}
         <ErrorMessage errorMsg={statusMessage} />
-        <div class="signup">
+        <div class="form-sheet">
             <form on:submit|preventDefault={onSubmit}>
-                <input type="email" placeholder="email" bind:value={email} />
-                <input type="password" placeholder="password" bind:value={password} />
-                <input type="password" placeholder="verify password" bind:value={verifyPassword} />
+                <input class="account-input" type="email" placeholder="email" bind:value={email} />
+                <input class="account-input" type="password" placeholder="password" bind:value={password} />
+                <input class="account-input" type="password" placeholder="verify password" bind:value={verifyPassword} />
                 <button type="submit">sign up</button>
             </form>
-            <div class="signup-info">
+            <div class="form-info">
                 <p>Already have an account? <a href="/login" use:link>Login</a></p>
-                <p>Forgot your password? <a href="/account-recovery" use:link>Account recovery</a> to reset your password</p>
+                <p>Forgot your password? <a href="/account-recovery" use:link>Account recovery</a></p>
                 <p>We don't actually want your email, we just need it to identify your account. The only emails you'll get from <a href="/" use:link>wheymen.net</a> are an email address confirmation and password recovery. Cause you know, passwords are hard.</p>
                 <p>Please don't use your banking password. It's just a workout tracker, not financial information bro.</p>
             </div>
@@ -112,23 +112,19 @@
         padding: 0;
     }
 
-    .signup {
+    .form-sheet {
         display: grid;
         grid: 1fr / 1fr 1fr;
         margin: auto;
         padding: 0;
     }
 
-    .signup-info {
+    .form-info {
         display: grid;
         grid: 1fr / auto;
         margin: auto;
         padding: 1rem;
         text-align: left;
-    }
-
-    input {
-        padding: 0.25rem;
     }
 
     form {
@@ -139,38 +135,8 @@
         padding: 0;
     }
 
-    input {
-        border: none;
-        border-bottom: 1px solid var(--text-color);
-        background: transparent;
-        color: var(--text-color);
-        font-weight: 900;
-        font-size: var(--font-size);
-        margin: 1rem;
-        padding: 0.25rem;
-    }
-
-    input:focus {
-        outline: none;
-    }
-
-    button {
-        font-size: var(--font-size);
-        background-color: var(--lightgrey);
-        color: var(--text-color);
-        margin: 0.5rem;
-        padding: 0.75rem;
-        border: solid 1px black;
-        cursor: pointer;
-        transition: border 0.25s;
-    }
-
-    button:hover {
-        border: solid 1px white;
-    }
-
     @media (max-width: 600px) {
-        .signup {
+        .form-sheet {
             grid: 1fr / auto;
         }
     }

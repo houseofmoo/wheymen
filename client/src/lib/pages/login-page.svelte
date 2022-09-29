@@ -39,8 +39,8 @@
     <ErrorMessage errorMsg={statusMessage} />
     <div class="form-sheet">
         <form on:submit|preventDefault={onSubmit}>
-            <input type="email" placeholder="email" bind:value={email} />
-            <input type="password" placeholder="password" bind:value={password} />
+            <input class="account-input" type="email" placeholder="email" bind:value={email} />
+            <input class="account-input" type="password" placeholder="password" bind:value={password} />
             <button type="submit">login</button>
         </form>
         <div class="form-info">
@@ -76,45 +76,12 @@
         text-align: left;
     }
 
-    input {
-        padding: 0.25rem;
-    }
-
     form {
         display: grid;
         grid: 1fr / auto;
         margin: auto;
         width: 250px;
         padding: 0;
-    }
-
-    input {
-        border: none;
-        border-bottom: 1px solid var(--text-color);
-        background: transparent;
-        color: var(--text-color);
-        font-weight: 900;
-        font-size: var(--font-size);
-        margin: 1rem;
-    }
-
-    input:focus {
-        outline: none;
-    }
-
-    button {
-        font-size: var(--font-size);
-        background-color: var(--lightgrey);
-        color: var(--text-color);
-        margin: 0.5rem;
-        padding: 0.75rem;
-        border: solid 1px black;
-        cursor: pointer;
-        transition: border 0.25s;
-    }
-
-    button:hover {
-        border: solid 1px white;
     }
 
     @media (max-width: 600px) {

@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let title = "Wheymen"
+    export let title = "wheymen"
     export let subtitle: string = "net";
 </script>
 

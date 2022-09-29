@@ -37,6 +37,7 @@ a:hover {
 }
 
 button {
+  font-family: 'Space Grotesk', sans-serif;
   font-size: var(--font-size);
   background-color: var(--lightgrey);
   color: var(--text-color);
@@ -51,25 +52,28 @@ button:hover {
   border: solid 1px var(--orange);
 }
 
-.button-fit {
-  font-size: var(--font-size);
-  background-color: var(--lightgrey);
-  color: var(--text-color);
-  margin: 0.5rem;
-  padding: 0.75rem;
-  border: solid 1px black;
-  cursor: pointer;
-  transition: border 0.25s;
-  width:fit-content;
-}
-
-.button-fit:hover {
-  border: solid 1px white;
-}
-
 input, textarea {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 14px;
+}
+
+input:focus {
+  outline: none;
+}
+
+.account-input {
+  border: none;
+  border-bottom: 1px solid var(--text-color);
+  background: transparent;
+  color: var(--text-color);
+  font-weight: 400;
+  font-size: var(--font-size);
+  margin: 1rem;
+  padding: 0.25rem;
+}
+
+input:focus {
+  outline: none;
 }
 
 .small-text {
