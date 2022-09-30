@@ -1,6 +1,6 @@
 <script lang="ts">
     import { push } from "svelte-spa-router";
-    import type { Routine } from "../models/routine";
+    import type { Routine } from "../../models/routine";
 
     export let routine: Routine = null;
 
@@ -13,12 +13,11 @@
 {#if routine}
     <div class="card">
         <p class="routine-name large-text">{routine.name}</p>
+        <p class="small-text center-text">{routine.days.join(",")}</p>
         <div class="routine-info">
             <div>
                 <p class="small-text">last completed:</p>
                 <p class="small-text">{new Date(routine.last_completed).toLocaleDateString()}</p>
-                <br />
-                <p class="small-text">{routine.days}</p>
             </div>
             <div>
                 {#each routine.workouts as workout}
@@ -26,7 +25,7 @@
                 {/each}
             </div>
         </div>
-        <button on:click={editRoutine}>Edit</button>
+        <button on:click={editRoutine}>edit</button>
     </div>
 {/if}
 

@@ -6,8 +6,9 @@
     import { getAllRoutines } from "../api/routine";
     import type { Routine } from "../models/routine";
     import type { Workout } from "../models/workout";
-    import RoutineCard from "../components/routine-card.svelte";
     import Title from "../components/display/title.svelte";
+    import ProfileRoutineCard from "../components/display/profile-routine-card.svelte";
+    import ProfileWorkoutButton from "../components/display/profile-workout-button.svelte";
 
     let routines: Routine[] = [];
     let workouts: Workout[] = [];
@@ -55,17 +56,16 @@
         {#if current_tab === "routines"}
             <div>
                 {#each routines as routine}
-                    <RoutineCard routine={routine} />
+                    <ProfileRoutineCard {routine} />
                 {/each}
                 <button class="create-button" on:click={() => push('/create-routine')}>create routine</button>
             </div>
         {:else if current_tab === "workouts"}
             <div>
                 {#each workouts as workout}
-                    <button class="workout-button" on:click={() => push(`/edit-workout/${workout.id}`)}>{workout.name}</button>
+                    <ProfileWorkoutButton {workout} on:click={() => push(`/edit-workout/${workout.id}`)} />
                 {/each}
                 <button class="create-button" on:click={() => push('/create-workout')}>create workout</button>
-                
             </div>
         {:else}
             <div>
@@ -114,14 +114,7 @@
     }
 
     .create-button {
-        font-family: 'Space Grotesk', sans-serif;
         width: 100%;
-        color: var(--orange);
         margin: 0;
-    }
-
-    .workout-button {
-        width: 100%;
-        margin: 0.25em 0;
     }
 </style>

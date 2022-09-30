@@ -108,7 +108,7 @@
             </div>
             <WorkoutSelectorModal bind:workouts={unselected_workouts} on:workout-selected={addWorkout} />
             {#each routine.workouts as workout, i (workout.id)}
-                <div class="workouts" transition:fade="{{duration: 150}}" animate:flip="{{duration: 200}}">
+                <div class="workouts" transition:fade|local="{{duration: 150}}" animate:flip|local="{{duration: 200}}">
                     <p>{workout.name}</p>
                     <IconButton icon={DownArrow} on:click={() => shift(i, i+1)} />
                     <IconButton icon={UpArrow} on:click={() => shift(i, i-1)} />

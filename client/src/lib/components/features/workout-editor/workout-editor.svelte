@@ -101,7 +101,7 @@
             </div>
             <RoutineSelectorModal bind:routines={unselected_routines} on:routine-selected={addRoutine} />
             {#each selected_routines as routine (routine.id)}
-            <div class="routines" transition:fade="{{duration: 150}}" animate:flip="{{duration: 200}}">
+            <div class="routines" transition:fade|local="{{duration: 150}}" animate:flip|local="{{duration: 200}}">
                 <p>{routine.name}</p>
                 <IconButton icon={Remove} on:click={() => removeRoutine(routine)} />
             </div>

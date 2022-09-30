@@ -40,7 +40,7 @@ button {
   font-family: 'Space Grotesk', sans-serif;
   font-size: var(--font-size);
   background-color: var(--lightgrey);
-  color: var(--text-color);
+  color: var(--orange);
   margin: 0.5rem;
   padding: 0.75rem;
   border: solid 1px black;
