@@ -29,7 +29,7 @@
             // TODO: maybe no routines, maybe error occured
         }
 
-        // TEST CODE TO BE REMOVED or moved to another tab on the profile page?
+        // get user workouts
         const workout_res = await getAllWorkouts($UserStore);
         if (workout_res.count > 0) {
             workouts = workout_res.result;

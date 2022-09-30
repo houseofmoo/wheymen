@@ -1,6 +1,7 @@
 <script lang="ts">
     import { push } from "svelte-spa-router";
     import type { Routine } from "../../models/routine";
+    import Kebabmenu from "../display/kebab-menu.svelte";
 
     export let routine: Routine = null;
 
@@ -12,7 +13,10 @@
 
 {#if routine}
     <div class="card">
-        <p class="routine-name large-text">{routine.name}</p>
+        <div class="title">
+            <p class="routine-name large-text">{routine.name}</p>
+            <Kebabmenu />
+        </div>
         <p class="small-text center-text">{routine.days.join(",")}</p>
         <div class="routine-info">
             <div>
@@ -35,6 +39,11 @@
         border: 1px solid black;
         padding: 0.5em 1em;
         margin: 1em 0;
+    }
+
+    .title {
+        display: grid;
+        grid: 1fr / 1fr auto;
     }
 
     .routine-name {
