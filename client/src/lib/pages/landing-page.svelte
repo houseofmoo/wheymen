@@ -15,16 +15,11 @@
 </div>
 
 <style>
-    .page {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
 
     .text {
         display: grid;
         place-content: center;
+        padding: 1rem;
         text-align: left;
-        margin: 1rem;
     }
 </style>

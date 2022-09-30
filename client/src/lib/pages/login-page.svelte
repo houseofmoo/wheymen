@@ -34,7 +34,7 @@
     }
 </script>
 
-<div class="page">
+<div>
     <Title subtitle={"login"} />
     <ErrorMessage errorMsg={statusMessage} />
     <div class="form-sheet">
@@ -44,43 +44,32 @@
             <button type="submit">login</button>
         </form>
         <div class="form-info">
-            <p>Don't have an account yet? <a href="/signup" use:link>Sign up</a> for your free account now</p>
-            <p>Forgot your password? <a href="/account-recovery" use:link>Account recovery</a> to reset your password</p>
+            <p>Don't have an account yet? <a href="/signup" use:link>Sign up</a> for your free account now.</p>
+            <p>Forgot your password? <a href="/account-recovery" use:link>Account recovery</a> to reset your password.</p>
         </div>
     </div>
-    <div class="nav">
+    <div class="center-text">
         <a href="/" use:link>home</a>
     </div>
 </div>
 
 <style>
-   .page {
-        text-align: center;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
     .form-sheet {
         display: grid;
-        grid: 1fr / 1fr 1fr;
-        place-items: start center;
-    }
-
-    .form-info {
-        padding: 1rem;
-        text-align: left;
+        grid: 1fr / auto;
+        place-items: center;
+        place-content: center;
     }
 
     form {
         display: grid;
         grid: 1fr / auto;
-        width: 100%;
+        max-width: 70%;
+        min-width: 20em;
     }
 
-    @media (max-width: 600px) {
-        .form-sheet {
-            grid: 1fr / auto;
-        }
+    .form-info {
+        padding: 1rem;
+        text-align: left;
     }
 </style>

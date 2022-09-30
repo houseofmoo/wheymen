@@ -29,7 +29,7 @@
         status_msg = null;
 
         if (email.length <= 0) {
-            status_msg = "Please enter a valud email";
+            status_msg = "Please enter your email";
             return;
         }
 
@@ -71,7 +71,7 @@
     }
 </script>
 
-<div class="page">
+<div>
     <Title subtitle={"sign up"} />
     {#if page_state === "signup"}
         <ErrorMessage errorMsg={status_msg} />
@@ -83,8 +83,7 @@
                 <button type="submit">sign up</button>
             </form>
             <div class="form-info">
-                <p>Already have an account? <a href="/login" use:link>Login</a></p>
-                <p>Forgot your password? <a href="/account-recovery" use:link>Account recovery</a></p>
+                <p>Already have an account? <a href="/login" use:link>Login</a>. Forgot your password? <a href="/account-recovery" use:link>Account recovery</a></p>
                 <p>We don't actually want your email, we just need it to identify your account. The only emails you'll get from <a href="/" use:link>wheymen.net</a> are an email address confirmation and password recovery. Cause you know, passwords are hard.</p>
                 <p>Please don't use your banking password. It's just a workout tracker, not financial information bro.</p>
             </div>
@@ -92,46 +91,35 @@
     {:else if page_state === "complete"}
         <div>
             <p>Check out your email at {email} to complete sign up!</p>
-            <p>This page can be closed</p>
+            <p>This page can be closed.</p>
         </div>
     {:else if page_state === "exists"}
         <div>
-            <p>A user with email {email} exists. You can <a href="/login" use:link>login</a> or <a href="/account-recovery" use:link>recover your password</a></p>
+            <p>A user with email {email} exists. You can <a href="/login" use:link>login</a> or <a href="/account-recovery" use:link>recover your password</a>.</p>
         </div>
     {/if}
-    <div class="nav">
+    <div class="center-text">
         <a href="/" use:link>home</a>
     </div>
 </div>
 
 <style>
-    .page {
-        text-align: center;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
     .form-sheet {
         display: grid;
-        grid: 1fr / 1fr 1fr;
-        place-items: start center;
-    }
-
-    .form-info {
-        padding: 1rem;
-        text-align: left;
+        grid: 1fr / auto;
+        place-items: center;
+        place-content: center;
     }
 
     form {
         display: grid;
         grid: 1fr / auto;
-        width: 100%;
+        max-width: 70%;
+        min-width: 20em;
     }
 
-    @media (max-width: 600px) {
-        .form-sheet {
-            grid: 1fr / auto;
-        }
+    .form-info {
+        padding: 1rem;
+        text-align: left;
     }
 </style>
