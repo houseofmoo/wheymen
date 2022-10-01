@@ -51,7 +51,6 @@
 
 <style>
     .content {
-        display: flex;
         margin: auto;
         padding-top: 1em;
         max-width: 30em;

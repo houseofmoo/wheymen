@@ -88,19 +88,18 @@
                 <p>Please don't use your banking password. It's just a workout tracker, not financial information bro.</p>
             </div>
         </div>
+        <div class="center-text">
+            <a href="/" use:link>home</a>
+        </div>
     {:else if page_state === "complete"}
-        <div>
-            <p>Check out your email at {email} to complete sign up!</p>
-            <p>This page can be closed.</p>
+        <div class="center-text">
+            <p>Check out your email at {email} to complete sign up</p>
         </div>
     {:else if page_state === "exists"}
-        <div>
+        <div class="center-text">
             <p>A user with email {email} exists. You can <a href="/login" use:link>login</a> or <a href="/account-recovery" use:link>recover your password</a>.</p>
         </div>
     {/if}
-    <div class="center-text">
-        <a href="/" use:link>home</a>
-    </div>
 </div>
 
 <style>

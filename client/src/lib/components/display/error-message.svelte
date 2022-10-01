@@ -14,11 +14,9 @@
 
     .visible {
         opacity: 1;
-        transition: all 1s;
     }
 
     .hidden {
         opacity: 0;
-        transition: all 1s;
     }
 </style>
