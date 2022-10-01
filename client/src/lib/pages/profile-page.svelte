@@ -12,8 +12,8 @@
 
     let routines: Routine[] = [];
     let workouts: Workout[] = [];
-    let subtitle = "routines";
     let current_tab: "routines" | "workouts" | "account" = "routines";
+    let routine_modal_visible = false;
 
     onMount(async () => {
         // if user landed here without being logged in, send them away
@@ -40,13 +40,12 @@
 
     function changeTab(tab: "routines" | "workouts" | "account") {
         current_tab = tab;
-        subtitle = tab;
     }
 </script>
 
 {#if $UserStore}
     <div class="page">
-        <Title {subtitle} />
+        <Title subtitle={current_tab} />
         <div class="action-buttons-grid">
             <button class={current_tab === "routines" ? "action-button-selected" : "action-button"} on:click={() => changeTab("routines")}>routines</button>
             <button class={current_tab === "workouts" ? "action-button-selected" : "action-button"} on:click={() => changeTab("workouts")}>workouts</button>
@@ -54,9 +53,9 @@
         </div>
 
         {#if current_tab === "routines"}
-            <div>
+            <div >
                 {#each routines as routine}
-                    <RoutineCard {routine} />
+                    <RoutineCard {routine} on:organize-routines={() => routine_modal_visible = true}/>
                 {/each}
                 <button class="create-button" on:click={() => push('/create-routine')}>create routine</button>
             </div>
@@ -73,7 +72,6 @@
                 <button class="create-button" on:click={() => push('/logout')}>logout</button>
             </div>
         {/if}
-
     </div>
 {/if}
 

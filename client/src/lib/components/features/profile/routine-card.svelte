@@ -15,8 +15,7 @@
             <Kebabmenu>
                 <a href="/test">start</a>
                 <a href={`/edit-routine/${routine.id}`} use:link>edit</a>
-                <a href="/test">history</a>
-                <a href="/test">organize</a>
+                <a href={`/history-routine/${routine.id}`}>history</a>
             </Kebabmenu>
         </div>
         <p class="small-text center-text">{routine.days.join(",")}</p>
