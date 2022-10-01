@@ -46,7 +46,7 @@
             const workoutRes = await insertWorkout($UserStore, workout, selected_ids, unseleced_ids);
             if (workoutRes.result !== null) {
                 workout = workoutRes.result;
-                push('/profile');
+                push('/profile/workouts');
             } else {
                 // TODO: handle insert failed
                 console.log("error inserting workout");
@@ -55,7 +55,7 @@
             const workoutRes = await updateWorkout($UserStore, workout, selected_ids, unseleced_ids);
             if (workoutRes.result !== null) {
                 workout = workoutRes.result;
-                push('/profile');
+                push('/profile/workouts');
             } else {
                 // TODO: handle update failed
                 console.log("error updating workout");
@@ -83,7 +83,7 @@
             <textarea class="styled-textarea" placeholder="Workout notes" bind:value={workout.note} />
             <div class="action-buttons">
                 <button class="wide-100"  on:click={saveWorkout}>save</button>
-                <button class="wide-100"  on:click={() => push("/profile")}>cancel</button>
+                <button class="wide-100"  on:click={() => push("/profile/workouts")}>cancel</button>
             </div>
             <RoutineSelectorModal bind:routines={unselected_routines} on:routine-selected={addRoutine} />
             {#each selected_routines as routine (routine.id)}

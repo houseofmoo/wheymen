@@ -26,7 +26,7 @@
         if ($UserStore !== null) {
             email = "";
             password = "";
-            push("/profile");
+            push("/profile/routines");
         } else {
             password = "";
             statusMessage = "email or password are incorrect";

@@ -26,7 +26,7 @@
         '/gains/:id': GainsPage,
         '/login': LoginPage,
         '/logout': LogoutPage,
-        '/profile': ProfilePage,
+        '/profile/:tab': ProfilePage,
         '/signup': SignupPage,
         '*': LandingPage
     }
@@ -38,7 +38,7 @@
         }
 
         if ($UserStore !== null) {
-            push('/profile');
+            push('/profile/routines');
         }
     });
 

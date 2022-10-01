@@ -10,9 +10,12 @@
     import RoutineCard from "../components/features/profile/routine-card.svelte";
     import WorkoutCard from "../components/features/profile/workout-card.svelte";
 
+    export let params = { tab: null };
     let routines: Routine[] = [];
     let workouts: Workout[] = [];
-    let current_tab: "routines" | "workouts" | "account" = "routines";
+    
+    type tabs = "routines" | "workouts" | "account";
+    let current_tab: tabs = params && params.tab ? params.tab : "routines";
 
     onMount(async () => {
         // if user landed here without being logged in, send them away

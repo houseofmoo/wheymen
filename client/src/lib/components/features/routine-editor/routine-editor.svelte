@@ -39,7 +39,7 @@
             const routineRes = await insertRoutine($UserStore, routine);
             if (routineRes.result !== null) {
                 routine = routineRes.result;
-                push("/profile");
+                push("/profile/routines");
             } else {
                 // TODO: handle insert failed
                 console.log("error inserting routine");
@@ -48,7 +48,7 @@
             const routineRes = await updateRoutine($UserStore, routine);
             if (routineRes.result !== null) {
                 routine = routineRes.result;
-                push("/profile");
+                push("/profile/routines");
             } else {
                 // TODO: handle update failed
                 console.log("error inserting routine");
@@ -90,7 +90,7 @@
             <textarea class="styled-textarea" placeholder="Routine notes" bind:value={routine.note} />
             <div class="action-buttons">
                 <button class="wide-100" on:click={saveRoutine}>save</button>
-                <button class="wide-100" on:click={() => push("/profile")}>cancel</button>
+                <button class="wide-100" on:click={() => push("/profile/routines")}>cancel</button>
             </div>
             <WorkoutSelectorModal bind:workouts={unselected_workouts} on:workout-selected={addWorkout} />
             {#each routine.workouts as workout, i (workout.id)}
