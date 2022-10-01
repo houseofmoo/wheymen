@@ -65,7 +65,6 @@
 		display: grid;
 		grid: auto auto / auto;
         width: 100%;
-        margin: 1em 0;
 	}
 
 	.days-upper {

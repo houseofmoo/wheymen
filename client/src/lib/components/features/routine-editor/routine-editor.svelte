@@ -85,12 +85,12 @@
 {#if routine}
     <div class="page">
         <div class="content">
-            <input placeholder="Routine name" bind:value={routine.name} />
+            <input class="styled-input wide-95 large-text" placeholder="Routine name" bind:value={routine.name} />
             <DaySelector bind:days={routine.days} />
-            <textarea placeholder="Routine notes" bind:value={routine.note} />
+            <textarea class="styled-textarea" placeholder="Routine notes" bind:value={routine.note} />
             <div class="action-buttons">
-                <button on:click={saveRoutine}>save</button>
-                <button on:click={() => push("/profile")}>cancel</button>
+                <button class="wide-100" on:click={saveRoutine}>save</button>
+                <button class="wide-100" on:click={() => push("/profile")}>cancel</button>
             </div>
             <WorkoutSelectorModal bind:workouts={unselected_workouts} on:workout-selected={addWorkout} />
             {#each routine.workouts as workout, i (workout.id)}
@@ -108,7 +108,7 @@
 <style>
     .page {
         width: 100%;
-        margin: 0;
+        margin: 2em 0 0 0;
         padding: 0;
     }
 
@@ -122,34 +122,12 @@
         place-content: center;
     }
 
-    input {
-        padding: 0.25em;
-        width: fit-content;
-        width: 100%;
-        margin: 0;
-        border: 1px solid black;
-    }
-
-    textarea {
-        box-sizing: border-box;
-        border: 1px solid black;
-        padding: 0.25em;
-        resize: none;
-        margin: 0;
-        height: 5em;
-        width: 100%;
-    }
-
     .action-buttons {
         display: grid;
         grid: auto / 1fr 1fr;
         grid-gap: 1em;
         place-items: center;
         place-content: center;
-        width: 100%;
-    }
-
-    .action-buttons > button {
         width: 100%;
     }
 
@@ -166,7 +144,7 @@
 
     .workouts > p {
         width: 100%;
-        font-size: var(--small-font-size);
+        font-size: var(--largest-font-size);
         margin-left: 2em;
     }
 </style>

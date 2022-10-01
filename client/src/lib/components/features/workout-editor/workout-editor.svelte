@@ -78,12 +78,12 @@
 {#if workout}
     <div class="page">
         <div class="content">
-            <input placeholder="Workout name" bind:value={workout.name} />
+            <input class="styled-input wide-95 large-text" placeholder="Workout name" bind:value={workout.name} />
             <CategorySelector bind:selected={workout.category} />
-            <textarea placeholder="Workout notes" bind:value={workout.note} />
+            <textarea class="styled-textarea" placeholder="Workout notes" bind:value={workout.note} />
             <div class="action-buttons">
-                <button on:click={saveWorkout}>save</button>
-                <button on:click={() => push("/profile")}>cancel</button>
+                <button class="wide-100"  on:click={saveWorkout}>save</button>
+                <button class="wide-100"  on:click={() => push("/profile")}>cancel</button>
             </div>
             <RoutineSelectorModal bind:routines={unselected_routines} on:routine-selected={addRoutine} />
             {#each selected_routines as routine (routine.id)}
@@ -99,7 +99,7 @@
 <style>
     .page {
         width: 100%;
-        margin: 0;
+        margin: 2em 0 0 0;
         padding: 0;
     }
 
@@ -113,34 +113,12 @@
         place-content: center;
     }
 
-    input {
-        padding: 0.25em;
-        width: fit-content;
-        width: 100%;
-        margin: 0;
-        border: 1px solid black;
-    }
-
-    textarea {
-        box-sizing: border-box;
-        border: 1px solid black;
-        padding: 0.25em;
-        resize: none;
-        margin: 0;
-        height: 5em;
-        width: 100%;
-    }
-
     .action-buttons {
         display: grid;
         grid: auto / 1fr 1fr;
         grid-gap: 1em;
         place-items: center;
         place-content: center;
-        width: 100%;
-    }
-
-    .action-buttons > button {
         width: 100%;
     }
 
@@ -157,7 +135,7 @@
 
     .routines > p {
         width: 100%;
-        font-size: var(--small-font-size);
+        font-size: var(--largest-font-size);
         margin-left: 2em;
     }
 </style>

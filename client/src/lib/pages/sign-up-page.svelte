@@ -77,9 +77,9 @@
         <ErrorMessage errorMsg={status_msg} />
         <div class="form-sheet">
             <form on:submit|preventDefault={onSubmit}>
-                <input class="account-input" type="email" placeholder="email" bind:value={email} />
-                <input class="account-input" type="password" placeholder="password" bind:value={password} />
-                <input class="account-input" type="password" placeholder="verify password" bind:value={verify_pass} />
+                <input class="styled-input" type="email" placeholder="email" bind:value={email} />
+                <input class="styled-input" type="password" placeholder="password" bind:value={password} />
+                <input class="styled-input" type="password" placeholder="verify password" bind:value={verify_pass} />
                 <button type="submit">sign up</button>
             </form>
             <div class="form-info">
@@ -114,8 +114,8 @@
     form {
         display: grid;
         grid: 1fr / auto;
-        max-width: 70%;
-        min-width: 20em;
+        min-width: 15em;
+        grid-gap: 2em;
     }
 
     .form-info {

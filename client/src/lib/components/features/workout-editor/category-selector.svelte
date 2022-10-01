@@ -21,5 +21,9 @@
 
    select {
         padding: 0.25em;
+        background-color: var(--primary-color-400);
+        color: var(--text-color);
+        border: 1px solid black;
+        font-size: var(--font-size);
    }
 </style>

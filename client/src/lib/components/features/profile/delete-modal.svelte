@@ -30,10 +30,9 @@
 </script>
 
 <dialog class="modal" bind:this={modal}>
-    <button class="close-button" on:click={close}>x</button>
     <div class="routine-selector">
         <p>Type <span>{item.name}</span> to confirm delete request</p>
-        <input class="account-input" bind:value={name} placeholder="{item.name}" />
+        <input class="styled-input" bind:value={name} placeholder="{item.name}" />
         <div class="action-buttons">
             <button on:click={close}>cancel</button>
             {#if name === item.name}
@@ -59,6 +58,7 @@
     .routine-selector {
         display: grid;
         grid: 1fr / 1fr;
+        grid-gap: 1em;
         place-items: center;
         place-content: center;
         width: 100%;
@@ -66,17 +66,6 @@
         overflow-y: scroll;
         scrollbar-width: none;
         z-index: 2;
-    }
-
-    .close-button {
-        display: flex;
-        margin-left: auto;
-        margin-top: 0;
-        padding-top: 0;
-        border: none;
-        color: var(--secondary-color);
-        background-color: var(--primary-color-800);
-        text-align: right;
     }
 
     p {

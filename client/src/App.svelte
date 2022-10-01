@@ -53,7 +53,7 @@
     .content {
         display: flex;
         margin: auto;
-        padding: 1em;
+        padding-top: 1em;
         max-width: 30em;
         min-width: 19em;
     }
