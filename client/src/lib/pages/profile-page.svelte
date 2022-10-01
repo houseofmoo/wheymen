@@ -7,8 +7,8 @@
     import type { Routine } from "../models/routine";
     import type { Workout } from "../models/workout";
     import Title from "../components/display/title.svelte";
-    import ProfileRoutineCard from "../components/display/profile-routine-card.svelte";
-    import ProfileWorkoutButton from "../components/display/profile-workout-button.svelte";
+    import RoutineCard from "../components/features/profile/routine-card.svelte";
+    import WorkoutCard from "../components/features/profile/workout-card.svelte";
 
     let routines: Routine[] = [];
     let workouts: Workout[] = [];
@@ -56,14 +56,14 @@
         {#if current_tab === "routines"}
             <div>
                 {#each routines as routine}
-                    <ProfileRoutineCard {routine} />
+                    <RoutineCard {routine} />
                 {/each}
                 <button class="create-button" on:click={() => push('/create-routine')}>create routine</button>
             </div>
         {:else if current_tab === "workouts"}
             <div>
                 {#each workouts as workout}
-                    <ProfileWorkoutButton {workout} on:click={() => push(`/edit-workout/${workout.id}`)} />
+                    <WorkoutCard {workout} />
                 {/each}
                 <button class="create-button" on:click={() => push('/create-workout')}>create workout</button>
             </div>

@@ -1,24 +1,38 @@
 <script lang="ts">
+    import { onDestroy, onMount } from "svelte";
+    import { fade } from "svelte/transition";
+    import KebabMenuIcon from "../display/icons/kebab-menu.svelte";
 
     let visible = false;
+    let container;
 
+    onMount(() => {
+        document.addEventListener('click', hideOnClick);
+    });
+
+    onDestroy(() => {
+        document.removeEventListener('click', hideOnClick);
+    });
+
+    function hideOnClick(e: Event) {
+        if (!container.contains(e.target) && visible) {
+            visible = false;
+        } 
+    }
 </script>
 
-<div class="container">
-    <button class="kebab-button" on:click={() => visible = !visible}>...</button>
-
-    <div class={visible ? "menu visible" : "menu hidden"}>
-        <p>item 1</p>
-        <p>item 1</p>
-        <p>item 1</p>
-        <p>item 1</p>
-    </div>
+<div class="container"  bind:this={container}>
+    <button class="kebab-button" on:click={() => visible = !visible}><KebabMenuIcon /></button>
+    {#if visible}
+        <div class="menu" transition:fade|local="{{duration: 100}}">
+            <slot />
+        </div>
+    {/if}
 </div>
 
 <style>
     .container {
         position: relative;
-        text-align: right;
         width: fit-content;
         margin-left: auto;
     }
@@ -31,21 +45,16 @@
     }
 
     .menu {
+        font-family: 'Space Grotesk', sans-serif;
         position: absolute;
-        left: 10em;
-        border: 1px solid black;
         background-color: var(--darkgrey);
+        right: 1em;
+        border: 1px solid black;
         padding: 1em;
-        min-width: 10em;
-    }
-
-
-    .hidden {
-        display: none;
-    
-    }
-
-    .visible {
-        display: block;
+        display: grid;
+        grid: 1fr / auto;
+        grid-gap: 0.5em;
+        font-size: 1.2em;
+        min-width: 5em;
     }
 </style>

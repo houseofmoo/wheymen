@@ -45,7 +45,7 @@ export async function deleteWorkout(id: string, user: User) {
     return await del(RequestPath.DeleteWorkout, id, user);
 }
 
-export async function getUnrelatedWorkouts(id: string, user: User) {
+export async function getUnrelatedWorkouts(routine_id: string, user: User) {
     if (user === null) {
         return {
             result: null,
@@ -55,7 +55,7 @@ export async function getUnrelatedWorkouts(id: string, user: User) {
     }
     
     const { token } = user;
-    const completeUrl = `${RequestPath.GetUnrelatedWorkouts}/${id}`;
+    const completeUrl = `${RequestPath.GetUnrelatedWorkouts}/${routine_id}`;
     const resp = await fetch(completeUrl, postReqeust(token, ""));
 
     if (resp.status === 200) {

@@ -1,24 +1,26 @@
 <script lang="ts">
-    import { push } from "svelte-spa-router";
-    import type { Routine } from "../../models/routine";
-    import Kebabmenu from "../display/kebab-menu.svelte";
+    import { link } from "svelte-spa-router";
+    import type { Routine } from "../../../models/routine";
+    import Kebabmenu from "../../display/kebab-menu.svelte";
+    import Card from "../../display/card.svelte";
 
     export let routine: Routine = null;
-
-    function editRoutine() {
-        push(`/edit-routine/${routine.id}`);
-        return;
-    }
 </script>
 
 {#if routine}
-    <div class="card">
+    <Card>
         <div class="title">
-            <p class="routine-name large-text">{routine.name}</p>
-            <Kebabmenu />
+            <div />
+            <p class="name large-text">{routine.name}</p>
+            <Kebabmenu>
+                <a href="/test">start</a>
+                <a href={`/edit-routine/${routine.id}`} use:link>edit</a>
+                <a href="/test">history</a>
+                <a href="/test">organize</a>
+            </Kebabmenu>
         </div>
         <p class="small-text center-text">{routine.days.join(",")}</p>
-        <div class="routine-info">
+        <div class="info">
             <div>
                 <p class="small-text">last completed:</p>
                 <p class="small-text">{new Date(routine.last_completed).toLocaleDateString()}</p>
@@ -29,29 +31,22 @@
                 {/each}
             </div>
         </div>
-        <button on:click={editRoutine}>edit</button>
-    </div>
+    </Card>
 {/if}
 
 <style>
-    .card {
-        background-color: var(--lightgrey);
-        border: 1px solid black;
-        padding: 0.5em 1em;
-        margin: 1em 0;
-    }
-
     .title {
         display: grid;
-        grid: 1fr / 1fr auto;
+        grid: 1fr / 1fr auto 1fr;
+        place-items: center;
     }
 
-    .routine-name {
+    .name {
         margin: 0.5em;
         text-align: center;
     }
 
-    .routine-info {
+    .info {
         display: grid;
         grid: 1fr / 1fr 1fr;
     }
