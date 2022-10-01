@@ -91,9 +91,9 @@
 {#if workout}
     <div class="page">
         <div class="content">
-            <input placeholder="Routine Name" bind:value={workout.name} />
+            <input placeholder="Workout name" bind:value={workout.name} />
             <CategorySelector bind:selected={workout.category} />
-            <textarea placeholder="Notes" bind:value={workout.note} />
+            <textarea placeholder="Workout notes" bind:value={workout.note} />
             <div class="action-buttons">
                 <button on:click={saveWorkout}>save</button>
                 <button on:click={() => push("/profile")}>cancel</button>

@@ -98,9 +98,9 @@
 {#if routine}
     <div class="page">
         <div class="content">
-            <input placeholder="Routine Name" bind:value={routine.name} />
+            <input placeholder="Routine name" bind:value={routine.name} />
             <DaySelector bind:days={routine.days} />
-            <textarea placeholder="Notes" bind:value={routine.note} />
+            <textarea placeholder="Routine notes" bind:value={routine.note} />
             <div class="action-buttons">
                 <button on:click={saveRoutine}>save</button>
                 <button on:click={() => push("/profile")}>cancel</button>

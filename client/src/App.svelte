@@ -54,8 +54,5 @@
         padding: 1em;
         max-width: 30em;
         min-width: 19em;
-        background-color: var(--darkgrey);
-        border: 1px solid black;
-        border-radius: 0.5em;
     }
 </style>

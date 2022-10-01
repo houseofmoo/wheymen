@@ -9,10 +9,10 @@
     let newRoutine: Routine = {
         id: null,
         user_id: null,
-        name: "New Routine",
+        name: "",
         days: [],
         last_completed: new Date().toISOString(),
-        note: "Note about this routine",
+        note: "",
         workouts: [],
     };
 

@@ -10,9 +10,9 @@
     let newWorkout: Workout = {
         id: null,
         user_id: null,
-        name: "New Workout",
+        name: "",
         category: Category.arms,
-        note: "Note about this workout",
+        note: "",
     };
 
     onMount(async () => {

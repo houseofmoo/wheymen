@@ -22,7 +22,7 @@
         if (resp.count > 0) {
             routine = resp.result;
         } else {
-            // TODO: maybe no routines, maybe error occured
+            // TODO: maybe no routine, maybe error occured
         }
     });
 </script>
