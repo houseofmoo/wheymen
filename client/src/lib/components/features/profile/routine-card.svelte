@@ -13,9 +13,9 @@
             <div />
             <p class="name large-text">{routine.name}</p>
             <Kebabmenu>
-                <a href="/test">start</a>
+                <a href={`/gains/${routine.id}`} use:link>start</a>
                 <a href={`/edit-routine/${routine.id}`} use:link>edit</a>
-                <a href={`/history-routine/${routine.id}`}>history</a>
+                <a href={`/history-routine/${routine.id}`} use:link>history</a>
             </Kebabmenu>
         </div>
         <p class="small-text center-text">{routine.days.join(",")}</p>
