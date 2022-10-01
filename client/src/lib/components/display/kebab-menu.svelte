@@ -24,7 +24,7 @@
 <div class="container"  bind:this={container}>
     <button class="kebab-button" on:click={() => visible = !visible}><KebabMenuIcon /></button>
     {#if visible}
-        <div class="menu" transition:fade|local="{{duration: 100}}">
+        <div class="menu large-text" transition:fade|local="{{duration: 100}}">
             <slot />
         </div>
     {/if}
@@ -54,7 +54,6 @@
         display: grid;
         grid: 1fr / auto;
         grid-gap: 0.5em;
-        font-size: 1.2em;
         min-width: 5em;
         box-shadow: 3px 3px 10px black;
     }

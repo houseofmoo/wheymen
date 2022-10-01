@@ -15,7 +15,8 @@ use std::env;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     //let local_host_ip = "127.0.0.1";
-    let host = "localhost";
+    //let host = "localhost";
+    let host = "192.168.50.215";
     let port = 8080;
     //let port = 5173;
 
@@ -32,7 +33,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(decoder.clone()))
             .service(
                 web::scope("/api")
-                    .guard(guard::Host(host))
+                    // .guard(guard::Host(host))
                     .guard(guard::Header("content-type", "application/json"))
                     .service(
                         web::scope("/routines")

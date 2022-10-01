@@ -56,18 +56,7 @@
         }
     }
 
-    async function deleteThisRoutine() {
-        // TODO: confirmation box
-        
-        if (routine.id === null) {
-            push("/profile");
-            return;
-        }
-
-        await deleteRoutine(routine.id, $UserStore);
-        push("/profile");
-        // TODO: handle delete failed
-    }
+  
 
     function addWorkout(e: any) {
         const workout = e.detail;
@@ -104,7 +93,6 @@
             <div class="action-buttons">
                 <button on:click={saveRoutine}>save</button>
                 <button on:click={() => push("/profile")}>cancel</button>
-                <button on:click={deleteThisRoutine}>delete</button>
             </div>
             <WorkoutSelectorModal bind:workouts={unselected_workouts} on:workout-selected={addWorkout} />
             {#each routine.workouts as workout, i (workout.id)}
@@ -156,13 +144,11 @@
 
     .action-buttons {
         display: grid;
-        grid: auto / repeat(3, 1fr);
+        grid: auto / 1fr 1fr;
         grid-gap: 1em;
         width: 100%;
-    }
-
-    .action-buttons > button {
-        width: 100%;
+        place-items: center;
+        place-content: center;
     }
 
     .workouts {

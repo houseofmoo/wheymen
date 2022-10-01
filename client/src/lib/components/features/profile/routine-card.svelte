@@ -1,10 +1,14 @@
 <script lang="ts">
     import { link } from "svelte-spa-router";
+    import { RequestPath } from "../../../api/shared";
     import type { Routine } from "../../../models/routine";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Card from "../../display/card.svelte";
+    import DeleteModal from "./delete-modal.svelte";
 
     export let routine: Routine = null;
+    let showModal;
+
 </script>
 
 {#if routine}
@@ -16,6 +20,7 @@
                 <a href={`/gains/${routine.id}`} use:link>start</a>
                 <a href={`/edit-routine/${routine.id}`} use:link>edit</a>
                 <a href={`/history-routine/${routine.id}`} use:link>history</a>
+                <button class="link-button" on:click={() => showModal()}>delete</button>
             </Kebabmenu>
         </div>
         <p class="small-text center-text">{routine.days.join(",")}</p>
@@ -32,6 +37,8 @@
         </div>
     </Card>
 {/if}
+
+<DeleteModal item={routine} url={RequestPath.DeleteRoutine} bind:show={showModal} />
 
 <style>
     .title {
@@ -54,4 +61,6 @@
         margin: 0;
         padding: 0;
     }
+
+
 </style>
