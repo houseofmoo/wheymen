@@ -41,7 +41,7 @@
     async function saveWorkout() {
         const selected_ids = selected_routines.map(x => x.id);
         const unseleced_ids = unselected_routines.map(x => x.id);
-        console.log(workout);
+        
         if (workout.id === null) {
             const workoutRes = await insertWorkout($UserStore, workout, selected_ids, unseleced_ids);
             if (workoutRes.result !== null) {
@@ -61,19 +61,6 @@
                 console.log("error updating workout");
             }
         }
-    }
-
-    async function deleteThisWorkout() {
-        // TODO: confirmation box
-        
-        if (workout.id === null) {
-            push("/profile");
-            return;
-        }
-
-        await deleteWorkout(workout.id, $UserStore);
-        push("/profile");
-        // TODO: handle delete failed
     }
 
     function addRoutine(e: any) {
@@ -97,7 +84,6 @@
             <div class="action-buttons">
                 <button on:click={saveWorkout}>save</button>
                 <button on:click={() => push("/profile")}>cancel</button>
-                <button on:click={deleteThisWorkout}>delete</button>
             </div>
             <RoutineSelectorModal bind:routines={unselected_routines} on:routine-selected={addRoutine} />
             {#each selected_routines as routine (routine.id)}
@@ -147,8 +133,14 @@
 
     .action-buttons {
         display: grid;
-        grid: auto / repeat(3, 1fr);
+        grid: auto / 1fr 1fr;
         grid-gap: 1em;
+        place-items: center;
+        place-content: center;
+        width: 100%;
+    }
+
+    .action-buttons > button {
         width: 100%;
     }
 

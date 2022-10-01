@@ -1,10 +1,14 @@
 <script lang="ts">
     import { link } from "svelte-spa-router";
+    import { RequestPath } from "../../../api/shared";
     import type { Workout } from "../../../models/workout";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Card from "../../display/card.svelte";
+    import DeleteModal from "./delete-modal.svelte";
 
     export let workout: Workout = null;
+    let showModal;
+
 </script>
 
 {#if workout}
@@ -15,6 +19,7 @@
             <Kebabmenu>
                 <a href={`/edit-workout/${workout.id}`} use:link>edit</a>
                 <a href="/test">history</a>
+                <button class="link-button" on:click={() => showModal()}>delete</button>
             </Kebabmenu>
         </div>
         <div class="info">
@@ -22,6 +27,12 @@
         </div>
     </Card>
 {/if}
+
+<DeleteModal 
+    item={workout} 
+    url={RequestPath.DeleteWorkout} 
+    bind:show={showModal} 
+    on:item-deleted />
 
 <style>
     .title {

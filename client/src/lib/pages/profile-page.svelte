@@ -13,7 +13,6 @@
     let routines: Routine[] = [];
     let workouts: Workout[] = [];
     let current_tab: "routines" | "workouts" | "account" = "routines";
-    let routine_modal_visible = false;
 
     onMount(async () => {
         // if user landed here without being logged in, send them away
@@ -21,22 +20,32 @@
             push('/login');
         }
 
-        // get users routines
+        await getRoutines();
+        await getWorkouts();
+    });
+
+    async function getRoutines() {
         const routine_res = await getAllRoutines($UserStore);
         if (routine_res.count > 0) {
             routines = routine_res.result;
         } else {
             // TODO: maybe no routines, maybe error occured
         }
+    }
 
-        // get user workouts
+    async function getWorkouts() {
         const workout_res = await getAllWorkouts($UserStore);
         if (workout_res.count > 0) {
             workouts = workout_res.result;
         } else {
             // TODO: maybe no workouts, maybe error occured
         }
-    });
+    }
+
+    async function refresh() {
+        await getRoutines();
+        await getWorkouts();
+    }
 
     function changeTab(tab: "routines" | "workouts" | "account") {
         current_tab = tab;
@@ -55,14 +64,14 @@
         {#if current_tab === "routines"}
             <div >
                 {#each routines as routine}
-                    <RoutineCard {routine} on:organize-routines={() => routine_modal_visible = true}/>
+                    <RoutineCard {routine} on:item-deleted={refresh}/>
                 {/each}
                 <button class="create-button" on:click={() => push('/create-routine')}>create routine</button>
             </div>
         {:else if current_tab === "workouts"}
             <div>
                 {#each workouts as workout}
-                    <WorkoutCard {workout} />
+                    <WorkoutCard {workout} on:item-deleted={refresh} />
                 {/each}
                 <button class="create-button" on:click={() => push('/create-workout')}>create workout</button>
             </div>

@@ -38,7 +38,11 @@
     </Card>
 {/if}
 
-<DeleteModal item={routine} url={RequestPath.DeleteRoutine} bind:show={showModal} />
+<DeleteModal 
+    item={routine} 
+    url={RequestPath.DeleteRoutine} 
+    bind:show={showModal} 
+    on:item-deleted />
 
 <style>
     .title {

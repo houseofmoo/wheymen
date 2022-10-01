@@ -56,8 +56,6 @@
         }
     }
 
-  
-
     function addWorkout(e: any) {
         const workout = e.detail;
         routine.workouts = [...routine.workouts, workout];
@@ -146,9 +144,13 @@
         display: grid;
         grid: auto / 1fr 1fr;
         grid-gap: 1em;
-        width: 100%;
         place-items: center;
         place-content: center;
+        width: 100%;
+    }
+
+    .action-buttons > button {
+        width: 100%;
     }
 
     .workouts {
