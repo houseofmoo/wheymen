@@ -47,7 +47,7 @@
     .menu {
         font-family: 'Space Grotesk', sans-serif;
         position: absolute;
-        background-color: var(--lightgrey);
+        background-color: var(--primary-color-400);
         right: 1em;
         border: 1px solid black;
         padding: 1em;

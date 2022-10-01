@@ -155,17 +155,17 @@
     .routines {
         display: grid;
         grid: auto / 1fr auto;
-        background-color: var(--lightgrey);
+        background-color: var(--primary-color-400);
         border: 1px solid black;
         place-items: center;
         width: 100%;
         height: 4em;
-        font-size: 0.9em;
+        font-size: var(--small-font-size);
     }
 
     .routines > p {
         width: 100%;
-        font-size: 0.9em;
+        font-size: var(--small-font-size);
         margin-left: 2em;
     }
 </style>

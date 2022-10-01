@@ -14,11 +14,15 @@
   padding: 0;
   margin: 0;
 
-  --lightgrey: #242424;
-  --darkgrey: #1A1A1A;
-  --orange: #cc5827;
+  --primary-color-400: #242424;
+  --primary-color-800: #1A1A1A;
+  --secondary-color: #cc5827;
   --text-color: rgba(255, 255, 255, 0.75);
-  --font-size: 16px;
+
+  --font-size: 1em;
+  --large-font-size: 1.1em;
+  --small-font-size: 0.8em;
+  --icon-font-size: 0.7em;
 }
 
 h1, h2, h3 {
@@ -27,33 +31,32 @@ h1, h2, h3 {
 
 a {
   font-weight: 500;
-  color: var(--orange);
+  color: var(--secondary-color);
   text-decoration: inherit;
 }
 
 a:hover {
   text-decoration: underline;
-  color: var(--orange);
+  color: var(--secondary-color);
 }
 
 button {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.1em;
-  background-color: var(--lightgrey);
-  color: var(--orange);
+  font-size: var(--large-font-size);
+  background-color: var(--primary-color-400);
+  color: var(--secondary-color);
   margin: 0.5rem;
   padding: 0.75rem;
   border: solid 1px black;
-  cursor: pointer;
   transition: border 0.25s;
 }
 
 button:hover {
-  border: solid 1px var(--orange);
+  border: solid 1px var(--secondary-color);
 }
 
 .link-button {
-  font-size: 18px;
+  font-size: var(--font-size);
   margin: 0;
   padding: 0;
   border: none;
@@ -68,7 +71,7 @@ button:hover {
 
 input, textarea {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size);
 }
 
 input:focus {
@@ -86,16 +89,12 @@ input:focus {
   padding: 0.25rem;
 }
 
-input:focus {
-  outline: none;
-}
-
 .small-text {
-  font-size: 0.8em;
+  font-size: var(--small-font-size);
 }
 
 .large-text {
-  font-size: 1.1em;
+  font-size: var(--large-font-size);
 }
 
 .center-text {

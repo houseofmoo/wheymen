@@ -43,7 +43,7 @@
 	}
 
 	.day-container input ~ div {
-		background-color: var(--lightgrey);
+		background-color: var(--primary-color-400);
 		border: solid 1px black;
 		text-align: center;
         cursor: pointer;
@@ -52,11 +52,11 @@
 	}
 
 	.day-container input ~ div:hover {
-		border: solid 1px var(--orange);
+		border: solid 1px var(--secondary-color);
 	}
 
 	.day-container input:checked ~ div {
-		background-color: var(--orange);
+		background-color: var(--secondary-color);
 		border: solid 1px black;
 		text-align: center;
 	}

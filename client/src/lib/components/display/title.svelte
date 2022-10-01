@@ -40,8 +40,8 @@
     }
 
     hr {
-        color: var(--orange);
-        background-color: var(--orange);
+        color: var(--secondary-color);
+        background-color: var(--secondary-color);
         width: 100%;
         margin-top: 10px;
         height: 1px;
@@ -51,6 +51,6 @@
         background-color: transparent;
         margin: 0;
         margin-left: auto;
-        color: var(--orange);
+        color: var(--secondary-color);
     }
 </style>

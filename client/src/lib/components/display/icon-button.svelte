@@ -8,7 +8,7 @@
     <div class="grid">
         <svelte:component this={icon} />
         {#if text}
-            <div class="small-text">{text}</div>
+            <div class="icon-text">{text}</div>
         {/if}
     </div>
 </button>
@@ -35,7 +35,7 @@
         color: var(--link-color);
     }
 
-    .small-text {
-        font-size: 0.7em;
+    .icon-text {
+        font-size: var(--icon-font-size);
     }
 </style>

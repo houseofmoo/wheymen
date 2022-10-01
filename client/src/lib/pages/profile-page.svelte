@@ -94,7 +94,7 @@
 
     .action-button {
         font-family: 'Space Grotesk', sans-serif;
-        background-color: var(--darkgrey);
+        background-color: var(--primary-color-800);
         width: 100%;
         padding: 0;
         margin: 0;
@@ -103,12 +103,12 @@
 
     .action-button-selected {
         font-family: 'Space Grotesk', sans-serif;
-        background-color: var(--darkgrey);
+        background-color: var(--primary-color-800);
         width: 100%;
         padding: 0;
         margin: 0;
         border: 0;
-        color: var(--orange);
+        color: var(--secondary-color);
     }
 
     .create-button {

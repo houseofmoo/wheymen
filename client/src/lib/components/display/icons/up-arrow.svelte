@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let fill = "#cc5827";
+    export let fill = "#cc5827"; // --secondary-color
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24">

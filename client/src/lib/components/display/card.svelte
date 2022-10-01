@@ -7,7 +7,7 @@
 
 <style>
     .card {
-        background-color: var(--lightgrey);
+        background-color: var(--primary-color-400);
         border: 1px solid black;
         padding: 0.5em 1em;
         margin: 1em 0;

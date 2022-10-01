@@ -27,7 +27,7 @@
 
 <style>
     .modal {
-        background-color: var(--darkgrey);
+        background-color: var(--primary-color-800);
         border: 1px solid black;
         width: 60vw;
         max-width: 60em;
@@ -56,8 +56,8 @@
         margin-top: 0;
         padding-top: 0;
         border: none;
-        color: var(--orange);
-        background-color: var(--darkgrey);
+        color: var(--secondary-color);
+        background-color: var(--primary-color-800);
         text-align: right;
     }
 
