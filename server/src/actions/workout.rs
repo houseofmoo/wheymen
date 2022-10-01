@@ -10,7 +10,7 @@ use crate::{
 
 pub async fn get_all_workouts(user_id: &String, client: &DbClient) -> DbResult<Vec<WorkoutRow>> {
     let query = format!(
-        "SELECT * FROM workouts WHERE user_id=\"{}\" ORDER BY category;",
+        "SELECT * FROM workouts WHERE user_id=\"{}\" ORDER BY category, name;",
         user_id
     );
     let result = client.send_query::<WorkoutRow>(query).await?;

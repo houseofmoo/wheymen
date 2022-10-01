@@ -8,7 +8,7 @@ use crate::resource::client::DbClient;
 
 pub async fn get_all_routines(user_id: &String, client: &DbClient) -> DbResult<Vec<Routine>> {
     let query = format!(
-        "SELECT * FROM routines WHERE user_id=\"{}\" FETCH workouts;",
+        "SELECT * FROM routines WHERE user_id=\"{}\" ORDER BY name FETCH workouts;",
         user_id
     );
     let result = client.send_query::<Routine>(query).await?;
