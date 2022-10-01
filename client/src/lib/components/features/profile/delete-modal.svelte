@@ -23,8 +23,8 @@
 
     async function deleteItem() {
         await del(url, item.id, $UserStore);
+        close();
         dispatch('item-deleted');
-        modal.close();
     }
 
 </script>

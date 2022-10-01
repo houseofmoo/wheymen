@@ -29,7 +29,7 @@
 
     async function getRoutines() {
         const routine_res = await getAllRoutines($UserStore);
-        if (routine_res.count > 0) {
+        if (routine_res.result !== null) {
             routines = routine_res.result;
         } else {
             // TODO: maybe no routines, maybe error occured
@@ -38,7 +38,7 @@
 
     async function getWorkouts() {
         const workout_res = await getAllWorkouts($UserStore);
-        if (workout_res.count > 0) {
+        if (workout_res.result !== null) {
             workouts = workout_res.result;
         } else {
             // TODO: maybe no workouts, maybe error occured
