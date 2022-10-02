@@ -5,3 +5,4 @@ server/dist
 server/.env
 launch_surreal_db.bat
 db
+*.exe
