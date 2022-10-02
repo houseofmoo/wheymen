@@ -14,14 +14,9 @@ use std::env;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    //let local_host_ip = "127.0.0.1";
-    //let host = "localhost";
-    let host = "192.168.50.215";
-    let port = 8080;
-    //let port = 5173;
-
     let vars = get_env_vars();
     let decoder = resource::auth::JwtDecoder::new(vars.jwt_token);
+    println!("listening on {}:{}", vars.host, vars.port);
 
     HttpServer::new(move || {
         App::new()
@@ -59,38 +54,44 @@ async fn main() -> std::io::Result<()> {
                     .index_file("index.html"),
             )
     })
-    .bind((host, port))?
+    .bind((vars.host, vars.port))?
     .run()
     .await
 }
 
 fn get_env_vars() -> EnvVar {
-    dotenv().ok();
-
-    let jwt_token = match env::var("JWT_TOKEN") {
-        Ok(key) => key,
-        Err(e) => panic!("Missing JWT_TOKEN environment variable: {}", e.to_string()),
-    };
-
-    let db_url = match env::var("DB_URL") {
-        Ok(key) => key,
-        Err(e) => panic!("Missing DB_URL environment variable: {}", e.to_string()),
-    };
-
-    let db_user = match env::var("DB_USER") {
-        Ok(key) => key,
-        Err(e) => panic!("Missing DB_USER environment variable: {}", e.to_string()),
-    };
-
-    let db_pass = match env::var("DB_PASS") {
-        Ok(key) => key,
-        Err(e) => panic!("Missing DB_PASS environment variable: {}", e.to_string()),
+    match dotenv() {
+        Ok(_) => (),
+        Err(e) => panic!(".env file mssing: {}", e.to_string()),
     };
 
     EnvVar {
-        jwt_token,
-        db_url,
-        db_user,
-        db_pass,
+        host: match env::var("HOST") {
+            Ok(key) => key,
+            Err(e) => panic!("Missing HOST environment variable: {}", e.to_string()),
+        },
+        port: match env::var("PORT") {
+            Ok(key) => match key.parse::<u16>() {
+                Ok(val) => val,
+                Err(e) => panic!("PORT must be a u16 value: {}", e.to_string()),
+            }
+            Err(e) => panic!("Missing PORT environment variable: {}", e.to_string()),
+        },
+        jwt_token: match env::var("JWT_TOKEN") {
+            Ok(key) => key,
+            Err(e) => panic!("Missing JWT_TOKEN environment variable: {}", e.to_string()),
+        },
+        db_url: match env::var("DB_URL") {
+            Ok(key) => key,
+            Err(e) => panic!("Missing DB_URL environment variable: {}", e.to_string()),
+        },
+        db_user: match env::var("DB_USER") {
+            Ok(key) => key,
+            Err(e) => panic!("Missing DB_USER environment variable: {}", e.to_string()),
+        },
+        db_pass: match env::var("DB_PASS") {
+            Ok(key) => key,
+            Err(e) => panic!("Missing DB_PASS environment variable: {}", e.to_string()),
+        },
     }
 }

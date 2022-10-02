@@ -2,7 +2,7 @@ client/.vscode/
 client/node_modules/
 server/target
 server/dist
-server/.env
 launch_surreal_db.bat
 db
 *.exe
+*.env
