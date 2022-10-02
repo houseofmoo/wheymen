@@ -89,8 +89,8 @@
             <DaySelector bind:days={routine.days} />
             <textarea class="styled-textarea" placeholder="Routine notes" bind:value={routine.note} />
             <div class="action-buttons">
-                <button class="wide-100" on:click={saveRoutine}>save</button>
                 <button class="wide-100" on:click={() => push("/profile/routines")}>cancel</button>
+                <button class="wide-100" on:click={saveRoutine}>save</button>
             </div>
             <WorkoutSelectorModal bind:workouts={unselected_workouts} on:workout-selected={addWorkout} />
             {#each routine.workouts as workout, i (workout.id)}

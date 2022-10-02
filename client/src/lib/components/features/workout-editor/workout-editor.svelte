@@ -82,8 +82,8 @@
             <CategorySelector bind:selected={workout.category} />
             <textarea class="styled-textarea" placeholder="Workout notes" bind:value={workout.note} />
             <div class="action-buttons">
-                <button class="wide-100"  on:click={saveWorkout}>save</button>
                 <button class="wide-100"  on:click={() => push("/profile/workouts")}>cancel</button>
+                <button class="wide-100"  on:click={saveWorkout}>save</button>
             </div>
             <RoutineSelectorModal bind:routines={unselected_routines} on:routine-selected={addRoutine} />
             {#each selected_routines as routine (routine.id)}
