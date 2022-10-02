@@ -2,8 +2,10 @@ import type { Routine, RoutineRow, InsertRoutineRow } from "../models/routine";
 import type { DbResponse } from "../models/db-response";
 import type { User } from "../models/user";
 import { postReqeust, RequestPath, getAll, get, del } from "./shared";
+import { Loading } from "../stores/loading-store";
 
 export async function insertRoutine(user: User, routine: Routine) {
+    Loading.start();
     const routine_row: InsertRoutineRow = {
         user_id: routine.user_id,
         name: routine.name,
@@ -12,10 +14,13 @@ export async function insertRoutine(user: User, routine: Routine) {
         note: routine.note,
         workouts: routine.workouts.map(x => x.id),
     }
-    return await insertOrUpdateRoutine(RequestPath.InsertRoutine, user, routine_row);
+    const res = await insertOrUpdateRoutine(RequestPath.InsertRoutine, user, routine_row);
+    Loading.complete(); 
+    return  res;
 }
 
 export async function updateRoutine(user: User, routine: Routine) {
+    Loading.start();
     const routine_row: RoutineRow = {
         id: routine.id,
         user_id: routine.user_id,
@@ -25,7 +30,9 @@ export async function updateRoutine(user: User, routine: Routine) {
         note: routine.note,
         workouts: routine.workouts.map(x => x.id),
     }
-    return await insertOrUpdateRoutine(RequestPath.UpdateRoutine, user, routine_row);
+    const res = await insertOrUpdateRoutine(RequestPath.UpdateRoutine, user, routine_row);
+    Loading.complete();
+    return res;
 }
 
 export async function getAllRoutines(user: User) {

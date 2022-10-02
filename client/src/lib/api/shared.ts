@@ -1,5 +1,6 @@
 import type { User } from '../models/user';
 import type { DbResponse } from '../models/db-response';
+import { Loading } from "../stores/loading-store";
 
 export enum RequestPath {
     InsertRoutine = `/api/routines/insert`,
@@ -36,28 +37,35 @@ export async function getAll<T>(url: RequestPath, user: User): Promise<DbRespons
         }
     }
     
+    Loading.start();
+
     const { token } = user;
     const resp = await fetch(url, postReqeust(token, ""));
+
+    let response: DbResponse<T[]> = null;
     if (resp.status === 200) {
         const obj: T[] = await resp.json();
-        return {
+        response = {
             result: obj,
             count: obj.length,
             status: "success"
         }
     } else if (resp.status === 204) {
-        return {
+        response = {
             result: [],
             count: 0,
             status: "success"
         }
     } else {
-        return {
+        response = {
             result: null,
             count: -1,
             status: await resp.text()
         }
     }
+
+    Loading.complete();
+    return response;
 }
 
 export async function get<T>(url: RequestPath, id: string, user: User): Promise<DbResponse<T>> {
@@ -69,30 +77,36 @@ export async function get<T>(url: RequestPath, id: string, user: User): Promise<
         }
     }
     
+    Loading.start();
+
     const { token } = user;
     const completeUrl = `${url}/${id}`;
     const resp = await fetch(completeUrl, postReqeust(token, ""));
 
+    let response: DbResponse<T> = null;
     if (resp.status === 200) {
         const obj: T = await resp.json();
-        return {
+        response = {
             result: obj,
             count: 1,
             status: "success"
         }
     } else if (resp.status === 204) {
-        return {
+        response = {
             result: null,
             count: 0,
             status: "success"
         }
     } else {
-        return {
+        response = {
             result: null,
             count: -1,
             status: await resp.text()
         }
     }
+
+    Loading.complete();
+    return response;
 }
 
 export async function del(url: RequestPath, id: string, user: User) {
@@ -104,15 +118,19 @@ export async function del(url: RequestPath, id: string, user: User) {
         }
     }
     
+    Loading.start();
+
     const { token } = user;
     const completeUrl = `${url}/${id}`;
     const resp = await fetch(completeUrl, postReqeust(token, ""));
 
     if (resp.status === 200 || resp.status === 204) {
+        Loading.complete();
         return {
             status: "success"
         }
     } else {
+        Loading.complete();
         return {
             status: await resp.text()
         }

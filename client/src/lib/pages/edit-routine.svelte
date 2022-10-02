@@ -17,7 +17,7 @@
             push('/login');
             return;
         }
-
+        
         const resp = await getRoutine(routine_id, $UserStore);
         if (resp.count > 0) {
             routine = resp.result;

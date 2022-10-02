@@ -2,8 +2,10 @@ import type { DbResponse } from '../models/db-response';
 import type { User } from '../models/user';
 import type { Workout, WorkoutRow, InsertWorkoutRow, UpsertWorkoutRow } from '../models/workout';
 import { postReqeust, RequestPath, getAll, get, del } from "./shared";
+import { Loading } from "../stores/loading-store";
 
 export async function insertWorkout(user: User, workout: Workout, selected_routine_ids: string[], unselected_routine_ids: string[]) {
+    Loading.start();
     const upsert: UpsertWorkoutRow<InsertWorkoutRow> = {
         workout_row: {
             user_id: workout.user_id,
@@ -14,10 +16,13 @@ export async function insertWorkout(user: User, workout: Workout, selected_routi
         selected_routine_ids, 
         unselected_routine_ids 
     };
-    return await insertOrUpdateWorkout(RequestPath.InsertWorkout, user, upsert);
+    const res = await insertOrUpdateWorkout(RequestPath.InsertWorkout, user, upsert);
+    Loading.complete();
+    return res;
 }
 
 export async function updateWorkout(user: User, workout: Workout, selected_routine_ids: string[], unselected_routine_ids: string[]) {
+    Loading.start();
     const upsert: UpsertWorkoutRow<WorkoutRow> = {
         workout_row: {
             id: workout.id,
@@ -29,7 +34,9 @@ export async function updateWorkout(user: User, workout: Workout, selected_routi
         selected_routine_ids, 
         unselected_routine_ids 
     };
-    return await insertOrUpdateWorkout(RequestPath.UpdateWorkout, user, upsert);
+    const res = await insertOrUpdateWorkout(RequestPath.UpdateWorkout, user, upsert);
+    Loading.complete();
+    return res;
 }
 
 export async function getAllWorkouts(user: User) {
@@ -53,31 +60,37 @@ export async function getUnrelatedWorkouts(routine_id: string, user: User) {
             status: "user is null",
         }
     }
+
+    Loading.start();
     
     const { token } = user;
     const completeUrl = `${RequestPath.GetUnrelatedWorkouts}/${routine_id}`;
     const resp = await fetch(completeUrl, postReqeust(token, ""));
 
+    let response: DbResponse<Workout[]> = null;
     if (resp.status === 200) {
         const obj: Workout[] = await resp.json()
-        return {
+        response = {
             result: obj,
             count: obj.length,
             status: "success"
         }
     } else if (resp.status === 204) {
-        return {
+        response = {
             result: [],
             count: 0,
             status: "success"
         }
     } else {
-        return {
+        response = {
             result: null,
             count: -1,
             status: await resp.text()
         }
     }
+
+    Loading.complete();
+    return response;
 }
 
 async function insertOrUpdateWorkout<T>(url: string, user: User, upsert: T): Promise<DbResponse<Workout>> {

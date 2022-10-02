@@ -4,6 +4,9 @@
     import { getSessionFromLocalToken, getSession } from "./lib/api/auth";
     import { UserStore } from "./lib/stores/user-store";
     import Router from "svelte-spa-router";
+    import AlertNotification from "./lib/components/display/alert-notification.svelte";
+    import Loading from "./lib/components/display/loading.svelte";
+    
     import AccountRecoveryPage from "./lib/pages/account-recovery-page.svelte";
     import CreateRoutinePage from "./lib/pages/create-routine-page.svelte";
     import CreateWorkoutPage from "./lib/pages/create-workout-page.svelte";
@@ -15,7 +18,7 @@
     import ProfilePage from "./lib/pages/profile-page.svelte";
     import SignupPage from "./lib/pages/sign-up-page.svelte";
     import GainsPage from "./lib/pages/gains-page.svelte";
-    import AlertNotification from "./lib/components/display/alert-notification.svelte";
+
 
     const routes = {
         '/': LandingPage,
@@ -46,7 +49,7 @@
  
 </script>
 
-
+<Loading />
 <AlertNotification />
 <main class="content">
     <Router {routes} />
