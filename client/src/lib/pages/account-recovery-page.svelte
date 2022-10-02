@@ -1,22 +1,18 @@
 <script lang="ts">
     import { link } from 'svelte-spa-router'
-    import ErrorMessage from '../components/display/error-message.svelte';
     import Title from "../components/display/title.svelte";
+    import { Alert } from "../stores/alert-store";
 
     let email = "";
-    let password = "";
-    let statusMessage = null;
 
     async function onSubmit() {
-        statusMessage = null;
-
+        Alert.setMsg("Not yet implemented");
         // TODO: account recovery email 
     }
 </script>
 
 <div>
     <Title subtitle={"recovery"} />
-    <ErrorMessage errorMsg={statusMessage} />
     <div class="form-sheet">
         <form on:submit|preventDefault={onSubmit}>
             <input class="styled-input" type="email" placeholder="email" bind:value={email} />

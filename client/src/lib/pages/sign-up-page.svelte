@@ -1,51 +1,35 @@
 <script lang="ts">
     import { link } from 'svelte-spa-router'
     import { signUp, doesUserExist } from '../api/auth';
-    import ErrorMessage from '../components/display/error-message.svelte';
     import Title from "../components/display/title.svelte";
+    import { Alert } from "../stores/alert-store";
 
     let email = "";
     let password = "";
     let verify_pass = "";
     let page_state: "signup" | "complete" | "exists" = "signup";
-    let status_msg = null;
-
-    $: {
-        if (verify_pass && verify_pass.length > 0) {
-            if (verify_pass.length < 6) {
-                status_msg = "Passwords do not match";
-            } else if (password !== verify_pass) {
-                status_msg = "Passwords do not match";
-            }
-            else {
-                status_msg = null;
-            }
-        } else {
-            status_msg = null;
-        }
-    }
 
     async function onSubmit() {
-        status_msg = null;
 
         if (email.length <= 0) {
-            status_msg = "Please enter your email";
+            Alert.setMsg("Please enter your email");
             return;
         }
 
         if (password.length < 6) {
-            status_msg = "Password must be at least 6 characters long";
+            Alert.setMsg("Password must be at least 6 characters long");
             return;
         }
 
         if (password !== verify_pass) {
-            status_msg = "Passwords do not match"
+            Alert.setMsg("Passwords do not match");
+            return;
         }
 
         // is user already signed up
         const userExists = await doesUserExist(email);
         if (userExists) {
-            status_msg = `User with ${email} already exists`;
+            Alert.setMsg(`User with ${email} already exists`);
             page_state = "exists";
             email = "";
             password = "";
@@ -56,7 +40,7 @@
         // send sign up request to auth
         const signUpResp = await signUp(email, password);
         if (signUpResp.status !== 200) {
-            status_msg = "Error while signing up. Please try again";
+            Alert.setMsg("Error while signing up. Please try again");
             page_state = "signup";
             email = "";
             password = "";
@@ -74,7 +58,6 @@
 <div>
     <Title subtitle={"sign up"} />
     {#if page_state === "signup"}
-        <ErrorMessage errorMsg={status_msg} />
         <div class="form-sheet">
             <form on:submit|preventDefault={onSubmit}>
                 <input class="styled-input" type="email" placeholder="email" bind:value={email} />

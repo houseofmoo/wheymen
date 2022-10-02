@@ -2,23 +2,20 @@
     import { push, link } from 'svelte-spa-router'
     import { signIn } from '../api/auth';
     import { UserStore } from "../stores/user-store";
-    import ErrorMessage from '../components/display/error-message.svelte';
     import Title from "../components/display/title.svelte";
+    import { Alert } from "../stores/alert-store";
 
     let email = "";
     let password = "";
-    let statusMessage = null;
 
     async function onSubmit() {
-        statusMessage = null;
-
         if (email.length <= 0) {
-            statusMessage = "please enter you account email address";
+            Alert.setMsg("Enter you account email address");
             return;
         }
 
         if (password.length <= 0) {
-            statusMessage = "please enter your password";
+            Alert.setMsg("Enter your password");
             return;
         }
 
@@ -29,14 +26,13 @@
             push("/profile/routines");
         } else {
             password = "";
-            statusMessage = "email or password are incorrect";
+            Alert.setMsg("Email or password are incorrect");
         }
     }
 </script>
 
 <div>
     <Title subtitle={"login"} />
-    <ErrorMessage errorMsg={statusMessage} />
     <div class="form-sheet">
         <form on:submit|preventDefault={onSubmit}>
             <input class="styled-input" type="email" placeholder="email" bind:value={email} />

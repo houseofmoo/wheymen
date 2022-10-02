@@ -4,6 +4,7 @@
     import { UserStore } from "../stores/user-store";
     import { getRoutine } from "../api/routine";
     import type { Routine } from "../models/routine";
+    import { Alert } from "../stores/alert-store";
 
     export let params = { id: null };
     let routine_id = params.id;
@@ -21,17 +22,13 @@
         } else {
             // TODO: maybe no routine, maybe error occured
         }
-
-
-        // we need the routine and the lifts which we're getting
-        // but we also need lift histories so we can prepopulate the workout lists
-
     });
 </script>
 
 {#if $UserStore && routine}
     <div class="page">
         {routine.name}
+        <button on:click={() => Alert.setMsg("hi")}>Test Notif</button>
     </div>
 {/if}
 
@@ -41,6 +38,4 @@
         margin: 0;
         padding: 0;
     }
-
-  
 </style>

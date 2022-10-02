@@ -15,6 +15,7 @@
     import ProfilePage from "./lib/pages/profile-page.svelte";
     import SignupPage from "./lib/pages/sign-up-page.svelte";
     import GainsPage from "./lib/pages/gains-page.svelte";
+    import AlertNotification from "./lib/components/display/alert-notification.svelte";
 
     const routes = {
         '/': LandingPage,
@@ -45,6 +46,8 @@
  
 </script>
 
+
+<AlertNotification />
 <main class="content">
     <Router {routes} />
 </main>
@@ -53,7 +56,7 @@
     .content {
         margin: auto;
         padding-top: 1em;
-        max-width: 30em;
-        min-width: 19em;
+        max-width: var(--max-width);
+        min-width: var(--min-width);
     }
 </style>
