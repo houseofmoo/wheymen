@@ -17,14 +17,18 @@
 <dialog class="modal" bind:this={modal}>
     <button class="close-button" on:click={() => modal.close()}>x</button>
     <div class="workout-selector">
-        {#each workouts as workout}
-            <button class="workout-button" on:click={() => workoutSelected(workout)}>
-                <div class="workout-info">
-                    <p class="name">{workout.name}</p>
-                    <p class="category">{workout.category}</p>
-                </div>
-            </button>
-        {/each}
+        {#if workouts.length <= 0}
+            <p class="unavailable">No workouts available to select</p>
+        {:else}
+            {#each workouts as workout}
+                <button class="workout-button" on:click={() => workoutSelected(workout)}>
+                    <div class="workout-info">
+                        <p class="name">{workout.name}</p>
+                        <p class="category">{workout.category}</p>
+                    </div>
+                </button>
+            {/each}
+        {/if}
     </div>
 </dialog>
 
@@ -83,5 +87,10 @@
     .category {
         text-align: right;
         margin-right: 1em;
+    }  
+    
+    .unavailable {
+        text-align: center;
+        color: var(--text-color);
     }
 </style>

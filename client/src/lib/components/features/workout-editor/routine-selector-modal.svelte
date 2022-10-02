@@ -17,11 +17,15 @@
 <dialog class="modal" bind:this={modal}>
     <button class="close-button" on:click={() => modal.close()}>x</button>
     <div class="routine-selector">
-        {#each routines as routine}
-            <button class="routine-button" on:click={() => workoutSelected(routine)}>
-                <p class="center-text large-text">{routine.name}</p>
-            </button>
-        {/each}
+        {#if routines.length <= 0}
+            <p class="unavailable">No routines available to select</p>
+        {:else}
+            {#each routines as routine}
+                <button class="routine-button" on:click={() => workoutSelected(routine)}>
+                    <p class="center-text large-text">{routine.name}</p>
+                </button>
+            {/each}
+        {/if}
     </div>
 </dialog>
 
@@ -63,5 +67,10 @@
 
     .routine-button, .control-button {
         width: 100%;
+    }
+
+    .unavailable {
+        text-align: center;
+        color: var(--text-color);
     }
 </style>
