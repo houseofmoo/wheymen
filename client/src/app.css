@@ -29,6 +29,10 @@
   --max-width: 30em;
 }
 
+/* *, *:before, *:after {
+  box-sizing: border-box;
+} */
+
 h1, h2, h3 {
   font-family: 'Space Grotesk', sans-serif;
 }
@@ -109,8 +113,16 @@ input:focus, textarea:focus {
   font-size: var(--large-font-size);
 }
 
+.largest-text {
+  font-size: var(--largest-font-size);
+}
+
 .center-text {
   text-align: center;
+}
+
+.right-text {
+  text-align: right;
 }
 
 .wide-100 {
@@ -119,4 +131,12 @@ input:focus, textarea:focus {
 
 .wide-95 {
   width: 95%;
+}
+
+.margin-0 {
+  margin: 0;
+}
+
+.padding-0 {
+  padding: 0;
 }

@@ -13,18 +13,12 @@
     });
 </script>
 
-<div class="page">
+<div>
     <Title subtitle={"logout"} />
     <p>Logging out...</p>
 </div>
 
 <style>
-    .page {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
     p {
         text-align: center;
     }

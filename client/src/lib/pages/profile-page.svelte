@@ -56,7 +56,7 @@
 </script>
 
 {#if $UserStore}
-    <div class="page">
+    <div>
         <Title subtitle={current_tab} />
         <div class="action-buttons-grid">
             <button class={current_tab === "routines" ? "action-button-selected" : "action-button"} on:click={() => changeTab("routines")}>routines</button>
@@ -69,31 +69,25 @@
                 {#each routines as routine}
                     <RoutineCard {routine} on:item-deleted={refresh}/>
                 {/each}
-                <button class="create-button" on:click={() => push('/create-routine')}>create routine</button>
+                <button class="wide-100 margin-0" on:click={() => push('/create-routine')}>create routine</button>
             </div>
         {:else if current_tab === "workouts"}
             <div>
                 {#each workouts as workout}
                     <WorkoutCard {workout} on:item-deleted={refresh} />
                 {/each}
-                <button class="create-button" on:click={() => push('/create-workout')}>create workout</button>
+                <button class="wide-100 margin-0" on:click={() => push('/create-workout')}>create workout</button>
             </div>
         {:else}
             <div>
                 <p style="text-align: center">{$UserStore.email}</p>
-                <button class="create-button" on:click={() => push('/logout')}>logout</button>
+                <button class="wide-100 margin-0" on:click={() => push('/logout')}>logout</button>
             </div>
         {/if}
     </div>
 {/if}
 
 <style>
-    .page {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
     .action-buttons-grid {
         display: grid;
         grid: 1fr / repeat(3, 1fr);
@@ -120,11 +114,6 @@
         padding: 0;
         margin: 0;
         border: 0;
-        color: var(--secondary-color);
-    }
-
-    .create-button {
-        width: 100%;
-        margin: 0;
+        text-decoration: underline;
     }
 </style>

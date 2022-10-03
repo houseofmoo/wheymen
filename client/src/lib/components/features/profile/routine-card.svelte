@@ -15,7 +15,7 @@
     <Card>
         <div class="title">
             <div />
-            <p class="name large-text">{routine.name}</p>
+            <p class="name large-text center-text">{routine.name}</p>
             <Kebabmenu>
                 <a href={`/gains/${routine.id}`} use:link>start</a>
                 <a href={`/edit-routine/${routine.id}`} use:link>edit</a>
@@ -23,15 +23,15 @@
                 <button class="link-button" on:click={() => showModal()}>delete</button>
             </Kebabmenu>
         </div>
-        <p class="small-text center-text">{routine.days.join(",")}</p>
+        <p class="small-text center-text margin-0 padding-0">{routine.days.join(",")}</p>
         <div class="info">
             <div>
-                <p class="small-text">last completed:</p>
-                <p class="small-text">{new Date(routine.last_completed).toLocaleDateString()}</p>
+                <p class="small-text margin-0 padding-0">last completed:</p>
+                <p class="small-text margin-0 padding-0">{new Date(routine.last_completed).toLocaleDateString()}</p>
             </div>
             <div>
                 {#each routine.workouts as workout}
-                    <p class="small-text">{workout.name}</p>
+                    <p class="small-text margin-0 padding-0">{workout.name}</p>
                 {/each}
             </div>
         </div>
@@ -53,18 +53,10 @@
 
     .name {
         margin: 0.5em;
-        text-align: center;
     }
 
     .info {
         display: grid;
         grid: 1fr / 1fr 1fr;
     }
-
-    p {
-        margin: 0;
-        padding: 0;
-    }
-
-
 </style>

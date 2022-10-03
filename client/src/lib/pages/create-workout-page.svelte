@@ -28,17 +28,9 @@
 </script>
 
 {#if $UserStore}
-    <div class="page">
+    <div>
         <Title subtitle={"create workout"} />
         <WorkoutEditor 
             bind:workout={newWorkout} />
     </div> 
 {/if}
-
-<style>
-    .page {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-</style>

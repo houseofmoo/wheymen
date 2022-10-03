@@ -29,17 +29,9 @@
 </script>
 
 {#if $UserStore}
-    <div class="page">
+    <div>
         <Title subtitle={"create routine"} />
         <RoutineEditor 
             bind:routine={newRoutine} />
     </div>
 {/if}
-
-<style>
-    .page {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-</style>

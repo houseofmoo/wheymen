@@ -15,7 +15,7 @@
     <Card>
         <div class="title">
             <div />
-            <p class="name large-text">{workout.name}</p>
+            <p class="name large-text center-text">{workout.name}</p>
             <Kebabmenu>
                 <a href={`/edit-workout/${workout.id}`} use:link>edit</a>
                 <a href="/test">history</a>
@@ -23,7 +23,7 @@
             </Kebabmenu>
         </div>
         <div class="info">
-            <p class="category">{workout.category}</p>
+            <p class="category margin-0 padding-0">{workout.category}</p>
         </div>
     </Card>
 {/if}
@@ -43,16 +43,10 @@
 
     .name {
         margin: 0.5em;
-        text-align: center;
     }
 
     .info {
         display: grid;
         grid: 1fr / 1fr 1fr;
-    }
-
-    p {
-        margin: 0;
-        padding: 0;
     }
 </style>

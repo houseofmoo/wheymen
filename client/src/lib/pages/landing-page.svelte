@@ -3,7 +3,7 @@
     import Title from "../components/display/title.svelte";
 </script>
 
-<div class="page">
+<div>
     <Title />
     <div class="text">
         <p>Keep a list of workout routines you perform regularly. Track your workout progress with stats about each workout and how much weight you lifted in the past.</p>
@@ -15,7 +15,6 @@
 </div>
 
 <style>
-
     .text {
         display: grid;
         place-content: center;
