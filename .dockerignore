@@ -4,3 +4,6 @@ db
 server/target
 server/Cargo.lock
 .git
+.gitignore
+launch_surreal_db.bat
+docker_readme.txt
