@@ -1,0 +1,31 @@
+# EXPECT HOST MACHINE TO HAVE NPM 8.15.0+, NODE 18.7.0+
+# .env file will have to be manually created with expected values before running this
+
+#base linux image
+FROM ubuntu:latest
+
+# updade/upgrade
+RUN apt update && apt upgrade -y
+
+# install dependencies
+RUN apt install cargo -y
+RUN apt install pkg-config -y
+RUN apt install libssl-dev -y
+
+# copy precompiled client code
+COPY /server/dist /server/dist
+
+# copy server code
+COPY /server /server
+
+# copy env file
+COPY .env /server/.env
+
+# expose ports
+EXPOSE 8080/tcp
+
+# set working dir
+WORKDIR /server
+
+# launch server
+# CMD cargo run --release

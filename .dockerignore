@@ -1,0 +1,6 @@
+client/node_modules
+client/.vscode
+db
+server/target
+server/Cargo.lock
+.git
