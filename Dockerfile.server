@@ -1,7 +1,7 @@
 # EXPECT HOST MACHINE TO HAVE NPM 8.15.0+, NODE 18.7.0+
 # .env file will have to be manually created with expected values before running this
 
-#base linux image
+# base linux image
 FROM ubuntu:latest
 
 # updade/upgrade
@@ -28,4 +28,4 @@ EXPOSE 8080/tcp
 WORKDIR /server
 
 # launch server
-# CMD cargo run --release
+CMD cargo run --release

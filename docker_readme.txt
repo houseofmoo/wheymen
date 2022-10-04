@@ -1,5 +1,3 @@
-# rename image to Docker file before building the image because the path thing doesnt seem to work
-
 # launch command
 # docker run --publish 8000:8000 ubuntu_surrealdb
 
