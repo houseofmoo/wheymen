@@ -1,5 +1,5 @@
 # launch command
-# docker run --publish 8000:8000 ubuntu_surrealdb
+# docker run --publish <HOST PORT>:<CONTAINER PORT> --network <NETWORK NAME> <IMAGE NAME>
 
 # build image
 # docker build -t <NAME> -f <DOCKER FILE NAME> .
@@ -24,6 +24,3 @@
 
 # Disconnect container from user defined network
 # docker network disconnect <NETWORK NAME> <CONTAINER NAME>
-
-# build dockerfile
-# docker build -t <NAME OF IMAGE> <PATH TO DIR CONTAINING DOCKERFILE>
