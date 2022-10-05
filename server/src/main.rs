@@ -32,7 +32,6 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(decoder.clone()))
             .service(
                 web::scope("/api")
-                    .guard(guard::Host(host))
                     .guard(guard::Header("content-type", "application/json"))
                     .service(
                         web::scope("/routines")

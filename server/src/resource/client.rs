@@ -26,8 +26,7 @@ impl DbClient {
     {
         self.client
             .post(&self.url)
-            .header("Accept", "*/*")
-            .header("Content-Type", "application/json")
+            .header("Accept", "application/json")
             .header("NS", "wheymen")
             .header("DB", "wheymen")
             .basic_auth(&self.user, Some(&self.pass))
