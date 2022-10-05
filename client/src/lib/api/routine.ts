@@ -1,7 +1,8 @@
 import type { Routine, RoutineRow, InsertRoutineRow } from "../models/routine";
 import type { DbResponse } from "../models/db-response";
 import type { User } from "../models/user";
-import { postReqeust, RequestPath, getAll, get, del } from "./shared";
+import { postReqeust, getAll, get, del } from "./shared";
+import { RequestTarget, generateUrl } from "./urls";
 import { Loading } from "../stores/loading-store";
 
 export async function insertRoutine(user: User, routine: Routine) {
@@ -14,7 +15,7 @@ export async function insertRoutine(user: User, routine: Routine) {
         note: routine.note,
         workouts: routine.workouts.map(x => x.id),
     }
-    const res = await insertOrUpdateRoutine(RequestPath.InsertRoutine, user, routine_row);
+    const res = await insertOrUpdateRoutine(RequestTarget.InsertRoutine, user, routine_row);
     Loading.complete(); 
     return  res;
 }
@@ -30,24 +31,24 @@ export async function updateRoutine(user: User, routine: Routine) {
         note: routine.note,
         workouts: routine.workouts.map(x => x.id),
     }
-    const res = await insertOrUpdateRoutine(RequestPath.UpdateRoutine, user, routine_row);
+    const res = await insertOrUpdateRoutine(RequestTarget.UpdateRoutine, user, routine_row);
     Loading.complete();
     return res;
 }
 
 export async function getAllRoutines(user: User) {
-    return await getAll<Routine>(RequestPath.GetAllRoutines, user);
+    return await getAll<Routine>(RequestTarget.GetAllRoutines, user);
 }
 
 export async function getRoutine(id: string, user: User) {
-    return await get<Routine>(RequestPath.GetRoutine, id, user);
+    return await get<Routine>(RequestTarget.GetRoutine, id, user);
 }
 
 export async function deleteRoutine(id: string, user: User) {
-    return await del(RequestPath.DeleteRoutine, id, user);
+    return await del(RequestTarget.DeleteRoutine, id, user);
 }
 
-async function insertOrUpdateRoutine<T>(url: string, user: User, routine_row: T): Promise<DbResponse<Routine>> {
+async function insertOrUpdateRoutine<T>(target: RequestTarget, user: User, routine_row: T): Promise<DbResponse<Routine>> {
     if (user === null) {
         return {
             result: null,
@@ -57,6 +58,7 @@ async function insertOrUpdateRoutine<T>(url: string, user: User, routine_row: T)
     }
 
     const { token } = user;
+    const url = generateUrl(target);
     const resp = await fetch(url, postReqeust(token, routine_row));
 
     if (resp.status === 200) {

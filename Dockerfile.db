@@ -8,8 +8,5 @@ RUN apt update && apt upgrade -y
 RUN apt install curl -y
 RUN curl -sSf https://install.surrealdb.com | sh
 
-# expose ports
-EXPOSE 8000/tcp
-
 # start server with generic username/password for testing
-CMD surreal start --log debug --user root --pass root file:///surrealdb/
+CMD surreal start --log full --user root --pass root file:///surrealdb/

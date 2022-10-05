@@ -1,6 +1,6 @@
 <script lang="ts">
     import { link } from "svelte-spa-router";
-    import { RequestPath } from "../../../api/shared";
+    import { RequestTarget } from "../../../api/urls";
     import type { Routine } from "../../../models/routine";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Card from "../../display/card.svelte";
@@ -40,7 +40,7 @@
 
 <DeleteModal 
     item={routine} 
-    url={RequestPath.DeleteRoutine} 
+    target={RequestTarget.DeleteRoutine} 
     bind:show={showModal} 
     on:item-deleted />
 

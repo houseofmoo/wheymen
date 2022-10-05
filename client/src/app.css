@@ -29,9 +29,9 @@
   --max-width: 30em;
 }
 
-/* *, *:before, *:after {
+*, *:before, *:after {
   box-sizing: border-box;
-} */
+}
 
 h1, h2, h3 {
   font-family: 'Space Grotesk', sans-serif;

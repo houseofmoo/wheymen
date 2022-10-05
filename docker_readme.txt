@@ -1,5 +1,6 @@
 # launch command
-# docker run --publish <HOST PORT>:<CONTAINER PORT> --network <NETWORK NAME> <IMAGE NAME>
+# docker run --p <HOST PORT>:<CONTAINER PORT> --network <NETWORK NAME> --name <CONTAINER NAME> <IMAGE NAME>
+# docker run -p 8080:8080 server
 
 # build image
 # docker build -t <NAME> -f <DOCKER FILE NAME> .

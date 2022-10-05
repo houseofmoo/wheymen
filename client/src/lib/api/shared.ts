@@ -1,21 +1,8 @@
 import type { User } from '../models/user';
 import type { DbResponse } from '../models/db-response';
 import { Loading } from "../stores/loading-store";
+import { RequestTarget, generateUrl } from "./urls";
 
-export enum RequestPath {
-    InsertRoutine = `/api/routines/insert`,
-    UpdateRoutine = `/api/routines/update`,
-    GetAllRoutines = `/api/routines/get-all`,
-    GetRoutine = `/api/routines/get`,
-    DeleteRoutine = `api/routines/delete`,
-
-    InsertWorkout = `/api/workouts/insert`,
-    UpdateWorkout = `/api/workouts/update`,
-    GetAllWorkouts = `/api/workouts/get-all`,
-    GetWorkout = `/api/workouts/get`,
-    GetUnrelatedWorkouts = `/api/workouts/get-all/unrelated`,
-    DeleteWorkout = `/api/workouts/delete`,
-}
 
 export function postReqeust(jwt: string, content: any) {
     return {
@@ -28,7 +15,7 @@ export function postReqeust(jwt: string, content: any) {
     };
 }
 
-export async function getAll<T>(url: RequestPath, user: User): Promise<DbResponse<T[]>> {
+export async function getAll<T>(target: RequestTarget, user: User): Promise<DbResponse<T[]>> {
     if (user === null) {
         return {
             result: null,
@@ -40,6 +27,7 @@ export async function getAll<T>(url: RequestPath, user: User): Promise<DbRespons
     Loading.start();
 
     const { token } = user;
+    const url = generateUrl(target);
     const resp = await fetch(url, postReqeust(token, ""));
 
     let response: DbResponse<T[]> = null;
@@ -68,7 +56,7 @@ export async function getAll<T>(url: RequestPath, user: User): Promise<DbRespons
     return response;
 }
 
-export async function get<T>(url: RequestPath, id: string, user: User): Promise<DbResponse<T>> {
+export async function get<T>(target: RequestTarget, id: string, user: User): Promise<DbResponse<T>> {
     if (user === null) {
         return {
             result: null,
@@ -80,8 +68,8 @@ export async function get<T>(url: RequestPath, id: string, user: User): Promise<
     Loading.start();
 
     const { token } = user;
-    const completeUrl = `${url}/${id}`;
-    const resp = await fetch(completeUrl, postReqeust(token, ""));
+    const url = generateUrl(target, id);
+    const resp = await fetch(url, postReqeust(token, ""));
 
     let response: DbResponse<T> = null;
     if (resp.status === 200) {
@@ -109,7 +97,7 @@ export async function get<T>(url: RequestPath, id: string, user: User): Promise<
     return response;
 }
 
-export async function del(url: RequestPath, id: string, user: User) {
+export async function del(target: RequestTarget, id: string, user: User) {
     if (user === null) {
         return {
             result: null,
@@ -121,8 +109,8 @@ export async function del(url: RequestPath, id: string, user: User) {
     Loading.start();
 
     const { token } = user;
-    const completeUrl = `${url}/${id}`;
-    const resp = await fetch(completeUrl, postReqeust(token, ""));
+    const url = generateUrl(target, id);
+    const resp = await fetch(url, postReqeust(token, ""));
 
     if (resp.status === 200 || resp.status === 204) {
         Loading.complete();

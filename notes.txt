@@ -1,0 +1,20 @@
+TODO: 
+1) Learn how to persist the DB data using docker volumes
+2) WHY THE HELL ARE THE DB RESPONSES NOT WORKING!?
+    Only get "unsupported media type" error even though we see the queury
+    run in the db logs. The response must be formatted incorrectly?
+
+
+PRODUCTION STEPS
+1) Change .env file DB_URL=http:\\localhost:8000\sql to DB_URL=http:\\database_c:8000\sql
+2) execute npm run build on client code base
+3) generate images
+    a) docker build -t server -f Dockerfile.server .
+    b) docker build -t database -f Dockerfile.db .
+4) confirm docket network wheymen exists, if not create it
+5) launch containers
+    a) docker run -d -p 8080:8080 --network wheymen --name server_c server
+    b) docker run -d -p 8000:8000 --network wheymen --name database_c database
+
+commandline to run surrealdb official docker image
+docker run --rm --name database_c --network wheymen -p 8000:8000 surrealdb/surrealdb:latest start --log full --user root --pass root file:///surrealdb/

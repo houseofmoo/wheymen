@@ -1,11 +1,12 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import { fade } from "svelte/transition";
-    import { del, RequestPath } from "../../../api/shared";
+    import { del } from "../../../api/shared";
+    import { RequestTarget } from "../../../api/urls";
     import { UserStore } from "../../../stores/user-store";
 
     export let item: any = null;
-    export let url: RequestPath = RequestPath.DeleteRoutine;
+    export let target: RequestTarget = RequestTarget.DeleteRoutine;
 
     const dispatch = createEventDispatcher();
 
@@ -22,7 +23,8 @@
     }
 
     async function deleteItem() {
-        await del(url, item.id, $UserStore);
+        // this can be a workout or a routine
+        await del(target, item.id, $UserStore);
         close();
         dispatch('item-deleted');
     }

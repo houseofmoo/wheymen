@@ -1,8 +1,9 @@
 import type { DbResponse } from '../models/db-response';
 import type { User } from '../models/user';
 import type { Workout, WorkoutRow, InsertWorkoutRow, UpsertWorkoutRow } from '../models/workout';
-import { postReqeust, RequestPath, getAll, get, del } from "./shared";
+import { postReqeust, getAll, get, del } from "./shared";
 import { Loading } from "../stores/loading-store";
+import { RequestTarget, generateUrl } from "./urls";
 
 export async function insertWorkout(user: User, workout: Workout, selected_routine_ids: string[], unselected_routine_ids: string[]) {
     Loading.start();
@@ -16,7 +17,7 @@ export async function insertWorkout(user: User, workout: Workout, selected_routi
         selected_routine_ids, 
         unselected_routine_ids 
     };
-    const res = await insertOrUpdateWorkout(RequestPath.InsertWorkout, user, upsert);
+    const res = await insertOrUpdateWorkout(RequestTarget.InsertWorkout, user, upsert);
     Loading.complete();
     return res;
 }
@@ -34,22 +35,22 @@ export async function updateWorkout(user: User, workout: Workout, selected_routi
         selected_routine_ids, 
         unselected_routine_ids 
     };
-    const res = await insertOrUpdateWorkout(RequestPath.UpdateWorkout, user, upsert);
+    const res = await insertOrUpdateWorkout(RequestTarget.UpdateWorkout, user, upsert);
     Loading.complete();
     return res;
 }
 
 export async function getAllWorkouts(user: User) {
-    return await getAll<Workout>(RequestPath.GetAllWorkouts, user);
+    return await getAll<Workout>(RequestTarget.GetAllWorkouts, user);
 }
 
 export async function getWorkout(id: string, user: User) {
-    return await get<Workout>(RequestPath.GetWorkout, id, user);
+    return await get<Workout>(RequestTarget.GetWorkout, id, user);
 
 }
 
 export async function deleteWorkout(id: string, user: User) {
-    return await del(RequestPath.DeleteWorkout, id, user);
+    return await del(RequestTarget.DeleteWorkout, id, user);
 }
 
 export async function getUnrelatedWorkouts(routine_id: string, user: User) {
@@ -64,8 +65,8 @@ export async function getUnrelatedWorkouts(routine_id: string, user: User) {
     Loading.start();
     
     const { token } = user;
-    const completeUrl = `${RequestPath.GetUnrelatedWorkouts}/${routine_id}`;
-    const resp = await fetch(completeUrl, postReqeust(token, ""));
+    const url = generateUrl(RequestTarget.GetUnrelatedWorkouts, routine_id);
+    const resp = await fetch(url, postReqeust(token, ""));
 
     let response: DbResponse<Workout[]> = null;
     if (resp.status === 200) {
@@ -93,7 +94,7 @@ export async function getUnrelatedWorkouts(routine_id: string, user: User) {
     return response;
 }
 
-async function insertOrUpdateWorkout<T>(url: string, user: User, upsert: T): Promise<DbResponse<Workout>> {
+async function insertOrUpdateWorkout<T>(target: RequestTarget, user: User, upsert: T): Promise<DbResponse<Workout>> {
     if (user === null) {
         return {
             result: null,
@@ -103,6 +104,7 @@ async function insertOrUpdateWorkout<T>(url: string, user: User, upsert: T): Pro
     }
 
     const { token } = user;
+    const url = generateUrl(target);
     const resp = await fetch(url, postReqeust(token, upsert));
 
     if (resp.status === 200) {

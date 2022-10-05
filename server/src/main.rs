@@ -14,9 +14,13 @@ use std::env;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let host = "0.0.0.0";
+    let port = 8080;
+   
     let vars = get_env_vars();
     let decoder = resource::auth::JwtDecoder::new(vars.jwt_token);
-    println!("listening on {}:{}", vars.host, vars.port);
+    
+    println!("listening on {}:{}", host, port);
 
     HttpServer::new(move || {
         App::new()
@@ -28,7 +32,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(decoder.clone()))
             .service(
                 web::scope("/api")
-                    // .guard(guard::Host(host))
+                    .guard(guard::Host(host))
                     .guard(guard::Header("content-type", "application/json"))
                     .service(
                         web::scope("/routines")
@@ -54,7 +58,7 @@ async fn main() -> std::io::Result<()> {
                     .index_file("index.html"),
             )
     })
-    .bind((vars.host, vars.port))?
+    .bind((host, port))?
     .run()
     .await
 }
@@ -66,17 +70,6 @@ fn get_env_vars() -> EnvVar {
     };
 
     EnvVar {
-        host: match env::var("HOST") {
-            Ok(key) => key,
-            Err(e) => panic!("Missing HOST environment variable: {}", e.to_string()),
-        },
-        port: match env::var("PORT") {
-            Ok(key) => match key.parse::<u16>() {
-                Ok(val) => val,
-                Err(e) => panic!("PORT must be a u16 value: {}", e.to_string()),
-            }
-            Err(e) => panic!("Missing PORT environment variable: {}", e.to_string()),
-        },
         jwt_token: match env::var("JWT_TOKEN") {
             Ok(key) => key,
             Err(e) => panic!("Missing JWT_TOKEN environment variable: {}", e.to_string()),

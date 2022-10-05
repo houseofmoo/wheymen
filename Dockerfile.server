@@ -12,17 +12,11 @@ RUN apt install cargo -y
 RUN apt install pkg-config -y
 RUN apt install libssl-dev -y
 
-# copy precompiled client code
-COPY /server/dist /server/dist
-
-# copy server code
+# copy server code and precompiled client code
 COPY /server /server
 
 # copy env file
 COPY .env /server/.env
-
-# expose ports
-EXPOSE 8080/tcp
 
 # set working dir
 WORKDIR /server
