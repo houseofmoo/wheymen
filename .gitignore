@@ -2,6 +2,7 @@ client/.vscode/
 client/node_modules/
 server/target
 server/dist
+server/Cargo.lock
 launch_surreal_db.bat
 db
 *.exe
