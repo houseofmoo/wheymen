@@ -1,10 +1,7 @@
-# EXPECT HOST MACHINE TO HAVE NPM 8.15.0+, NODE 18.7.0+
-# .env file will have to be manually created with expected values before running this
-
 # base linux image
 FROM ubuntu:latest
 
-# updade/upgrade
+# install latest updates
 RUN apt update && apt upgrade -y
 
 # install dependencies

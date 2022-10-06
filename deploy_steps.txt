@@ -9,3 +9,12 @@ PRODUCTION STEPS
 1) Change .env file DB_URL=http:\\localhost:8000\sql to DB_URL=http:\\database_c:8000\sql
 2) execute npm run build on client code base
 3) docker-compose up --build -d
+
+TODO:
+    - create a image for server that is based off a smaller baseline
+    - figure out how to allow server to accept requests from
+        - localhost
+        - 0.0.0.0
+        - wheymen.net
+        - database_c ?
+        - may have to use preprocessor directives (debug vs release)

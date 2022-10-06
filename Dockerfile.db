@@ -1,12 +1,12 @@
 # base surrealdb image
 FROM ubuntu:latest
 
-# install latest updates and surrealdb
+# install latest updates
 RUN apt update && apt upgrade -y
 
 # install dependencies
 RUN apt install curl -y
 RUN curl -sSf https://install.surrealdb.com | sh
 
-# start server with generic username/password for testing
+# launch db
 CMD surreal start --user root --pass root file:///data/db
