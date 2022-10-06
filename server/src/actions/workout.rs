@@ -63,7 +63,7 @@ pub async fn get_workout(
     workout_id: &String,
     client: &DbClient,
 ) -> DbResult<WorkoutRow> {
-    let query = format!("SELECT * FROM {} WHERE user_id=\"{}\"", workout_id, user_id);
+    let query = format!("SELECT * FROM {} WHERE user_id=\"{}\";", workout_id, user_id);
     let result = client.send_query::<WorkoutRow>(query).await?;
 
     match get_first_result::<WorkoutRow>(result) {
@@ -100,7 +100,7 @@ pub async fn update_workout(
     client: &DbClient,
 ) -> DbResult<WorkoutRow> {
     let json = serde_json::json!(workout_row);
-    let query = format!("UPDATE {} CONTENT {}", workout_row.id, json);
+    let query = format!("UPDATE {} CONTENT {};", workout_row.id, json);
     let result = client.send_query::<WorkoutRow>(query).await?;
 
     let workout = match get_first_result::<WorkoutRow>(result) {

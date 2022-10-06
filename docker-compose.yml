@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile.server
     container_name: server_c
     ports:
-      - "8080:8080"
+      - "80:8080"
     networks:
       - dotnet
 
@@ -15,7 +15,9 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile.db
-    container_name: database_c    
+    container_name: database_c 
+    ports:
+      - "8000:8000"
     networks:
       - dotnet
     volumes: 

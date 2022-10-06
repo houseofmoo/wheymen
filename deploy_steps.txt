@@ -6,15 +6,10 @@ node v18.7.0
 .env file that contains expect env variables in root directory of project
 
 PRODUCTION STEPS
-1) Change .env file DB_URL=http:\\localhost:8000\sql to DB_URL=http:\\database_c:8000\sql
-2) execute npm run build on client code base
-3) docker-compose up --build -d
-
-TODO:
-    - create a image for server that is based off a smaller baseline
-    - figure out how to allow server to accept requests from
-        - localhost
-        - 0.0.0.0
-        - wheymen.net
-        - database_c ?
-        - may have to use preprocessor directives (debug vs release)
+1) Change .env 
+    FROM: DB_URL=http:\\localhost:8000\sql 
+    TO:   DB_URL=http:\\database_c:8000\sql
+2) Remove ports option from db in docker-compose.yml
+3) Remove --log debug flag from Dockerfile.db CMD arg
+3) Execute npm run build on client code base
+4) docker-compose up --build -d

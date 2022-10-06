@@ -5,22 +5,41 @@ mod resource;
 
 use actix_files::Files;
 use actix_web::{
-    guard::{self},
+    guard::{self, GuardContext},
     web, App, HttpServer,
 };
 use dotenv::dotenv;
 use model::env_var::EnvVar;
 use std::env;
 
+const HOST: &str = "0.0.0.0";
+const PORT: u16 = 8080;
+
+fn validate_host(ctx: &GuardContext) -> bool {
+    match ctx.head().headers().get("host") {
+        Some(host) => match host.to_str() {
+            Ok(host_name) => match host_name {
+                    "localhost:8080" => true,
+                    "localhost" => true,
+                    "0.0.0.0:8080" => true,
+                    "0.0.0.0" => true,
+                    "192.168.50.215:8080" => true,
+                    "192.168.50.215" => true,
+                    "database_c:8000" => true,
+                    "wheymen.net" => true,
+                    _ => false,
+            },
+            Err(_) => false
+        },
+        None => false,
+    }
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let host = "0.0.0.0";
-    let port = 8080;
-   
     let vars = get_env_vars();
     let decoder = resource::auth::JwtDecoder::new(vars.jwt_token);
-    
-    println!("listening on {}:{}", host, port);
+    println!("listening on {}:{}", HOST, PORT);
 
     HttpServer::new(move || {
         App::new()
@@ -33,6 +52,7 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/api")
                     .guard(guard::Header("content-type", "application/json"))
+                    .guard(guard::fn_guard(validate_host))
                     .service(
                         web::scope("/routines")
                             .service(api::routine::get_all_routines)
@@ -57,7 +77,7 @@ async fn main() -> std::io::Result<()> {
                     .index_file("index.html"),
             )
     })
-    .bind((host, port))?
+    .bind((HOST, PORT))?
     .run()
     .await
 }
