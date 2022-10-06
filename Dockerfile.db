@@ -9,4 +9,4 @@ RUN apt install curl -y
 RUN curl -sSf https://install.surrealdb.com | sh
 
 # start server with generic username/password for testing
-CMD surreal start --log debug --user root --pass root file:///surrealdb/
+CMD surreal start --user root --pass root file:///data/db

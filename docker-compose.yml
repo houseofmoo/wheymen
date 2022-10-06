@@ -1,0 +1,28 @@
+version: "3.8"
+
+services: 
+  server:
+    build: 
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: server_c
+    ports:
+      - "8080:8080"
+    networks:
+      - dotnet
+
+  database:
+    build: 
+      context: .
+      dockerfile: Dockerfile.db
+    container_name: database_c    
+    networks:
+      - dotnet
+    volumes: 
+      - surreal:/data/db
+
+networks:
+  dotnet:
+
+volumes:
+  surreal:

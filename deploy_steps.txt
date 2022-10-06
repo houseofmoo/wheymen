@@ -1,0 +1,11 @@
+MUST HAVE ON HOST MACHINE: (windows)
+docker v20.10.17
+docker-compose v2.10.2
+npm v8.15.0
+node v18.7.0
+.env file that contains expect env variables in root directory of project
+
+PRODUCTION STEPS
+1) Change .env file DB_URL=http:\\localhost:8000\sql to DB_URL=http:\\database_c:8000\sql
+2) execute npm run build on client code base
+3) docker-compose up --build -d
