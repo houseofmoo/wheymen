@@ -11,7 +11,7 @@
         user_id: null,
         name: "",
         days: [],
-        last_completed: new Date().toISOString(),
+        last_completed: new Date(),
         note: "",
         workouts: [],
     };

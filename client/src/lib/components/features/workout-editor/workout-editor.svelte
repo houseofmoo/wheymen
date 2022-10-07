@@ -11,7 +11,9 @@
     import { insertWorkout, updateWorkout, deleteWorkout } from "../../../api/workout";
     import RoutineSelectorModal from "./routine-selector-modal.svelte";
     import Remove from "../../display/icons/remove.svelte";
-    import IconButton from "../../display/icon-button.svelte";
+    import IconButton from "../../display/icon-button.svelte";    
+    import UpArrow from "../../display/icons/up-arrow.svelte";
+    import DownArrow from "../../display/icons/down-arrow.svelte";
 
     export let workout: Workout;
     let selected_routines: Routine[] = [];
@@ -73,6 +75,9 @@
         unselected_routines = [...unselected_routines, routine];
         selected_routines = selected_routines.filter(r => r.id !== routine.id);
     }
+
+
+    function shift(from: number, to: number) {}
 </script>
 
 {#if workout}
@@ -86,9 +91,11 @@
                 <button class="wide-100"  on:click={saveWorkout}>save</button>
             </div>
             <RoutineSelectorModal bind:routines={unselected_routines} on:routine-selected={addRoutine} />
-            {#each selected_routines as routine (routine.id)}
+            {#each selected_routines as routine, i (routine.id)}
             <div class="routines" transition:fade|local="{{duration: 150}}" animate:flip|local="{{duration: 200}}">
-                <p>{routine.name}</p>
+                <p>{routine.name}</p>                 
+                <IconButton icon={DownArrow} on:click={() => shift(i, i+1)} />
+                <IconButton icon={UpArrow} on:click={() => shift(i, i-1)} />
                 <IconButton icon={Remove} on:click={() => removeRoutine(routine)} />
             </div>
         {/each}
@@ -124,7 +131,7 @@
 
     .routines {
         display: grid;
-        grid: auto / 1fr auto;
+        grid: auto / 2fr repeat(3, 1fr);
         background-color: var(--primary-color-400);
         border: 1px solid black;
         place-items: center;

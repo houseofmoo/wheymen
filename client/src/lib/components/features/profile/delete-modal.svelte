@@ -32,8 +32,8 @@
 </script>
 
 <dialog class="modal" bind:this={modal}>
-    <div class="routine-selector">
-        <p>Type <span>{item.name}</span> to confirm delete request</p>
+    <div class="content">
+        <p class="center-text">Type <span>{item.name}</span> in the box below to confirm</p>
         <input class="styled-input" bind:value={name} placeholder="{item.name}" />
         <div class="action-buttons">
             <button on:click={close}>cancel</button>
@@ -48,26 +48,21 @@
     .modal {
         background-color: var(--primary-color-800);
         border: 1px solid black;
-        width: 60vw;
-        max-width: 60em;
+        max-width: 30em;
+        width: 90%;
+        margin-top: 20vh;
+    }
+
+    .content {
+        display: grid;
+        grid: 1fr / 1fr;
+        place-content: center;
+        place-items: center;
     }
 
     .modal::backdrop {
         background: black;
         opacity: 0.4;
-    }
-
-    .routine-selector {
-        display: grid;
-        grid: 1fr / 1fr;
-        grid-gap: 1em;
-        place-items: center;
-        place-content: center;
-        width: 100%;
-        height: fit-content;
-        overflow-y: scroll;
-        scrollbar-width: none;
-        z-index: 2;
     }
 
     p {

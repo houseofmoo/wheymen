@@ -13,3 +13,8 @@ PRODUCTION STEPS
 3) Remove --log debug flag from Dockerfile.db CMD arg
 3) Execute npm run build on client code base
 4) docker-compose up --build -d
+
+
+# DEV NOTE
+manually launch database on host machine
+surreal start --log debug --user root --pass root file://C:\Users\yourg\Desktop\wheymen\db

@@ -5,7 +5,7 @@ export class Routine {
     user_id: string;
     name: string;
     days: string[];
-    last_completed: string;
+    last_completed: Date;
     note: string;
     workouts: Workout[];
 }
@@ -15,7 +15,7 @@ export class RoutineRow {
     user_id: string;
     name: string;
     days: string[];
-    last_completed: string;
+    last_completed: Date;
     note: string;
     workouts: string[];
 }
@@ -24,7 +24,7 @@ export class InsertRoutineRow {
     user_id: string;
     name: string;
     days: string[];
-    last_completed: string;
+    last_completed: Date;
     note: string;
     workouts: string[];
 }

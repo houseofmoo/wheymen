@@ -3,7 +3,7 @@ client/node_modules/
 server/target
 server/dist
 server/Cargo.lock
-launch_surreal_db.bat
+launch_db.bat
 db
 *.exe
 *.env

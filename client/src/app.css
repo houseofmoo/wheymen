@@ -117,12 +117,16 @@ input:focus, textarea:focus {
   font-size: var(--largest-font-size);
 }
 
-.center-text {
+.center-text, .text-center {
   text-align: center;
 }
 
-.right-text {
+.right-text, .text-right {
   text-align: right;
+}
+
+.left-text, .text-left {
+  text-align: left;
 }
 
 .wide-100 {
