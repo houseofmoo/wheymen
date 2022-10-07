@@ -1,47 +1,18 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { push } from "svelte-spa-router";
-    import { UserStore } from "../stores/user-store";
-    import { getRoutine } from "../api/routine";
-    import type { Routine } from "../models/routine";
-    import Card from "../components/display/card.svelte";
-    import Kebabmenu from "../components/display/kebab-menu.svelte";
-    import Title from "../components/display/title.svelte";
+    import { UserStore } from "../../../stores/user-store";
+    import Card from "../../display/card.svelte";
+    import Kebabmenu from "../../display/kebab-menu.svelte";
+    import Title from "../../display/title.svelte";
+    import type { InProgress } from "../../../models/in-progress";
 
-    export let params = { id: null };
-    let routine_id = params.id;
-    let routine: Routine = null;
-
-    onMount(async () => {
-        // if user landed here without being logged in, send them away
-        if ($UserStore === null) {
-            push('/login');
-        }
-
-        // NOTE: when we land here we either are starting a new workout
-        // or continuing a workout that was in progress...
-        // need to handle both
-        
-        //let routine_id = "routines:olisz8rlthi3ux7b7aa5";
-
-        const resp = await getRoutine(routine_id, $UserStore);
-        if (resp.count > 0) {
-            routine = resp.result;
-        } else {
-            // TODO: maybe no routine, maybe error occured
-        }
-
-        // get histories of workouts to get set/weight counts
-
-        // store the workout in "workout in progress" table
-    });
+    export let in_progress: InProgress = null;
 </script>
 
-{#if $UserStore && routine}
+{#if $UserStore && in_progress}
     <div>
         <Title subtitle={"gains"} />
         <div>
-            <p class="largest-text center-text">{routine.name}</p>
+            <p class="largest-text center-text">{in_progress.name}</p>
             <Kebabmenu>
                 <button class="link-button" on:click={() => console.log("")}>sort workouts</button>
                 <button class="link-button" on:click={() => console.log("")}>add workout</button>
@@ -53,7 +24,7 @@
             <p>timer that counts time since last set (sticky)</p>
             <p>update inprogress workout db table once per min and/or everytime a set is completed</p>
         </div>
-        {#each routine.workouts as workout}
+        {#each in_progress.workouts as workout}
             <Card>
                 <div class="workout-title">
                     <div />

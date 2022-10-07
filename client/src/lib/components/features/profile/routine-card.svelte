@@ -17,7 +17,7 @@
             <div />
             <p class="name large-text center-text">{routine.name}</p>
             <Kebabmenu>
-                <a href={`/gains/${routine.id}`} use:link>start</a>
+                <a href={`/start-routine/${routine.id}`} use:link>start</a>
                 <a href={`/edit-routine/${routine.id}`} use:link>edit</a>
                 <a href={`/history-routine/${routine.id}`} use:link>history</a>
                 <button class="link-button" on:click={() => showModal()}>delete</button>
