@@ -35,6 +35,7 @@
         background-color: var(--primary-color-800);
         border: 1px solid black;
         max-width: 30em;
+        width: 100%;
     }
 
     .modal::backdrop {

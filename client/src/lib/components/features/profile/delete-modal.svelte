@@ -34,7 +34,7 @@
 <dialog class="modal" bind:this={modal}>
     <div class="content">
         <p class="center-text">Type <span>{item.name}</span> in the box below to confirm</p>
-        <input class="styled-input" bind:value={name} placeholder="{item.name}" />
+        <input class="center-text styled-input" bind:value={name} placeholder="{item.name}" />
         <div class="action-buttons">
             <button on:click={close}>cancel</button>
             {#if name === item.name}
