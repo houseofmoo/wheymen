@@ -4,6 +4,7 @@
     import { del } from "../../../api/shared";
     import { RequestTarget } from "../../../api/urls";
     import { UserStore } from "../../../stores/user-store";
+    import Modal from "../../display/modal.svelte";
 
     export let item: any = null;
     export let target: RequestTarget = RequestTarget.DeleteRoutine;
@@ -11,15 +12,20 @@
     const dispatch = createEventDispatcher();
 
     let name: string = "";
-    let modal;
+    let showModal: () => void;
+    let closeModal: () => void;
 
     export function show() {
-        modal.showModal();
+        showModal();
     }
 
-    function close() {
+    function cancel() {
+        cleanUpName()
+        closeModal();
+    }
+
+    function cleanUpName() {
         name = "";
-        modal.close();
     }
 
     async function deleteItem() {
@@ -31,41 +37,26 @@
 
 </script>
 
-<dialog class="modal" bind:this={modal}>
+<Modal bind:showModal={showModal} bind:closeModal={closeModal} on:modal-close={cleanUpName}>
     <div class="content">
         <p class="center-text">Type <span>{item.name}</span> in the box below to confirm</p>
         <input class="center-text styled-input" bind:value={name} placeholder="{item.name}" />
         <div class="action-buttons">
-            <button on:click={close}>cancel</button>
+            <button on:click={cancel}>cancel</button>
             {#if name === item.name}
                 <button on:click={deleteItem} transition:fade|local>delete</button>
             {/if}
         </div>
     </div>
-</dialog>
+</Modal>
+    
 
 <style>
-    .modal {
-        background-color: var(--primary-color-800);
-        border: 1px solid black;
-        max-width: 30em;
-        width: 90%;
-        margin-top: 20vh;
-    }
-
     .content {
         display: grid;
         grid: 1fr / 1fr;
         place-content: center;
         place-items: center;
-    }
-
-    .modal::backdrop {
-        background: black;
-        opacity: 0.4;
-    }
-
-    p {
         color: var(--text-color);
     }
 
