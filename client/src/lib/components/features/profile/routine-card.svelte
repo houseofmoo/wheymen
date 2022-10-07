@@ -23,18 +23,12 @@
                 <button class="link-button" on:click={() => showModal()}>delete</button>
             </Kebabmenu>
         </div>
-        <p class="small-text center-text margin-0 padding-0">{routine.days.join(",")}</p>
         <div class="info">
-            <div>
-                <p class="small-text margin-0 padding-0">last completed:</p>
-                <p class="small-text margin-0 padding-0">{new Date(routine.last_completed).toLocaleDateString()}</p>
-            </div>
-            <div>
-                {#each routine.workouts as workout}
-                    <p class="small-text margin-0 padding-0">{workout.name}</p>
-                {/each}
-            </div>
+            <p class="small-text center-text">{routine.days.join(", ")}</p>
+            <p class="small-text center-text">{new Date(routine.last_completed).toLocaleDateString()}</p>
+            <p class="small-text">{routine.note}</p>
         </div>
+        <p class="center-text">{routine.workouts.map(x => x.name).join(" - ")}</p>
     </Card>
 {/if}
 
@@ -57,6 +51,7 @@
 
     .info {
         display: grid;
-        grid: 1fr / 1fr 1fr;
+        grid: 1fr / repeat(3, 1fr);
+        place-content: center;
     }
 </style>
