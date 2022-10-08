@@ -122,28 +122,14 @@ pub async fn delete_workout(
     workout_id: &String,
     client: &DbClient,
 ) -> DbResult<WorkoutRow> {
-    let query = format!("DELETE {} WHERE user_id=\"{}\";", workout_id, user_id);
+    // delete this workout from all routines
+    super::routine::remove_workout_from_all_user_routines(&user_id, &workout_id, &client).await?;
 
-    match super::routine::get_all_routine_rows(&user_id, &client).await {
-        Ok(r) => match r {
-            Some(r) => {
-                // remove workout id from routines then delete workout
-                let routine_ids = r.into_iter().map(|r| r.id).collect();
-                super::routine::remove_workout_from_many_routines(
-                    &routine_ids,
-                    &workout_id,
-                    &client,
-                )
-                .await?;
-                client.send_query::<WorkoutRow>(query).await?;
-                Ok(None)
-            }
-            None => {
-                // just delete workout
-                client.send_query::<WorkoutRow>(query).await?;
-                Ok(None)
-            }
-        },
-        Err(e) => Err(e),
-    }
+    // delete this workout history
+    super::workout_history::delete_all_history_for_workout(&user_id, &workout_id, &client).await?;
+
+    // delete workout
+    let query = format!("DELETE {} WHERE user_id=\"{}\";", workout_id, user_id);
+    client.send_query::<WorkoutRow>(query).await?;
+    Ok(None)
 }

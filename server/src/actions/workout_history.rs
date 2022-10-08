@@ -1,6 +1,6 @@
 use super::helper::{get_all_results, get_first_result};
 use crate::{
-    model::{shared_types::DbResult, workout::WorkoutHistoryRow},
+    model::{shared_types::DbResult, workout::WorkoutHistoryRow, db::Table},
     resource::client::DbClient,
 };
 use chrono::Utc;
@@ -12,8 +12,8 @@ pub async fn clean_workout_history(
     // get all workout histories that are more than 26 weeks
     let current_datetime = Utc::now();
     let query = format!(
-        "SELECT * FROM workout_history WHERE user_id=\"{}\" AND completed_on + 26w < \"{}\";",
-        user_id, current_datetime
+        "SELECT * FROM {} WHERE user_id=\"{}\" AND completed_on + 26w < \"{}\";",
+        Table::WorkoutHistory.name(), user_id, current_datetime
     );
     let result = client.send_query::<WorkoutHistoryRow>(query).await?;
 
@@ -40,8 +40,8 @@ pub async fn get_workout_history(
     client: &DbClient,
 ) -> DbResult<Vec<WorkoutHistoryRow>> {
     let query = format!(
-        "SELECT * FROM workout_history WHERE user_id=\"{}\" AND workout=\"{}\" ORDER BY completed_on FETCH workout;",
-        user_id, workout_id
+        "SELECT * FROM {} WHERE user_id=\"{}\" AND workout=\"{}\" ORDER BY completed_on FETCH workout;",
+        Table::WorkoutHistory.name(), user_id, workout_id
     );
     let result = client.send_query::<WorkoutHistoryRow>(query).await?;
 
@@ -56,7 +56,7 @@ pub async fn insert_workout_history(
     client: &DbClient,
 ) -> DbResult<WorkoutHistoryRow> {
     let json = serde_json::json!(workout_history_row);
-    let query = format!("INSERT INTO workout_history {};", json);
+    let query = format!("INSERT INTO {} {};", Table::WorkoutHistory.name(), json);
     let result = client.send_query::<WorkoutHistoryRow>(query).await?;
 
     match get_first_result::<WorkoutHistoryRow>(result) {
@@ -71,8 +71,8 @@ pub async fn delete_all_history_for_workout(
     client: &DbClient,
 ) -> DbResult<WorkoutHistoryRow> {
     let query = format!(
-        "DELETE workout_history WHERE user_id=\"{}\" AND workout_id=\"{}\";", 
-        user_id, workout_id
+        "DELETE {} WHERE user_id=\"{}\" AND workout_id=\"{}\";", 
+        Table::WorkoutHistory.name(),user_id, workout_id
     );
     let result = client.send_query::<WorkoutHistoryRow>(query).await?;
 

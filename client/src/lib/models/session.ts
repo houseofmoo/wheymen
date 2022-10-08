@@ -4,7 +4,7 @@ export class Session {
     routine_id: string;
     routine_name: string;
     routine_note: string;               
-    start_time: Date;
+    start_time: string;
     duration_in_sec: number;
     workouts: SessionWorkout[];
 }

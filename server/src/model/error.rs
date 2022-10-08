@@ -6,6 +6,7 @@ pub enum LocalError {
     InsertFailed,
     UpdateFailed,
     RelationshipFailed,
+    GetFailed
 }
 
 impl Error for LocalError {}
@@ -18,6 +19,7 @@ impl std::fmt::Debug for LocalError {
             Self::InsertFailed => write!(f, "InsertFailed"),
             Self::UpdateFailed => write!(f, "UpdateFailed"),
             Self::RelationshipFailed => write!(f, "RelationshipFailed"),
+            Self::GetFailed => write!(f, "GetFailed"),
         }
     }
 }
@@ -30,6 +32,7 @@ impl fmt::Display for LocalError {
             Self::InsertFailed => write!(f, "InsertFailed"),
             Self::UpdateFailed => write!(f, "UpdateFailed"),
             Self::RelationshipFailed => write!(f, "RelationshipFailed"),
+            Self::GetFailed => write!(f, "GetFailed"),
         }
     }
 }

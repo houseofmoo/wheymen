@@ -1,6 +1,6 @@
 use super::helper::{get_all_results, get_first_result};
 use crate::{
-    model::{routine::RoutineHistoryRow, shared_types::DbResult, workout::WorkoutHistoryRow},
+    model::{routine::RoutineHistoryRow, shared_types::DbResult, workout::WorkoutHistoryRow, db::Table},
     resource::client::DbClient,
 };
 use chrono::Utc;
@@ -11,8 +11,8 @@ pub async fn clean_routine_history(
 ) -> DbResult<RoutineHistoryRow> {
     let current_datetime = Utc::now();
     let query = format!(
-        "SELECT * FROM routine_history WHERE user_id=\"{}\" AND completed_on + 26w < \"{}\";",
-        user_id, current_datetime
+        "SELECT * FROM {} WHERE user_id=\"{}\" AND completed_on + 26w < \"{}\";",
+        Table::RoutineHistory.name(), user_id, current_datetime
     );
     let result = client.send_query::<RoutineHistoryRow>(query).await?;
 
@@ -24,8 +24,7 @@ pub async fn clean_routine_history(
 
     let query = format!(
         "DELETE {} WHERE user_id=\"{}\";",
-        routine_history_ids.join(", "),
-        user_id
+        routine_history_ids.join(", "), user_id
     );
     client.send_query::<RoutineHistoryRow>(query).await?;
     Ok(None)

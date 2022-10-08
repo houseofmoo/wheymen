@@ -82,11 +82,3 @@ async function insertOrUpdateRoutine<T>(target: RequestTarget, user: User, routi
         }
     }
 }
-
-export async function startRoutine(id: string, user: User) {
-
-}
-
-export async function continueRoutine(id: string, user: User) {
-    
-}

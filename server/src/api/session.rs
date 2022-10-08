@@ -12,7 +12,7 @@ async fn start_session(
         return HttpResponse::BadRequest().body("no routine id provided".to_string());
     }
 
-    match actions::routine::delete_routine(&auth.user_id, &routine_id, &db).await {
+    match actions::session::start_session(&auth.user_id, &routine_id, &db).await {
         Ok(r) => match r {
             Some(r) => HttpResponse::Ok().json(r),
             None => HttpResponse::NoContent().body(""),

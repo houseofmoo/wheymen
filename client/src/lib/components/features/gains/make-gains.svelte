@@ -3,16 +3,16 @@
     import Card from "../../display/card.svelte";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Title from "../../display/title.svelte";
-    import type { InProgress } from "../../../models/in-progress";
+    import type { Session } from "../../../models/session";
 
-    export let in_progress: InProgress = null;
+    export let session: Session = null;
 </script>
 
-{#if $UserStore && in_progress}
+{#if $UserStore && session}
     <div>
         <Title subtitle={"gains"} />
         <div>
-            <p class="largest-text center-text">{in_progress.name}</p>
+            <p class="largest-text center-text">{session.routine_name}</p>
             <Kebabmenu>
                 <button class="link-button" on:click={() => console.log("")}>sort workouts</button>
                 <button class="link-button" on:click={() => console.log("")}>add workout</button>
@@ -24,18 +24,18 @@
             <p>timer that counts time since last set (sticky)</p>
             <p>update inprogress workout db table once per min and/or everytime a set is completed</p>
         </div>
-        {#each in_progress.workouts as workout}
+        {#each session.workouts as workout}
             <Card>
                 <div class="workout-title">
                     <div />
-                    <p class="large-text">{workout.name}</p>
+                    <p class="large-text">{workout.workout_name}</p>
                     <Kebabmenu>
-                        <button class="link-button" on:click={() => console.log(workout.note)}>add set</button>
-                        <button class="link-button" on:click={() => console.log(workout.note)}>history</button>
-                        <button class="link-button" on:click={() => console.log(workout.note)}>skip</button>
+                        <button class="link-button" on:click={() => console.log("")}>add set</button>
+                        <button class="link-button" on:click={() => console.log("")}>history</button>
+                        <button class="link-button" on:click={() => console.log("")}>skip</button>
                     </Kebabmenu>
                 </div>
-                <textarea class="note" bind:value={workout.note} />
+                <textarea class="note" bind:value={workout.workout_note} />
                 <div class="workout-grid">
                     <div class="set">
                         <p class="small-text margin-0 padding-0">weight</p>
