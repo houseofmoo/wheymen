@@ -19,17 +19,17 @@ fn validate_host(ctx: &GuardContext) -> bool {
     match ctx.head().headers().get("host") {
         Some(host) => match host.to_str() {
             Ok(host_name) => match host_name {
-                    "localhost:8080" => true,
-                    "localhost" => true,
-                    "0.0.0.0:8080" => true,
-                    "0.0.0.0" => true,
-                    "192.168.50.215:8080" => true,
-                    "192.168.50.215" => true,
-                    "database_c:8000" => true,
-                    "wheymen.net" => true,
-                    _ => false,
+                "localhost:8080" => true,
+                "localhost" => true,
+                "0.0.0.0:8080" => true,
+                "0.0.0.0" => true,
+                "192.168.50.215:8080" => true,
+                "192.168.50.215" => true,
+                "database_c:8000" => true,
+                "wheymen.net" => true,
+                _ => false,
             },
-            Err(_) => false
+            Err(_) => false,
         },
         None => false,
     }
@@ -69,6 +69,14 @@ async fn main() -> std::io::Result<()> {
                             .service(api::workout::insert_workout)
                             .service(api::workout::update_workout)
                             .service(api::workout::delete_workout),
+                    )
+                    .service(
+                        web::scope("/session")
+                            .service(api::session::start_session)
+                            .service(api::session::continue_sesion)
+                            .service(api::session::update_session)
+                            .service(api::session::complete_session)
+                            .service(api::session::delete_session),
                     ),
             )
             .service(

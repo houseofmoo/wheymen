@@ -28,3 +28,24 @@ export class UpsertWorkoutRow<T> {
     selected_routine_ids: string[];
     unselected_routine_ids: string[];
 }
+
+export class WorkoutHistoryRow {
+    id: string;
+    workout: string;
+    user_id: string;
+    completed_on: string;
+    sets: Set[];
+}
+
+export class WorkoutHistory {
+    id: string;
+    workout: Workout;
+    user_id: string;
+    completed_on: string;
+    sets: Set[];
+}
+
+export class Set {
+    weight: number;
+    reps: number;
+}

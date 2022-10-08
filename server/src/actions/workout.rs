@@ -1,17 +1,17 @@
-use super::helper::{get_all_results, get_first_result};
+use super::helper::{get_all_results, get_first_result,};
 use crate::{
     model::{
         error::LocalError,
         shared_types::DbResult,
-        workout::{InsertWorkoutRow, WorkoutRow},
+        workout::{InsertWorkoutRow, WorkoutRow}, db::Table,
     },
     resource::client::DbClient,
 };
 
 pub async fn get_all_workouts(user_id: &String, client: &DbClient) -> DbResult<Vec<WorkoutRow>> {
     let query = format!(
-        "SELECT * FROM workouts WHERE user_id=\"{}\" ORDER BY category, name;",
-        user_id
+        "SELECT * FROM {} WHERE user_id=\"{}\" ORDER BY category, name;",
+        Table::Workouts.name(), user_id
     );
     let result = client.send_query::<WorkoutRow>(query).await?;
 
@@ -63,7 +63,10 @@ pub async fn get_workout(
     workout_id: &String,
     client: &DbClient,
 ) -> DbResult<WorkoutRow> {
-    let query = format!("SELECT * FROM {} WHERE user_id=\"{}\";", workout_id, user_id);
+    let query = format!(
+        "SELECT * FROM {} WHERE user_id=\"{}\";",
+        workout_id, user_id
+    );
     let result = client.send_query::<WorkoutRow>(query).await?;
 
     match get_first_result::<WorkoutRow>(result) {
@@ -79,7 +82,7 @@ pub async fn insert_workout(
     client: &DbClient,
 ) -> DbResult<WorkoutRow> {
     let json = serde_json::json!(workout_row);
-    let query = format!("INSERT INTO workouts {};", json);
+    let query = format!("INSERT INTO {} {};", Table::Workouts.name(), json);
     let result = client.send_query::<WorkoutRow>(query).await?;
 
     let workout = match get_first_result::<WorkoutRow>(result) {
