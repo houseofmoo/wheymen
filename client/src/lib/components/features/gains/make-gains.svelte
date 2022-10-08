@@ -1,29 +1,44 @@
 <script lang="ts">
     import { UserStore } from "../../../stores/user-store";
+    import type { Session } from "../../../models/session";
+    import { restTime } from "../../../stores/session-time";
     import Card from "../../display/card.svelte";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Title from "../../display/title.svelte";
-    import type { Session } from "../../../models/session";
+    import Timer from "./timer.svelte";
 
     export let session: Session = null;
+
+    // we need a timer that starts when we land on this page
+    // we need to record the date/time we started
+    // we need to get the history for each workout in the session
+
+    // every time the user completes a set, update the session
+
+    function resetRestTimer() {
+        restTime.reset()
+    }
+
+    function updateSession() {
+        // everytime user finishes a set
+    }
+
 </script>
 
 {#if $UserStore && session}
     <div>
         <Title subtitle={"gains"} />
         <div>
+            <div />
             <p class="largest-text center-text">{session.routine_name}</p>
             <Kebabmenu>
                 <button class="link-button" on:click={() => console.log("")}>sort workouts</button>
                 <button class="link-button" on:click={() => console.log("")}>add workout</button>
                 <button class="link-button" on:click={() => console.log("")}>create workout</button>
+                <button class="link-button" on:click={() => console.log("")}>cancel session</button>
             </Kebabmenu>
-            <p>total time</p>
-            <p>cancel routine</p>
-            <p>modify workoutlist -> order, create, select, or remove a workout. probably takes us to a different page after we store the current progress</p>
-            <p>timer that counts time since last set (sticky)</p>
-            <p>update inprogress workout db table once per min and/or everytime a set is completed</p>
         </div>
+        <Timer show_timer={true} />
         {#each session.workouts as workout}
             <Card>
                 <div class="workout-title">
@@ -33,6 +48,7 @@
                         <button class="link-button" on:click={() => console.log("")}>add set</button>
                         <button class="link-button" on:click={() => console.log("")}>history</button>
                         <button class="link-button" on:click={() => console.log("")}>skip</button>
+                        <button class="link-button" on:click={() => console.log("")}>remove</button>
                     </Kebabmenu>
                 </div>
                 <textarea class="note" bind:value={workout.workout_note} />

@@ -25,7 +25,7 @@
         border-left: none;
         border-right: none;
         border-bottom: solid 1px black;
-		z-index: 2;
+		z-index: 1;
 		text-align: center;
         box-sizing: border-box;
         width: 100%;
