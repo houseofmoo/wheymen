@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import { fade } from "svelte/transition";
     import { del } from "../../../api/shared";
-    import { RequestTarget } from "../../../api/urls";
+    import { RequestTarget } from "../../../api/request-target";
     import { UserStore } from "../../../stores/user-store";
     import Modal from "../../display/modal.svelte";
 

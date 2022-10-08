@@ -1,7 +1,7 @@
 import type { User } from '../models/user';
 import type { DbResponse } from '../models/db-response';
 import { Loading } from "../stores/loading-store";
-import { RequestTarget, generateUrl } from "./urls";
+import { RequestTarget, generateUrl } from "./request-target";
 
 
 export function postReqeust(jwt: string, content: any) {

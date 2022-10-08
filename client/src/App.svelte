@@ -6,9 +6,9 @@
     import Router from "svelte-spa-router";
     import AlertNotification from "./lib/components/display/alert-notification.svelte";
     import Loading from "./lib/components/display/loading.svelte";
-    
+
     import AccountRecoveryPage from "./lib/pages/account-recovery-page.svelte";
-    import ContinueRoutinePage from "./lib/pages/continue-routine-page.svelte";
+    import ContinueSessionPage from "./lib/pages/continue-session-page.svelte";
     import CreateRoutinePage from "./lib/pages/create-routine-page.svelte";
     import CreateWorkoutPage from "./lib/pages/create-workout-page.svelte";
     import EditRoutinePage from "./lib/pages/edit-routine-page.svelte";
@@ -18,12 +18,12 @@
     import LogoutPage from "./lib/pages/logout-page.svelte";
     import ProfilePage from "./lib/pages/profile-page.svelte";
     import SignupPage from "./lib/pages/sign-up-page.svelte";
-    import StartRoutinePage from "./lib/pages/start-routine-page.svelte";
+    import StartSessionPage from "./lib/pages/start-session-page.svelte";
 
     const routes = {
         '/': LandingPage,
         '/account-recovery': AccountRecoveryPage,
-        '/continue-routine/:id': ContinueRoutinePage,
+        '/continue-session/:id': ContinueSessionPage,
         '/create-routine': CreateRoutinePage,
         '/create-workout': CreateWorkoutPage,
         '/edit-routine/:id': EditRoutinePage,
@@ -32,7 +32,7 @@
         '/logout': LogoutPage,
         '/profile/:tab': ProfilePage,
         '/signup': SignupPage,
-        '/start-routine/:id': StartRoutinePage,
+        '/start-session/:id': StartSessionPage,
         '*': LandingPage
     }
 

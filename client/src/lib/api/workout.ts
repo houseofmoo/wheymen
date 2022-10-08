@@ -3,7 +3,7 @@ import type { User } from '../models/user';
 import type { Workout, WorkoutRow, InsertWorkoutRow, UpsertWorkoutRow } from '../models/workout';
 import { postReqeust, getAll, get, del } from "./shared";
 import { Loading } from "../stores/loading-store";
-import { RequestTarget, generateUrl } from "./urls";
+import { RequestTarget, generateUrl } from "./request-target";
 
 export async function insertWorkout(user: User, workout: Workout, selected_routine_ids: string[], unselected_routine_ids: string[]) {
     Loading.start();

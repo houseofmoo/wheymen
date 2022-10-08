@@ -2,7 +2,7 @@ import type { Session } from "../models/session";
 import type { DbResponse } from "../models/db-response";
 import type { User } from "../models/user";
 import { postReqeust } from "./shared";
-import { RequestTarget, generateUrl } from "./urls";
+import { RequestTarget, generateUrl } from "./request-target";
 import { Loading } from "../stores/loading-store";
 
 export async function startSession(user: User, routine_id: string): Promise<DbResponse<Session>> {

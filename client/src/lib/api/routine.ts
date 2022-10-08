@@ -2,7 +2,7 @@ import type { Routine, RoutineRow, InsertRoutineRow } from "../models/routine";
 import type { DbResponse } from "../models/db-response";
 import type { User } from "../models/user";
 import { postReqeust, getAll, get, del } from "./shared";
-import { RequestTarget, generateUrl } from "./urls";
+import { RequestTarget, generateUrl } from "./request-target";
 import { Loading } from "../stores/loading-store";
 
 export async function insertRoutine(user: User, routine: Routine) {

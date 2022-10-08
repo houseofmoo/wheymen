@@ -1,6 +1,6 @@
 <script lang="ts">
     import { link } from "svelte-spa-router";
-    import { RequestTarget } from "../../../api/urls";
+    import { RequestTarget } from "../../../api/request-target";
     import type { Workout } from "../../../models/workout";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Card from "../../display/card.svelte";

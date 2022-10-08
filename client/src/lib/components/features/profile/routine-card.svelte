@@ -1,6 +1,6 @@
 <script lang="ts">
     import { link } from "svelte-spa-router";
-    import { RequestTarget } from "../../../api/urls";
+    import { RequestTarget } from "../../../api/request-target";
     import type { Routine } from "../../../models/routine";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Card from "../../display/card.svelte";
@@ -17,7 +17,7 @@
             <div />
             <p class="name large-text center-text">{routine.name}</p>
             <Kebabmenu>
-                <a href={`/start-routine/${routine.id}`} use:link>start</a>
+                <a href={`/start-session/${routine.id}`} use:link>start</a>
                 <a href={`/edit-routine/${routine.id}`} use:link>edit</a>
                 <a href={`/history-routine/${routine.id}`} use:link>history</a>
                 <button class="link-button" on:click={() => showModal()}>delete</button>
