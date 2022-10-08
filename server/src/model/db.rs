@@ -20,7 +20,7 @@ pub struct Relationship {
     pub user_id: UserRef,
 }
 
-pub enum Table {    // TODO: standardize table names so we dont screw up typing it
+pub enum Table {
     Routines,
     RoutineHistory,
     Sessions,

@@ -1,7 +1,7 @@
 import type { Session } from "../models/session";
 import type { DbResponse } from "../models/db-response";
 import type { User } from "../models/user";
-import { postReqeust } from "./shared";
+import { postReqeust, del } from "./shared";
 import { RequestTarget, generateUrl } from "./request-target";
 import { Loading } from "../stores/loading-store";
 
@@ -43,4 +43,8 @@ export async function startSession(user: User, routine_id: string): Promise<DbRe
     
     Loading.complete(); 
     return  result;
+}
+
+export async function deleteSession(user: User, session_id: string) {
+    return await del(RequestTarget.DeleteSession, session_id, user);
 }

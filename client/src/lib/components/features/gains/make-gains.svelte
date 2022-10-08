@@ -23,12 +23,16 @@
         // everytime user finishes a set
     }
 
+    function getWorkoutHistor() {
+        // get the history for each workout that is part of this session
+        // do that onMount 
+    }
 </script>
 
 {#if $UserStore && session}
     <div>
         <Title subtitle={"gains"} />
-        <div>
+        <div class="">
             <div />
             <p class="largest-text center-text">{session.routine_name}</p>
             <Kebabmenu>

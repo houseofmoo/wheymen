@@ -45,6 +45,10 @@
         }
     }
 
+    async function getSessinos() {
+
+    }
+
     async function refresh() {
         await getRoutines();
         await getWorkouts();
@@ -65,7 +69,7 @@
         </div>
 
         {#if current_tab === "routines"}
-            <div >
+            <div>
                 {#each routines as routine}
                     <RoutineCard {routine} on:item-deleted={refresh}/>
                 {/each}
