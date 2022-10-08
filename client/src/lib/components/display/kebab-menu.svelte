@@ -52,9 +52,9 @@
         border: 1px solid black;
         padding: 1em;
         display: grid;
-        grid: 1fr / auto;
+        grid: 1fr / 1fr;
         grid-gap: 0.5em;
-        min-width: 5em;
+        width: max-content;
         box-shadow: 3px 3px 10px black;
     }
 </style>
