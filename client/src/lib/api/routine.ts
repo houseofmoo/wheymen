@@ -6,7 +6,6 @@ import { RequestTarget, generateUrl } from "./request-target";
 import { Loading } from "../stores/loading-store";
 
 export async function insertRoutine(user: User, routine: Routine) {
-    Loading.start();
     const routine_row: InsertRoutineRow = {
         user_id: routine.user_id,
         name: routine.name,
@@ -15,13 +14,10 @@ export async function insertRoutine(user: User, routine: Routine) {
         note: routine.note,
         workouts: routine.workouts.map(x => x.id),
     }
-    const res = await insertOrUpdateRoutine(RequestTarget.InsertRoutine, user, routine_row);
-    Loading.complete(); 
-    return  res;
+    return await insertOrUpdateRoutine(RequestTarget.InsertRoutine, user, routine_row);
 }
 
 export async function updateRoutine(user: User, routine: Routine) {
-    Loading.start();
     const routine_row: RoutineRow = {
         id: routine.id,
         user_id: routine.user_id,
@@ -31,54 +27,63 @@ export async function updateRoutine(user: User, routine: Routine) {
         note: routine.note,
         workouts: routine.workouts.map(x => x.id),
     }
-    const res = await insertOrUpdateRoutine(RequestTarget.UpdateRoutine, user, routine_row);
-    Loading.complete();
-    return res;
+    return await insertOrUpdateRoutine(RequestTarget.UpdateRoutine, user, routine_row);
 }
 
 export async function getAllRoutines(user: User) {
     return await getAll<Routine>(RequestTarget.GetAllRoutines, user);
 }
 
-export async function getRoutine(id: string, user: User) {
-    return await get<Routine>(RequestTarget.GetRoutine, id, user);
+export async function getRoutine(routine_id: string, user: User) {
+    return await get<Routine>(RequestTarget.GetRoutine, routine_id, user);
 }
 
-export async function deleteRoutine(id: string, user: User) {
-    return await del(RequestTarget.DeleteRoutine, id, user);
+export async function deleteRoutine(routine_id: string, user: User) {
+    return await del(RequestTarget.DeleteRoutine, routine_id, user);
 }
 
 async function insertOrUpdateRoutine<T>(target: RequestTarget, user: User, routine_row: T): Promise<DbResponse<Routine>> {
-    if (user === null) {
+    if (!user) {
         return {
             result: null,
-            count: -1,
-            status: "user is null",
+            status_code: 401,
+            status_msg: "user is not logged in",
         }
     }
 
-    const { token } = user;
-    const url = generateUrl(target);
-    const resp = await fetch(url, postReqeust(token, routine_row));
+    try { 
+        Loading.start();
 
-    if (resp.status === 200) {
-        const obj: Routine = await resp.json()
-        return {
-            result: obj,
-            count: 1,
-            status: "success"
+        const { token } = user;
+        const url = generateUrl(target);
+        const res = await fetch(url, postReqeust(token, routine_row));
+    
+        if (res.status === 200) {
+            return {
+                result: await res.json() as Routine,
+                status_code: res.status,
+                status_msg: "success"
+            }
+        } else if (res.status === 204) {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: "empty",
+            }
+        } else {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: await res.text(),
+            }
         }
-    } else if (resp.status === 204) {
+    } catch (e) {
         return {
             result: null,
-            count: 0,
-            status: "empty",
+            status_msg: e.toString(),
+            status_code: 400,
         }
-    } else {
-        return {
-            result: null,
-            count: -1,
-            status: await resp.text()
-        }
+    } finally {
+        Loading.complete();
     }
 }

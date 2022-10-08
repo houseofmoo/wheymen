@@ -16,111 +16,133 @@ export function postReqeust(jwt: string, content: any) {
 }
 
 export async function getAll<T>(target: RequestTarget, user: User): Promise<DbResponse<T[]>> {
-    if (user === null) {
+    if (!user) {
         return {
             result: null,
-            count: -1,
-            status: "user is null",
+            status_code: 401,
+            status_msg: "user is not logged in",
         }
     }
     
-    Loading.start();
+    try {
+        Loading.start();
 
-    const { token } = user;
-    const url = generateUrl(target);
-    const resp = await fetch(url, postReqeust(token, ""));
-
-    let response: DbResponse<T[]> = null;
-    if (resp.status === 200) {
-        const obj: T[] = await resp.json();
-        response = {
-            result: obj,
-            count: obj.length,
-            status: "success"
+        const { token } = user;
+        const url = generateUrl(target);
+        const res = await fetch(url, postReqeust(token, ""));
+    
+        if (res.status === 200) {
+            return {
+                result: await res.json() as T[],
+                status_code: res.status,
+                status_msg: "success"
+            }
+        } else if (res.status === 204) {
+            return {
+                result: [],
+                status_code: res.status,
+                status_msg: "empty"
+            }
+        } else {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: await res.text()
+            }
         }
-    } else if (resp.status === 204) {
-        response = {
-            result: [],
-            count: 0,
-            status: "success"
-        }
-    } else {
-        response = {
+    } catch (e) {
+        return {
             result: null,
-            count: -1,
-            status: await resp.text()
+            status_msg: e.toString(),
+            status_code: 400,
         }
+    } finally {
+        Loading.complete();
     }
-
-    Loading.complete();
-    return response;
 }
 
 export async function get<T>(target: RequestTarget, id: string, user: User): Promise<DbResponse<T>> {
-    if (user === null) {
+    if (!user) {
         return {
             result: null,
-            count: -1,
-            status: "user is null",
+            status_code: 401,
+            status_msg: "user is not logged in",
         }
     }
     
-    Loading.start();
+    try {
+        Loading.start();
 
-    const { token } = user;
-    const url = generateUrl(target, id);
-    const resp = await fetch(url, postReqeust(token, ""));
-
-    let response: DbResponse<T> = null;
-    if (resp.status === 200) {
-        const obj: T = await resp.json();
-        response = {
-            result: obj,
-            count: 1,
-            status: "success"
+        const { token } = user;
+        const url = generateUrl(target, id);
+        const res = await fetch(url, postReqeust(token, ""));
+    
+        if (res.status === 200) {
+            return {
+                result: await res.json() as T,
+                status_code: res.status,
+                status_msg: "success"
+            }
+        } else if (res.status === 204) {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: "empty"
+            }
+        } else {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: await res.text()
+            }
         }
-    } else if (resp.status === 204) {
-        response = {
+    } catch (e) {
+        return {
             result: null,
-            count: 0,
-            status: "success"
+            status_msg: e.toString(),
+            status_code: 400,
         }
-    } else {
-        response = {
-            result: null,
-            count: -1,
-            status: await resp.text()
-        }
+    } finally {
+        Loading.complete();
     }
-
-    Loading.complete();
-    return response;
 }
 
 export async function del(target: RequestTarget, id: string, user: User) {
-    if (user === null) {
+    if (!user) {
         return {
             result: null,
-            count: -1,
-            status: "user is null",
+            status_code: 401,
+            status_msg: "user is not logged in",
         }
     }
     
-    Loading.start();
+    try {
+        Loading.start();
 
-    const { token } = user;
-    const url = generateUrl(target, id);
-    const resp = await fetch(url, postReqeust(token, ""));
+        const { token } = user;
+        const url = generateUrl(target, id);
+        const res = await fetch(url, postReqeust(token, ""));
 
-    if (resp.status === 200 || resp.status === 204) {
-        Loading.complete();
-        return {
-            status: "success"
+        if (res.status === 200 || res.status === 204) {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: "success"
+            }
+        } else {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: await res.text()
+            }
         }
-    } else {
-        Loading.complete();
+    } catch (e) {
         return {
-            status: await resp.text()
+            result: null,
+            status_msg: e.toString(),
+            status_code: 400,
         }
+    } finally {
+        Loading.complete();
     }
 }

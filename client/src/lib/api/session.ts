@@ -6,43 +6,141 @@ import { RequestTarget, generateUrl } from "./request-target";
 import { Loading } from "../stores/loading-store";
 
 export async function startSession(user: User, routine_id: string): Promise<DbResponse<Session>> {
-    if (user === null) {
+    if (!user) {
         return {
             result: null,
-            count: -1,
-            status: "user is null",
+            status_code: 401,
+            status_msg: "user is not logged in",
         }
     }
     
-    Loading.start();
-    const { token } = user;
-    const url = generateUrl(RequestTarget.StartSession, routine_id);
-    const resp = await fetch(url, postReqeust(token, ""));
-    
-    let result: DbResponse<Session> = null;
-    if (resp.status === 200) {
-        const obj: Session = await resp.json()
-        result = {
-            result: obj,
-            count: 1,
-            status: "success"
+    try {
+        Loading.start();
+
+        const { token } = user;
+        const url = generateUrl(RequestTarget.StartSession, routine_id);
+        const res = await fetch(url, postReqeust(token, ""));
+        
+        if (res.status === 200) {
+            return {
+                result: await res.json() as Session,
+                status_code: res.status,
+                status_msg: "success"
+            }
+        } else if (res.status === 204) {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: "empty",
+            }
+        } else {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: await res.text(),
+            }
         }
-    } else if (resp.status === 204) {
-        result =  {
+    } catch (e) {
+        return {
             result: null,
-            count: 0,
-            status: "empty",
+            status_msg: e.toString(),
+            status_code: 400,
         }
-    } else {
-        result =  {
+    } finally {
+        Loading.complete();
+    }
+}
+
+export async function continueSession(user: User, session_id: string): Promise<DbResponse<Session>> {
+    if (!user) {
+        return {
             result: null,
-            count: -1,
-            status: await resp.text()
+            status_code: 401,
+            status_msg: "user is not logged in",
         }
     }
     
-    Loading.complete(); 
-    return  result;
+    try {
+        Loading.start();
+
+        const { token } = user;
+        const url = generateUrl(RequestTarget.ContinueSession, session_id);
+        const res = await fetch(url, postReqeust(token, ""));
+        
+        if (res.status === 200) {
+            return {
+                result: await res.json() as Session,
+                status_code: res.status,
+                status_msg: "success"
+            }
+        } else if (res.status === 204) {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: "empty",
+            }
+        } else {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: await res.text(),
+            }
+        }
+    } catch (e) {
+        return {
+            result: null,
+            status_msg: e.toString(),
+            status_code: 400,
+        }
+    } finally {
+        Loading.complete();
+    }
+}
+
+export async function updateSession(user: User, session: Session): Promise<DbResponse<Session>> {
+    if (!user) {
+        return {
+            result: null,
+            status_code: 401,
+            status_msg: "user is not logged in",
+        }
+    }
+    
+    try {
+        Loading.start();
+
+        const { token } = user;
+        const url = generateUrl(RequestTarget.updateSession);
+        const res = await fetch(url, postReqeust(token, session));
+        
+        if (res.status === 200) {
+            return {
+                result: await res.json() as Session,
+                status_code: res.status,
+                status_msg: "success"
+            }
+        } else if (res.status === 204) {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: "empty",
+            }
+        } else {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: await res.text(),
+            }
+        }
+    } catch (e) {
+        return {
+            result: null,
+            status_msg: e.toString(),
+            status_code: 400,
+        }
+    } finally {
+        Loading.complete();
+    }
 }
 
 export async function deleteSession(user: User, session_id: string) {

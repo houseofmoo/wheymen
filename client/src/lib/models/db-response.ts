@@ -1,5 +1,5 @@
 export class DbResponse<T> {
     result: T;
-    count: number;
-    status: string;
+    status_msg: string;
+    status_cod: number;
 }

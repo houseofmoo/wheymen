@@ -6,7 +6,6 @@ import { Loading } from "../stores/loading-store";
 import { RequestTarget, generateUrl } from "./request-target";
 
 export async function insertWorkout(user: User, workout: Workout, selected_routine_ids: string[], unselected_routine_ids: string[]) {
-    Loading.start();
     const upsert: UpsertWorkoutRow<InsertWorkoutRow> = {
         workout_row: {
             user_id: workout.user_id,
@@ -17,13 +16,10 @@ export async function insertWorkout(user: User, workout: Workout, selected_routi
         selected_routine_ids, 
         unselected_routine_ids 
     };
-    const res = await insertOrUpdateWorkout(RequestTarget.InsertWorkout, user, upsert);
-    Loading.complete();
-    return res;
+    return await insertOrUpdateWorkout(RequestTarget.InsertWorkout, user, upsert);
 }
 
 export async function updateWorkout(user: User, workout: Workout, selected_routine_ids: string[], unselected_routine_ids: string[]) {
-    Loading.start();
     const upsert: UpsertWorkoutRow<WorkoutRow> = {
         workout_row: {
             id: workout.id,
@@ -35,9 +31,7 @@ export async function updateWorkout(user: User, workout: Workout, selected_routi
         selected_routine_ids, 
         unselected_routine_ids 
     };
-    const res = await insertOrUpdateWorkout(RequestTarget.UpdateWorkout, user, upsert);
-    Loading.complete();
-    return res;
+    return await insertOrUpdateWorkout(RequestTarget.UpdateWorkout, user, upsert);
 }
 
 export async function getAllWorkouts(user: User) {
@@ -54,77 +48,94 @@ export async function deleteWorkout(id: string, user: User) {
 }
 
 export async function getUnrelatedWorkouts(routine_id: string, user: User) {
-    if (user === null) {
+    if (!user) {
         return {
             result: null,
-            count: -1,
-            status: "user is null",
+            status_code: 401,
+            status_msg: "user is not logged in",
         }
     }
 
-    Loading.start();
-    
-    const { token } = user;
-    const url = generateUrl(RequestTarget.GetUnrelatedWorkouts, routine_id);
-    const resp = await fetch(url, postReqeust(token, ""));
+    try {
+        Loading.start();
+        
+        const { token } = user;
+        const url = generateUrl(RequestTarget.GetUnrelatedWorkouts, routine_id);
+        const res = await fetch(url, postReqeust(token, ""));
 
-    let response: DbResponse<Workout[]> = null;
-    if (resp.status === 200) {
-        const obj: Workout[] = await resp.json()
-        response = {
-            result: obj,
-            count: obj.length,
-            status: "success"
+        let response: DbResponse<Workout[]> = null;
+        if (res.status === 200) {
+            response = {
+                result: await res.json() as Workout[],
+                status_code: res.status,
+                status_msg: "success"
+            }
+        } else if (res.status === 204) {
+            response = {
+                result: [],
+                status_code: res.status,
+                status_msg: "empty",
+            }
+        } else {
+            response = {
+                result: null,
+                status_code: res.status,
+                status_msg: await res.text()
+            }
         }
-    } else if (resp.status === 204) {
-        response = {
-            result: [],
-            count: 0,
-            status: "success"
-        }
-    } else {
-        response = {
+    } catch (e) {
+        return {
             result: null,
-            count: -1,
-            status: await resp.text()
+            status_msg: e.toString(),
+            status_code: 400,
         }
+    } finally {
+        Loading.complete();
     }
-
-    Loading.complete();
-    return response;
 }
 
 async function insertOrUpdateWorkout<T>(target: RequestTarget, user: User, upsert: T): Promise<DbResponse<Workout>> {
-    if (user === null) {
+    if (!user) {
         return {
             result: null,
-            count: -1,
-            status: "user is null",
+            status_code: 401,
+            status_msg: "user is not logged in",
         }
     }
 
-    const { token } = user;
-    const url = generateUrl(target);
-    const resp = await fetch(url, postReqeust(token, upsert));
+    try {
+        Loading.start();
 
-    if (resp.status === 200) {
-        const obj: Workout = await resp.json()
-        return {
-            result: obj,
-            count: 1,
-            status: "success"
+        const { token } = user;
+        const url = generateUrl(target);
+        const res = await fetch(url, postReqeust(token, upsert));
+
+        if (res.status === 200) {
+            return {
+                result: await res.json() as Workout,
+                status_code: res.status,
+                status_msg: "success"
+            }
+        } else if (res.status === 204) {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: "empty",
+            }
+        } else {
+            return {
+                result: null,
+                status_code: res.status,
+                status_msg: await res.text(),
+            }
         }
-    } else if (resp.status === 204) {
+    } catch (e) {
         return {
             result: null,
-            count: 0,
-            status: "empty",
+            status_msg: e.toString(),
+            status_code: 400,
         }
-    } else {
-        return {
-            result: null,
-            count: -1,
-            status: await resp.text()
-        }
+    } finally {
+        Loading.complete();
     }
 }

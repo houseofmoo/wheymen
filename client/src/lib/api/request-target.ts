@@ -13,7 +13,9 @@ export enum RequestTarget {
     DeleteWorkout           = `api/workouts/delete`,
 
     StartSession            = 'api/session/start',
-    DeleteSession           = 'api/session/delete'
+    ContinueSession         = 'api/session/continue',
+    updateSession           = 'api/session/update',
+    DeleteSession           = 'api/session/delete',
 }
 
 export function generateUrl(target: RequestTarget, id: string = null) {
