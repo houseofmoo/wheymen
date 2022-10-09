@@ -1,14 +1,26 @@
 <script lang="ts">
-    import { link } from "svelte-spa-router";
+    import { link, push } from "svelte-spa-router";
+    import { UserStore } from "../../../stores/user-store";
     import { RequestTarget } from "../../../api/request-target";
+    import { startSession } from "../../../api/session";
     import type { Routine } from "../../../models/routine";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Card from "../../display/card.svelte";
     import DeleteModal from "./delete-modal.svelte";
+    import { Alert } from "../../../stores/alert-store";
 
     export let routine: Routine = null;
     let showModal;
 
+    async function start(routine_id: string) {
+        let session_res = await startSession($UserStore, routine_id);
+        if (session_res.status_code === 200) {
+            push(`/make-gains/${session_res.result.id}`);
+            return;
+        } else {
+            Alert.setMsg("Unable to start routine");
+        }
+    }
 </script>
 
 {#if routine}
@@ -17,7 +29,7 @@
             <div />
             <p class="name large-text center-text">{routine.name}</p>
             <Kebabmenu>
-                <a href={`/start-session/${routine.id}`} use:link>start</a>
+                <button class="link-button" on:click={() => start(routine.id)}>start</button>
                 <a href={`/edit-routine/${routine.id}`} use:link>edit</a>
                 <a href={`/history-routine/${routine.id}`} use:link>history</a>
                 <button class="link-button" on:click={() => showModal()}>delete</button>

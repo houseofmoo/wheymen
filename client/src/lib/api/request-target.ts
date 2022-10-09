@@ -15,6 +15,7 @@ export enum RequestTarget {
     GetAllSessions          = 'api/sessions/get-all',
     GetSession              = 'api/sessions/get',
     StartSession            = 'api/sessions/start',
+    RestartSession          = 'api/sessions/restart',
     UpdateSession           = 'api/sessions/update',
     DeleteSession           = 'api/sessions/delete',
     DoesSessionExist        = 'api/sessions/exists'

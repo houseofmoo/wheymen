@@ -10,6 +10,9 @@
 
     async function cancelSession() {
         const res = await deleteSession($UserStore, session.id);
+        if (res.status_code !== 200 && res.status_code !== 204) {
+            // TODO: handle error?
+        }
         session = null;
     }
 
@@ -21,7 +24,7 @@
             <p class="small-text">in-progress:</p>
             <p class="name large-text center-text">{session.routine_name}</p>
             <Kebabmenu>
-                <a href={`/continue-session/${session.id}`} use:link>continue</a>
+                <a href={`/make-gains/${session.id}`} use:link>continue</a>
                 <button class="link-button" on:click={() => cancelSession()}>cancel</button>
             </Kebabmenu>
         </div>

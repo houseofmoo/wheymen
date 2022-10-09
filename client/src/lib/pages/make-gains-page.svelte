@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
     import { UserStore } from "../stores/user-store";
-    import { getSession } from "../api/session";
+    import { getSession} from "../api/session";
     import MakeGains from "../components/features/gains/make-gains.svelte";
     import type { Session } from "../models/session";
     import { Alert } from "../stores/alert-store";
@@ -18,15 +18,20 @@
             return;
         }
 
-        const sessionRes = await getSession($UserStore, session_id);
-        if (sessionRes.status_code === 200) {
-            session =sessionRes.result;
+        const session_res = await getSession($UserStore, session_id);
+        if (session_res.status_code === 200) {session_id
+            session = session_res.result;
+        } else if (session_res.status_code === 204) {
+            Alert.setMsg("Session not found, returning to profile");
+                push('/profile/routines');
+                return;
         } else {
-            Alert.setMsg("Session was not able to be started, returning tp proile");
+            Alert.setMsg("Error getting session, returning to proile");
             push('/profile/routines');
             return;
         }
     });
+
 </script>
 
 {#if $UserStore && session}
@@ -34,7 +39,3 @@
         <MakeGains session={session} />
     </div>
 {/if}
-
-<style>
-  
-</style>

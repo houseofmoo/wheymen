@@ -73,12 +73,10 @@ async fn main() -> std::io::Result<()> {
                     .service(
                         web::scope("/sessions")
                             .service(api::session::get_all_sessions)
+                            .service(api::session::get_session)
                             .service(api::session::start_session)
-                            .service(api::session::continue_sesion)
                             .service(api::session::update_session)
-                            .service(api::session::complete_session)
                             .service(api::session::delete_session)
-                            .service(api::session::does_session_exist),
                     ),
             )
             .service(
