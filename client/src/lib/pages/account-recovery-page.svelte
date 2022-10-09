@@ -1,9 +1,18 @@
 <script lang="ts">
-    import { link } from 'svelte-spa-router'
+    import { onMount } from "svelte";
+    import { push, link } from "svelte-spa-router";
+    import { UserStore } from "../stores/user-store";
     import Title from "../components/display/title.svelte";
     import { Alert } from "../stores/alert-store";
 
     let email = "";
+
+    onMount(() => {
+        if ($UserStore !== null) {
+            push('/profile/routines');
+            return;
+        }
+    });
 
     async function onSubmit() {
         Alert.setMsg("Not yet implemented");

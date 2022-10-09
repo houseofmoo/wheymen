@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import { push, link } from 'svelte-spa-router'
     import { signIn } from '../api/auth';
     import { UserStore } from "../stores/user-store";
@@ -7,6 +8,13 @@
 
     let email = "";
     let password = "";
+
+    onMount(() => {
+        if ($UserStore !== null) {
+            push('/profile/routines');
+            return;
+        }
+    });
 
     async function onSubmit() {
         if (email.length <= 0) {

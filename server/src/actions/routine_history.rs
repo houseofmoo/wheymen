@@ -9,10 +9,9 @@ pub async fn clean_routine_history(
     user_id: &String,
     client: &DbClient,
 ) -> DbResult<RoutineHistoryRow> {
-    let current_datetime = Utc::now();
     let query = format!(
         "SELECT * FROM {} WHERE user_id=\"{}\" AND completed_on + 26w < \"{}\";",
-        Table::RoutineHistory.name(), user_id, current_datetime
+        Table::RoutineHistory.name(), user_id, Utc::now().format("%Y-%m-%dT%H:%M:%SZ")
     );
     let result = client.send_query::<RoutineHistoryRow>(query).await?;
 

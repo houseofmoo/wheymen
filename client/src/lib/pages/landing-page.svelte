@@ -1,6 +1,15 @@
 <script lang="ts">
-    import {push} from 'svelte-spa-router'
+    import { onMount } from "svelte";
+    import { push } from "svelte-spa-router";
+    import { UserStore } from "../stores/user-store";
     import Title from "../components/display/title.svelte";
+
+    onMount(() => {
+        if ($UserStore !== null) {
+            push('/profile/routines');
+            return;
+        }
+    });
 </script>
 
 <div>

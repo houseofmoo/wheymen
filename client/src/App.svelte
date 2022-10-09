@@ -37,13 +37,10 @@
     }
 
     onMount(async () => {
+        // attemp to login the user from their stored token
         $UserStore = await getSession();
         if ($UserStore == null) {
             $UserStore = await getSessionFromLocalToken();
-        }
-
-        if ($UserStore !== null) {
-            push('/profile/routines');
         }
     });
 

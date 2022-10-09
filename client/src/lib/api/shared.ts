@@ -30,7 +30,7 @@ export async function getAll<T>(target: RequestTarget, user: User): Promise<DbRe
         const { token } = user;
         const url = generateUrl(target);
         const res = await fetch(url, postReqeust(token, ""));
-    
+        
         if (res.status === 200) {
             return {
                 result: await res.json() as T[],

@@ -18,7 +18,7 @@
 {#if session}
     <Card>
         <div class="title">
-            <div />
+            <p class="small-text">in-progress:</p>
             <p class="name large-text center-text">{session.routine_name}</p>
             <Kebabmenu>
                 <a href={`/continue-session/${session.id}`} use:link>continue</a>

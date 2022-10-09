@@ -1,21 +1,23 @@
 export enum RequestTarget {
-    InsertRoutine           = `api/routines/insert`,
-    UpdateRoutine           = `api/routines/update`,
     GetAllRoutines          = `api/routines/get-all`,
     GetRoutine              = `api/routines/get`,
+    InsertRoutine           = `api/routines/insert`,
+    UpdateRoutine           = `api/routines/update`,
     DeleteRoutine           = `api/routines/delete`,
 
+    GetWorkout              = `api/workouts/get`,
+    GetAllWorkouts          = `api/workouts/get-all`,
     InsertWorkout           = `api/workouts/insert`,
     UpdateWorkout           = `api/workouts/update`,
-    GetAllWorkouts          = `api/workouts/get-all`,
-    GetWorkout              = `api/workouts/get`,
-    GetUnrelatedWorkouts    = `api/workouts/get-all/unrelated`,
     DeleteWorkout           = `api/workouts/delete`,
+    GetUnrelatedWorkouts    = `api/workouts/get-all/unrelated`,
 
-    StartSession            = 'api/session/start',
-    ContinueSession         = 'api/session/continue',
-    updateSession           = 'api/session/update',
-    DeleteSession           = 'api/session/delete',
+    GetAllSessions          = 'api/sessions/get-all',
+    GetSession              = 'api/sessions/get',
+    StartSession            = 'api/sessions/start',
+    UpdateSession           = 'api/sessions/update',
+    DeleteSession           = 'api/sessions/delete',
+    DoesSessionExist        = 'api/sessions/exists'
 }
 
 export function generateUrl(target: RequestTarget, id: string = null) {

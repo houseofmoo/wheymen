@@ -2,28 +2,30 @@
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
     import { UserStore } from "../stores/user-store";
-    //import { continueSession } from "../api/session";
-    import type { Routine } from "../models/routine";
+    import { getSession } from "../api/session";
     import MakeGains from "../components/features/gains/make-gains.svelte";
     import type { Session } from "../models/session";
+    import { Alert } from "../stores/alert-store";
 
     export let params = { id: null };
-    let routine_id = params.id;
+    let session_id = params.id;
     let session: Session = null;
 
     onMount(async () => {
         // if user landed here without being logged in, send them away
         if ($UserStore === null) {
             push('/login');
+            return;
         }
 
-        // NOTE: when we land here we expect to just have an inprogress workout object
-        // let a page level component create that and pass it to us
-        
-        //let routine_id = "routines:olisz8rlthi3ux7b7aa5";
-        //const resp = await continueSession(routine_id, $UserStore);
-       
-        // convert into a valid format
+        const sessionRes = await getSession($UserStore, session_id);
+        if (sessionRes.status_code === 200) {
+            session =sessionRes.result;
+        } else {
+            Alert.setMsg("Session was not able to be started, returning tp proile");
+            push('/profile/routines');
+            return;
+        }
     });
 </script>
 

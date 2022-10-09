@@ -2,18 +2,23 @@
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
     import { getAllWorkouts } from "../api/workout";
+    import { getAllSessions } from "../api/session";
     import { UserStore } from "../stores/user-store";
     import { getAllRoutines } from "../api/routine";
     import type { Routine } from "../models/routine";
     import type { Workout } from "../models/workout";
+    import type { Session } from "../models/session";
     import Title from "../components/display/title.svelte";
     import RoutineCard from "../components/features/profile/routine-card.svelte";
     import WorkoutCard from "../components/features/profile/workout-card.svelte";
+    import SessionCard from "../components/features/profile/session-card.svelte";
+    import { Alert } from "../stores/alert-store";
 
     export let params = { tab: null };
     let routines: Routine[] = [];
     let workouts: Workout[] = [];
-    
+    let sessions: Session[] = [];
+
     type tabs = "routines" | "workouts" | "account";
     let current_tab: tabs = params && params.tab ? params.tab : "routines";
 
@@ -21,32 +26,39 @@
         // if user landed here without being logged in, send them away
         if ($UserStore === null) {
             push('/login');
+            return;
         }
 
         await getRoutines();
         await getWorkouts();
+        await getSessions();
     });
 
     async function getRoutines() {
         const routine_res = await getAllRoutines($UserStore);
-        if (routine_res.result !== null) {
+        if (routine_res.status_code === 200 || routine_res.status_code === 204) {
             routines = routine_res.result;
         } else {
-            // TODO: maybe no routines, maybe error occured
+            Alert.setMsg("Encountered a problem fetching routines");
         }
     }
 
     async function getWorkouts() {
         const workout_res = await getAllWorkouts($UserStore);
-        if (workout_res.result !== null) {
+        if (workout_res.status_code === 200 || workout_res.status_code === 204) {
             workouts = workout_res.result;
-        } else {
-            // TODO: maybe no workouts, maybe error occured
+        }  else {
+            Alert.setMsg("Encountered a problem fetching workouts");
         }
     }
 
-    async function getSessinos() {
-
+    async function getSessions() {
+        const session_res = await getAllSessions($UserStore);        
+        if (session_res.status_code === 200 || session_res.status_code === 204) {
+            sessions = session_res.result;
+        }  else {
+            Alert.setMsg("Encountered a problem fetching sessions: ");
+        }
     }
 
     async function refresh() {
@@ -70,6 +82,10 @@
 
         {#if current_tab === "routines"}
             <div>
+                {#each sessions as session}
+                    <SessionCard {session} />
+                {/each}
+
                 {#each routines as routine}
                     <RoutineCard {routine} on:item-deleted={refresh}/>
                 {/each}

@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+    import { push } from "svelte-spa-router";
+    import { UserStore } from "../stores/user-store";
     import { link } from 'svelte-spa-router'
     import { signUp, doesUserExist } from '../api/auth';
     import Title from "../components/display/title.svelte";
@@ -8,6 +11,13 @@
     let password = "";
     let verify_pass = "";
     let page_state: "signup" | "complete" | "exists" = "signup";
+
+    onMount(() => {
+        if ($UserStore !== null) {
+            push('/profile/routines');
+            return;
+        }
+    });
 
     async function onSubmit() {
 
