@@ -1,11 +1,10 @@
-use crate::{actions, resource::auth::Authorized, resource::client::DbClient, model::session::Session};
+use crate::{
+    actions, model::session::Session, resource::auth::Authorized, resource::client::DbClient,
+};
 use actix_web::{post, web, HttpResponse, Responder};
 
 #[post("/get-all")]
-async fn get_all_sessions(
-    auth: Authorized,
-    db: web::Data<DbClient>,
-) -> impl Responder {
+async fn get_all_sessions(auth: Authorized, db: web::Data<DbClient>) -> impl Responder {
     match actions::session::get_all_sessions(&auth.user_id, &db).await {
         Ok(r) => match r {
             Some(r) => HttpResponse::Ok().json(r),

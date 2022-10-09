@@ -29,10 +29,19 @@
             return;
         }
 
+        await getSessions();
         await getRoutines();
         await getWorkouts();
-        await getSessions();
     });
+
+    async function getSessions() {
+        const session_res = await getAllSessions($UserStore);        
+        if (session_res.status_code === 200 || session_res.status_code === 204) {
+            sessions = session_res.result;
+        }  else {
+            Alert.setMsg(`Encountered a problem fetching sessions: ${session_res.status_msg}`);
+        }
+    }
 
     async function getRoutines() {
         const routine_res = await getAllRoutines($UserStore);
@@ -52,16 +61,8 @@
         }
     }
 
-    async function getSessions() {
-        const session_res = await getAllSessions($UserStore);        
-        if (session_res.status_code === 200 || session_res.status_code === 204) {
-            sessions = session_res.result;
-        }  else {
-            Alert.setMsg(`Encountered a problem fetching sessions: ${session_res.status_msg}`);
-        }
-    }
-
     async function refresh() {
+        await getSessions();
         await getRoutines();
         await getWorkouts();
     }
@@ -83,7 +84,7 @@
         {#if current_tab === "routines"}
             <div>
                 {#each sessions as session}
-                    <SessionCard {session} on:session-deleted={getSessions} />
+                    <SessionCard {session} on:item-deleted={refresh} />
                 {/each}
 
                 {#each routines as routine}

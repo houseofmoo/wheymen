@@ -29,9 +29,9 @@
     }
 
     async function deleteItem() {
-        // this can be a workout or a routine
+        cleanUpName()
+        closeModal();
         await del(target, item.id, $UserStore);
-        close();
         dispatch('item-deleted');
     }
 

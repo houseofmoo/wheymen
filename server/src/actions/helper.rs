@@ -1,3 +1,5 @@
+use chrono::Utc;
+
 use crate::model::db::DbResponse;
 
 pub fn get_first_result<T>(response: Vec<DbResponse<T>>) -> Option<T> {
@@ -22,4 +24,8 @@ pub fn get_all_results<T>(response: Vec<DbResponse<T>>) -> Option<Vec<T>> {
     } else {
         None
     }
+}
+
+pub fn get_iso_time_now() -> String {
+    Utc::now().format("%Y-%m-%dT%H:%M:%SZ").to_string()
 }

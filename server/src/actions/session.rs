@@ -1,20 +1,22 @@
-use chrono::Utc;
-use super::helper::{get_all_results, get_first_result};
+use super::helper::{get_all_results, get_first_result, get_iso_time_now};
 use crate::{
-    model::{shared_types::DbResult, db::Table, session::{Session, InsertSession, SessionWorkout}, error::LocalError},
+    model::{
+        db::Table,
+        error::LocalError,
+        session::{InsertSession, Session, SessionWorkout},
+        shared_types::DbResult,
+    },
     resource::client::DbClient,
 };
 
-pub async fn get_all_sessions(
-    user_id: &String,
-    client: &DbClient,
-) -> DbResult<Vec<Session>> {
+pub async fn get_all_sessions(user_id: &String, client: &DbClient) -> DbResult<Vec<Session>> {
     let query = format!(
         "SELECT * FROM {} WHERE user_id=\"{}\" ORDER BY start_time;",
-        Table::Sessions.name(), user_id
+        Table::Sessions.name(),
+        user_id
     );
     let result = client.send_query::<Session>(query).await?;
-    
+
     match get_all_results::<Session>(result) {
         Some(r) => Ok(Some(r)),
         None => Ok(None),
@@ -38,22 +40,37 @@ pub async fn get_session(
     }
 }
 
+pub async fn get_session_by_routine_id(
+    user_id: &String,
+    routine_id: &String,
+    client: &DbClient,
+) -> DbResult<Session> {
+    let query = format!(
+        "SELECT * FROM {} WHERE user_id=\"{}\" and routine_id=\"{}\";",
+        Table::Sessions.name(),
+        user_id,
+        routine_id
+    );
+    let result = client.send_query::<Session>(query).await?;
+
+    match get_first_result::<Session>(result) {
+        Some(r) => Ok(Some(r)),
+        None => Ok(None),
+    }
+}
+
 pub async fn start_session(
     user_id: &String,
     routine_id: &String,
     client: &DbClient,
 ) -> DbResult<Session> {
     // delete any session that already exists
-    let query = format!(
-        "DELETE {} WHERE user_id=\"{}\";",
-        Table::Sessions.name(), user_id
-    );
-    client.send_query::<Session>(query).await?;
+    delete_all_sessions(user_id, client).await?;
 
     // get the routine
     let routine = match super::routine::get_routine(user_id, routine_id, client).await? {
-        Some(r) =>  r,
-        None => return Err(LocalError::GetFailed)
+        Some(r) => r,
+        None => return Err(LocalError::GetFailed),
     };
 
     // create a session from the routine
@@ -62,16 +79,20 @@ pub async fn start_session(
         routine_id: routine.id,
         routine_name: routine.name,
         routine_note: routine.note,
-        start_time: Utc::now().format("%Y-%m-%dT%H:%M:%SZ").to_string(),
+        start_time: get_iso_time_now(),
         duration_in_sec: 0,
-        workouts: routine.workouts.into_iter().map(|w| {
-            SessionWorkout {
-                workout_id: w.id,
-                workout_name: w.name,
-                workout_note: w.note,
-                sets: vec![]
-            }
-        }).collect()
+        workouts: routine
+            .workouts
+            .into_iter()
+            .map(|w| {
+                SessionWorkout {
+                    workout_id: w.id,
+                    workout_name: w.name,
+                    workout_note: w.note,
+                    sets: vec![],
+                }
+            })
+            .collect()
     });
     let query = format!("INSERT INTO {} {};", Table::Sessions.name(), json);
     let result = client.send_query::<Session>(query).await?;
@@ -80,7 +101,6 @@ pub async fn start_session(
         Some(r) => Ok(Some(r)),
         None => Err(LocalError::InsertFailed),
     }
-
 }
 
 pub async fn delete_session(
@@ -93,14 +113,21 @@ pub async fn delete_session(
     Ok(None)
 }
 
-pub async fn update_session(
-    session: &Session,
-    client: &DbClient,
-) -> DbResult<Session> {
+pub async fn delete_all_sessions(user_id: &String, client: &DbClient) -> DbResult<Session> {
+    let query = format!(
+        "DELETE {} WHERE user_id=\"{}\";",
+        Table::Sessions.name(),
+        user_id
+    );
+    client.send_query::<Session>(query).await?;
+    Ok(None)
+}
+
+pub async fn update_session(session: &Session, client: &DbClient) -> DbResult<Session> {
     let json = serde_json::json!(session);
     let query = format!("UPDATE {} CONTENT {};", session.id, json);
     let result = client.send_query::<Session>(query).await?;
-    
+
     match get_first_result::<Session>(result) {
         Some(r) => Ok(Some(r)),
         None => Ok(None),

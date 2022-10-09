@@ -6,7 +6,7 @@ pub enum LocalError {
     InsertFailed,
     UpdateFailed,
     RelationshipFailed,
-    GetFailed
+    GetFailed,
 }
 
 impl Error for LocalError {}

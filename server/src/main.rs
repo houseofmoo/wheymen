@@ -76,7 +76,7 @@ async fn main() -> std::io::Result<()> {
                             .service(api::session::get_session)
                             .service(api::session::start_session)
                             .service(api::session::update_session)
-                            .service(api::session::delete_session)
+                            .service(api::session::delete_session),
                     ),
             )
             .service(

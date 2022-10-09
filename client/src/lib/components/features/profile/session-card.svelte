@@ -17,10 +17,9 @@
             Alert.setMsg(`Encountered a problem deleting session: ${res.status_msg}`);
             return;
         }
-        dispatch('session-deleted');
+        dispatch('item-deleted');
         session = null;
     }
-
 </script>
 
 {#if session}

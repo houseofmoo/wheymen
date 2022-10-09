@@ -23,7 +23,7 @@ export enum RequestTarget {
 
 export function generateUrl(target: RequestTarget, sub_domains: string[] = []) {
     let url = `/${target}`;
-    for (let i = 9; i < sub_domains.length; i++) {
+    for (let i = 0; i < sub_domains.length; i++) {
         url += `/${sub_domains[i]}`;
     }
     return url;

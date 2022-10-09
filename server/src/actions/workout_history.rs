@@ -1,9 +1,8 @@
-use super::helper::{get_all_results, get_first_result};
+use super::helper::{get_all_results, get_first_result, get_iso_time_now};
 use crate::{
-    model::{shared_types::DbResult, workout::WorkoutHistoryRow, db::Table},
+    model::{db::Table, shared_types::DbResult, workout::WorkoutHistoryRow},
     resource::client::DbClient,
 };
-use chrono::Utc;
 
 pub async fn clean_workout_history(
     user_id: &String,
@@ -12,7 +11,9 @@ pub async fn clean_workout_history(
     // get all workout histories that are more than 26 weeks
     let query = format!(
         "SELECT * FROM {} WHERE user_id=\"{}\" AND completed_on + 26w < \"{}\";",
-        Table::WorkoutHistory.name(), user_id, Utc::now().format("%Y-%m-%dT%H:%M:%SZ")
+        Table::WorkoutHistory.name(),
+        user_id,
+        get_iso_time_now()
     );
     let result = client.send_query::<WorkoutHistoryRow>(query).await?;
 
@@ -64,14 +65,16 @@ pub async fn insert_workout_history(
     }
 }
 
-pub async fn delete_all_history_for_workout(
+pub async fn delete_workout_history(
     user_id: &String,
     workout_id: &String,
     client: &DbClient,
 ) -> DbResult<WorkoutHistoryRow> {
     let query = format!(
-        "DELETE {} WHERE user_id=\"{}\" AND workout_id=\"{}\";", 
-        Table::WorkoutHistory.name(),user_id, workout_id
+        "DELETE {} WHERE user_id=\"{}\" AND workout_id=\"{}\";",
+        Table::WorkoutHistory.name(),
+        user_id,
+        workout_id
     );
     let result = client.send_query::<WorkoutHistoryRow>(query).await?;
 

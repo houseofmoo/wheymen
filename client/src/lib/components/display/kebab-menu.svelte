@@ -56,6 +56,6 @@
         grid-gap: 0.5em;
         width: max-content;
         box-shadow: 3px 3px 10px black;
-        z-index: 1;
+        z-index: 0;
     }
 </style>

@@ -1,15 +1,17 @@
 use super::helper::{get_all_results, get_first_result};
 use crate::model::{
+    db::Table,
     error::LocalError,
     routine::{InsertRoutineRow, Routine, RoutineRow},
-    shared_types::DbResult, db::Table,
+    shared_types::DbResult,
 };
 use crate::resource::client::DbClient;
 
 pub async fn get_all_routines(user_id: &String, client: &DbClient) -> DbResult<Vec<Routine>> {
     let query = format!(
         "SELECT * FROM {} WHERE user_id=\"{}\" ORDER BY name FETCH workouts;",
-        Table::Routines.name(), user_id
+        Table::Routines.name(),
+        user_id
     );
     let result = client.send_query::<Routine>(query).await?;
 
@@ -59,10 +61,7 @@ pub async fn insert_routine(
     client: &DbClient,
 ) -> DbResult<Routine> {
     let json = serde_json::json!(routine_row);
-    let query = format!(
-        "INSERT INTO {} {};", 
-        Table::Routines.name(), json
-    );
+    let query = format!("INSERT INTO {} {};", Table::Routines.name(), json);
     let result = client.send_query::<RoutineRow>(query).await?;
 
     match get_first_result::<RoutineRow>(result) {
@@ -91,6 +90,13 @@ pub async fn delete_routine(
     routine_id: &String,
     client: &DbClient,
 ) -> DbResult<Routine> {
+    // to prevent a session from using a dangline reference, just delete all sessions
+    super::session::delete_all_sessions(user_id, client).await?;
+
+    // delete history for this routine
+    super::routine_history::delete_routine_history(user_id, routine_id, client).await?;
+
+    // delete the routine
     let query = format!("DELETE {} WHERE user_id=\"{}\";", routine_id, user_id);
     client.send_query::<Routine>(query).await?;
     Ok(None)
@@ -107,7 +113,8 @@ pub async fn add_workout_to_many_routines(
 
     let query = format!(
         "UPDATE {} SET workouts += [\"{}\"];",
-        routine_ids.join(","), workout_id,
+        routine_ids.join(","),
+        workout_id,
     );
     client.send_query::<RoutineRow>(query).await?;
     Ok(None)
@@ -124,7 +131,8 @@ pub async fn remove_workout_from_many_routines(
 
     let query = format!(
         "UPDATE {} SET workouts -= [\"{}\"];",
-        routine_ids.join(","), workout_id,
+        routine_ids.join(","),
+        workout_id,
     );
     client.send_query::<RoutineRow>(query).await?;
     Ok(None)
@@ -137,7 +145,9 @@ pub async fn remove_workout_from_all_user_routines(
 ) -> DbResult<RoutineRow> {
     let query = format!(
         "UPDATE {} SET workouts -= [\"{}\"] WHERE user_id=\"{}\";",
-        Table::Routines.name(), user_id, workout_id
+        Table::Routines.name(),
+        workout_id,
+        user_id,
     );
     client.send_query::<RoutineRow>(query).await?;
     Ok(None)

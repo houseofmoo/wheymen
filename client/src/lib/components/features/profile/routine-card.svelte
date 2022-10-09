@@ -16,6 +16,7 @@
         let session_res = await startSession($UserStore, routine_id);
         if (session_res.status_code === 200) {
             push(`/make-gains/${session_res.result.id}`);
+            console.log('going to new page');
             return;
         } else {
             Alert.setMsg("Unable to start routine");

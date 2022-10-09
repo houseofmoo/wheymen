@@ -1,9 +1,10 @@
-use super::helper::{get_all_results, get_first_result,};
+use super::helper::{get_all_results, get_first_result};
 use crate::{
     model::{
+        db::Table,
         error::LocalError,
         shared_types::DbResult,
-        workout::{InsertWorkoutRow, WorkoutRow}, db::Table,
+        workout::{InsertWorkoutRow, WorkoutRow},
     },
     resource::client::DbClient,
 };
@@ -11,7 +12,8 @@ use crate::{
 pub async fn get_all_workouts(user_id: &String, client: &DbClient) -> DbResult<Vec<WorkoutRow>> {
     let query = format!(
         "SELECT * FROM {} WHERE user_id=\"{}\" ORDER BY category, name;",
-        Table::Workouts.name(), user_id
+        Table::Workouts.name(),
+        user_id
     );
     let result = client.send_query::<WorkoutRow>(query).await?;
 
@@ -122,11 +124,14 @@ pub async fn delete_workout(
     workout_id: &String,
     client: &DbClient,
 ) -> DbResult<WorkoutRow> {
+    // to prevent a session from using a dangline reference, just delete all sessions
+    super::session::delete_all_sessions(user_id, client).await?;
+
     // delete this workout from all routines
     super::routine::remove_workout_from_all_user_routines(&user_id, &workout_id, &client).await?;
 
     // delete this workout history
-    super::workout_history::delete_all_history_for_workout(&user_id, &workout_id, &client).await?;
+    super::workout_history::delete_workout_history(&user_id, &workout_id, &client).await?;
 
     // delete workout
     let query = format!("DELETE {} WHERE user_id=\"{}\";", workout_id, user_id);

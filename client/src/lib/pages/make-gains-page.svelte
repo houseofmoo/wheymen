@@ -19,7 +19,7 @@
         }
 
         // if there is no session_id, leave
-        if (session_id) {
+        if (!session_id) {
             push('/profile/routines');
             return;
         }
