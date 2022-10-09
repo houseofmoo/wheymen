@@ -21,9 +21,10 @@ export enum RequestTarget {
     DoesSessionExist        = 'api/sessions/exists'
 }
 
-export function generateUrl(target: RequestTarget, id: string = null) {
-    if (id) {
-        return `/${target}/${id}`
+export function generateUrl(target: RequestTarget, sub_domains: string[] = []) {
+    let url = `/${target}`;
+    for (let i = 9; i < sub_domains.length; i++) {
+        url += `/${sub_domains[i]}`;
     }
-    return `/${target}`;
+    return url;
 }

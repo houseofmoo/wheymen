@@ -3,6 +3,7 @@
     import { push } from "svelte-spa-router";
     import { getRoutine } from "../api/routine";
     import { UserStore } from "../stores/user-store";
+    import { Alert } from "../stores/alert-store";
     import type { Routine } from "../models/routine";
     import RoutineEditor from "../components/features/routine-editor/routine-editor.svelte"
     import Title from "../components/display/title.svelte";
@@ -17,13 +18,21 @@
             push('/login');
             return;
         }
-        
-        const resp = await getRoutine(routine_id, $UserStore);
-        if (resp.count > 0) {
-            routine = resp.result;
-        } else {
-            // TODO: maybe no routine, maybe error occured
+
+        // if there is no id, leave
+        if (routine_id) {
+            push('/profile/routines');
+            return;
         }
+        
+        const res = await getRoutine(routine_id, $UserStore);
+        if (res.status_code !== 200) {
+            Alert.setMsg(`Routine does not exist, returning to profile: ${res.status_msg}`);
+            push('/profile/routines');
+            return;
+        }
+
+        routine = res.result;
     });
 </script>
 

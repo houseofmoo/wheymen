@@ -39,7 +39,7 @@
         if (routine_res.status_code === 200 || routine_res.status_code === 204) {
             routines = routine_res.result;
         } else {
-            Alert.setMsg("Encountered a problem fetching routines");
+            Alert.setMsg(`Encountered a problem fetching routines: ${routine_res.status_msg}`);
         }
     }
 
@@ -48,7 +48,7 @@
         if (workout_res.status_code === 200 || workout_res.status_code === 204) {
             workouts = workout_res.result;
         }  else {
-            Alert.setMsg("Encountered a problem fetching workouts");
+            Alert.setMsg(`Encountered a problem fetching workouts: ${workout_res.status_msg}`);
         }
     }
 
@@ -57,7 +57,7 @@
         if (session_res.status_code === 200 || session_res.status_code === 204) {
             sessions = session_res.result;
         }  else {
-            Alert.setMsg("Encountered a problem fetching sessions: ");
+            Alert.setMsg(`Encountered a problem fetching sessions: ${session_res.status_msg}`);
         }
     }
 
@@ -83,11 +83,11 @@
         {#if current_tab === "routines"}
             <div>
                 {#each sessions as session}
-                    <SessionCard {session} />
+                    <SessionCard {session} on:session-deleted={getSessions} />
                 {/each}
 
                 {#each routines as routine}
-                    <RoutineCard {routine} on:item-deleted={refresh}/>
+                    <RoutineCard {routine} on:item-deleted={refresh} />
                 {/each}
                 <button class="wide-100 margin-0" on:click={() => push('/create-routine')}>create routine</button>
             </div>

@@ -8,6 +8,7 @@
     import { insertRoutine, updateRoutine, deleteRoutine } from "../../../api/routine";
     import { getAllWorkouts } from "../../../api/workout";
     import { UserStore } from "../../../stores/user-store";
+    import { Alert } from "../../../stores/alert-store";
     import { getUnrelatedWorkouts } from "../../../api/workout";
     import DaySelector from "./day-selector.svelte";
     import WorkoutSelectorModal from "./workout-selector-modal.svelte";
@@ -21,39 +22,35 @@
     let unselected_workouts: Workout[] = [];
 
     onMount(async () => {
+        let res = null;
         if (routine && routine.id) {
-            const resp = await getUnrelatedWorkouts(routine.id, $UserStore);
-            if (resp.result !== null) {
-                unselected_workouts = resp.result;
-            }
+            res = await getUnrelatedWorkouts(routine.id, $UserStore);
         } else {
-            const resp = await getAllWorkouts($UserStore);
-            if (resp.result !== null) {
-                unselected_workouts = resp.result;
-            }
+            res = await getAllWorkouts($UserStore);
+        }
+
+        if (res.status_code === 200 || res.status_code === 204) {
+            unselected_workouts = res.result;
+        } else {
+            Alert.setMsg(`Encountered a problem fetching workouts: ${res.status_msg}`);
         }
     });
 
     async function saveRoutine() {
+        let routine_res = null;
+
         if (routine.id === null) {
-            const routineRes = await insertRoutine($UserStore, routine);
-            if (routineRes.result !== null) {
-                routine = routineRes.result;
-                push("/profile/routines");
-            } else {
-                // TODO: handle insert failed
-                console.log("error inserting routine");
-            }
+            routine_res = await insertRoutine($UserStore, routine);
         } else {
-            const routineRes = await updateRoutine($UserStore, routine);
-            if (routineRes.result !== null) {
-                routine = routineRes.result;
-                push("/profile/routines");
-            } else {
-                // TODO: handle update failed
-                console.log("error inserting routine");
-            }
+            routine_res = await updateRoutine($UserStore, routine);
         }
+
+        if (routine_res.status_code === 200) {
+            routine = routine_res.result;
+            push("/profile/routines");
+            return;
+        }
+        Alert.setMsg(`Unable to save Routine: ${routine_res.status_msg}`);
     }
 
     function addWorkout(e: any) {

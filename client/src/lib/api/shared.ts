@@ -74,7 +74,7 @@ export async function get<T>(target: RequestTarget, id: string, user: User): Pro
         Loading.start();
 
         const { token } = user;
-        const url = generateUrl(target, id);
+        const url = generateUrl(target, [ id ]);
         const res = await fetch(url, postReqeust(token, ""));
     
         if (res.status === 200) {
@@ -107,7 +107,7 @@ export async function get<T>(target: RequestTarget, id: string, user: User): Pro
     }
 }
 
-export async function del(target: RequestTarget, id: string, user: User) {
+export async function del<T>(target: RequestTarget, id: string, user: User): Promise<DbResponse<T>> {
     if (!user) {
         return {
             result: null,
@@ -120,7 +120,7 @@ export async function del(target: RequestTarget, id: string, user: User) {
         Loading.start();
 
         const { token } = user;
-        const url = generateUrl(target, id);
+        const url = generateUrl(target, [ id ]);
         const res = await fetch(url, postReqeust(token, ""));
 
         if (res.status === 200 || res.status === 204) {

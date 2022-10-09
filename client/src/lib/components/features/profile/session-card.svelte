@@ -1,18 +1,23 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import { link } from "svelte-spa-router";
     import { UserStore } from "../../../stores/user-store";
+    import { Alert } from "../../../stores/alert-store";
     import { deleteSession } from "../../../api/session";
     import type { Session } from "../../../models/session";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Card from "../../display/card.svelte";
 
     export let session: Session = null;
+    const dispatch = createEventDispatcher();
 
     async function cancelSession() {
         const res = await deleteSession($UserStore, session.id);
         if (res.status_code !== 200 && res.status_code !== 204) {
-            // TODO: handle error?
+            Alert.setMsg(`Encountered a problem deleting session: ${res.status_msg}`);
+            return;
         }
+        dispatch('session-deleted');
         session = null;
     }
 

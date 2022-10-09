@@ -7,6 +7,7 @@
     import type { Workout } from "../../../models/workout";
     import type { Routine } from "../../../models/routine";
     import { UserStore } from "../../../stores/user-store";
+    import { Alert } from "../../../stores/alert-store";
     import CategorySelector from "./category-selector.svelte";
     import { insertWorkout, updateWorkout, deleteWorkout } from "../../../api/workout";
     import RoutineSelectorModal from "./routine-selector-modal.svelte";
@@ -22,7 +23,13 @@
     onMount(async () => {
         if (workout) {
             const res = await getAllRoutines($UserStore);
-            const routines = res.result;    // TODO: handle failure case
+            let routines: Routine[] = [];
+            if (res.status_code === 200 || res.status_code === 204) {
+                routines = res.result;
+            } else {
+                Alert.setMsg(`Encountered a problem fetching routines: ${res.status_msg}`);
+            }
+
 
             if (routines && routines.length > 0) {
                 // gather routines that contain the workout id
@@ -43,26 +50,20 @@
     async function saveWorkout() {
         const selected_ids = selected_routines.map(x => x.id);
         const unseleced_ids = unselected_routines.map(x => x.id);
-        
+        let workout_res = null;
+
         if (workout.id === null) {
-            const workoutRes = await insertWorkout($UserStore, workout, selected_ids, unseleced_ids);
-            if (workoutRes.result !== null) {
-                workout = workoutRes.result;
-                push('/profile/workouts');
-            } else {
-                // TODO: handle insert failed
-                console.log("error inserting workout");
-            }
+            workout_res = await insertWorkout($UserStore, workout, selected_ids, unseleced_ids);
         } else {
-            const workoutRes = await updateWorkout($UserStore, workout, selected_ids, unseleced_ids);
-            if (workoutRes.result !== null) {
-                workout = workoutRes.result;
-                push('/profile/workouts');
-            } else {
-                // TODO: handle update failed
-                console.log("error updating workout");
-            }
+            workout_res = await updateWorkout($UserStore, workout, selected_ids, unseleced_ids);
         }
+
+        if (workout_res.status_code === 200) {
+            workout = workout_res.result;
+            push("/profile/workouts");
+            return;
+        }
+        Alert.setMsg(`Unable to save Workout: ${workout_res.status_msg}`);
     }
 
     function addRoutine(e: any) {

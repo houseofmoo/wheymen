@@ -5,7 +5,7 @@ import { postReqeust, getAll, get, del } from "./shared";
 import { RequestTarget, generateUrl } from "./request-target";
 import { Loading } from "../stores/loading-store";
 
-export async function insertRoutine(user: User, routine: Routine) {
+export async function insertRoutine(user: User, routine: Routine): Promise<DbResponse<Routine>> {
     const routine_row: InsertRoutineRow = {
         user_id: routine.user_id,
         name: routine.name,
@@ -17,7 +17,7 @@ export async function insertRoutine(user: User, routine: Routine) {
     return await insertOrUpdateRoutine(RequestTarget.InsertRoutine, user, routine_row);
 }
 
-export async function updateRoutine(user: User, routine: Routine) {
+export async function updateRoutine(user: User, routine: Routine): Promise<DbResponse<Routine>> {
     const routine_row: RoutineRow = {
         id: routine.id,
         user_id: routine.user_id,
@@ -30,15 +30,15 @@ export async function updateRoutine(user: User, routine: Routine) {
     return await insertOrUpdateRoutine(RequestTarget.UpdateRoutine, user, routine_row);
 }
 
-export async function getAllRoutines(user: User) {
+export async function getAllRoutines(user: User): Promise<DbResponse<Routine[]>> {
     return await getAll<Routine>(RequestTarget.GetAllRoutines, user);
 }
 
-export async function getRoutine(routine_id: string, user: User) {
+export async function getRoutine(routine_id: string, user: User): Promise<DbResponse<Routine>> {
     return await get<Routine>(RequestTarget.GetRoutine, routine_id, user);
 }
 
-export async function deleteRoutine(routine_id: string, user: User) {
+export async function deleteRoutine(routine_id: string, user: User): Promise<DbResponse<Routine>> {
     return await del(RequestTarget.DeleteRoutine, routine_id, user);
 }
 
