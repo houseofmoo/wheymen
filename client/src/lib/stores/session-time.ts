@@ -5,7 +5,7 @@ function startSessionTimer() {
 	const { subscribe } = readable(Date.now(), function start(set) {
 		const inverval = setInterval(() => {
 			set(Date.now());
-		}, 5000);
+		}, 1000);
 
 		return function stop() {
 			clearInterval(inverval);
@@ -31,7 +31,7 @@ function startRestTimer() {
 	const { subscribe } = readable(Date.now(), function start(set) {
 		const inverval = setInterval(() => {
 			set(Date.now());
-		}, 5000);
+		}, 1000);
 
 		return function stop() {
 			clearInterval(inverval);

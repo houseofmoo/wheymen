@@ -73,8 +73,6 @@ export async function updateSession(user: User, session: Session): Promise<DbRes
     }
     
     try {
-        Loading.start();
-
         const { token } = user;
         const url = generateUrl(RequestTarget.UpdateSession);
         const res = await fetch(url, postReqeust(token, session));
@@ -104,7 +102,5 @@ export async function updateSession(user: User, session: Session): Promise<DbRes
             status_msg: e.toString(),
             status_code: 400,
         }
-    } finally {
-        Loading.complete();
     }
 }

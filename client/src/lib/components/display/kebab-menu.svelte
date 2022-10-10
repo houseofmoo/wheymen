@@ -19,6 +19,10 @@
             visible = false;
         } 
     }
+
+    export function hide() {
+        visible = false;
+    }
 </script>
 
 <div class="container"  bind:this={container}>
