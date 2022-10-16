@@ -14,10 +14,15 @@
   padding: 0;
   margin: 0;
 
-  --primary-color-400: #242424;
-  --primary-color-800: #1A1A1A;
-  --secondary-color: #cc5827;
+  --primary-color-400: rgba(36, 36, 36, 1);
+  --primary-color-800: rgba(26, 26, 26, 1);
+  --secondary-color: rgba(204, 88, 39, 1);
   --text-color: rgba(255, 255, 255, 0.75);
+
+  --primary-color-400-faded: rgba(36, 36, 36, 0.5);
+  --primary-color-800-faded: rgba(26, 26, 26, 0.5);
+  --secondary-color-faded: rgba(204, 88, 39, 0.5);
+  --text-color-faded: rgba(255, 255, 255, 0.5);
 
   --font-size: 1em;
   --largest-font-size: 1.2em;

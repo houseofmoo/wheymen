@@ -7,7 +7,6 @@
     import { RestTime } from "../../../stores/session-time";
     import Card from "../../display/card.svelte";
     import Kebabmenu from "../../display/kebab-menu.svelte";
-    import CheckButton from "../../display/check-button.svelte";
     import HistoryModal from "./history-modal.svelte";
 
     export let workout: SessionWorkout = null;
@@ -132,10 +131,8 @@
 
     function setCompleteToggle(set: SessionSet) {
         set.complete = !set.complete;
-        if (set.complete) {
             RestTime.reset();
             dispatch(SET_CHANGED);
-        }
     }
 </script>
 
@@ -157,7 +154,7 @@
         <div class="margin-0 padding-0" />
     </div>
     {#each workout.sets as set, i (i)}
-        <div class={set.complete ? "set-complete" : "set"} transition:fade|local="{{duration: 150}}" animate:flip|local="{{duration: 200}}">
+        <div class="set" class:complete={set.complete} transition:fade|local="{{duration: 150}}" animate:flip|local="{{duration: 200}}">
             <input type="number" 
                 class="styled-input wide-100 center-text"
                 class:invalid={set.weight === null}
@@ -168,7 +165,7 @@
                 class:invalid={set.reps === null}
                 bind:value={set.reps}
                 disabled={set.complete} />
-            <CheckButton on:click={() => setCompleteToggle(set)} />
+                <button class="check-button" on:click={() => setCompleteToggle(set)}>&check;</button>
         </div>
     {/each}
 </Card>
@@ -204,15 +201,23 @@
         margin-bottom: 1em;
     }
 
-    .set-complete {
-        display: grid;
-        grid: 1fr / repeat(2, 2fr) 1fr;
-        grid-gap: 1em;
-        width: 100%;
-        place-content: center;
-        place-items: center;
-        margin-bottom: 1em;
-        opacity: 0.5;
+    .check-button {
+        font-size: 1.5em;
+        margin: 0;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        text-align: right;
+        color: var(--text-color);
+    }
+
+    .complete > input  {
+        color: var(--secondary-color-faded);
+        border-bottom: solid 1px var(--secondary-color-faded);
+    }
+
+    .complete > button {
+        color: var(--secondary-color-faded);
     }
 
     .invalid {

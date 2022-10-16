@@ -1,6 +1,6 @@
 <script lang="ts">
-
 </script>
+
 <button class="check-button" on:click>&check;</button>
 
 <style>
