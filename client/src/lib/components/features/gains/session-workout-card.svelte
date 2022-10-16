@@ -123,12 +123,6 @@
         dispatch(SET_CHANGED);
     }
 
-    function skip() {
-        workout.sets.forEach(s => s.complete = true);
-        hideKebab();
-        dispatch(SET_CHANGED);
-    }
-
     function setCompleteToggle(set: SessionSet) {
         set.complete = !set.complete;
             RestTime.reset();
@@ -144,7 +138,6 @@
             <button class="link-button" on:click={addSet}>add set</button>
             <button class="link-button" on:click={removeSet}>remove set</button>
             <button class="link-button" on:click={showHistory}>view history</button>
-            <button class="link-button" on:click={skip}>skip</button>
         </Kebabmenu>
     </div>
     <textarea class="note" bind:value={workout.workout_note} />

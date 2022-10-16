@@ -1,15 +1,17 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { UserStore } from "../../../stores/user-store";
+    import { updateSession } from "../../../api/session";
     import type { Session } from "../../../models/session";
     import { RestElapsed, SessionLength, SessionElapsed } from "../../../stores/session-time";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Title from "../../display/title.svelte";
     import StickyHeader from "./sticky-header.svelte";
     import SessionWorkoutCard from "./session-workout-card.svelte";
-    import { updateSession } from "../../../api/session";
+    import StopWatch from "../../display/icons/stop-watch.svelte"
 
     export let session: Session = null;
+    let timeout;
 
     onMount(() => {
         SessionLength.setTimeSinceStart(session.duration_in_sec * 1000);
@@ -33,9 +35,24 @@
             })
         })
 
-        const res = await updateSession($UserStore, session);
-        if (res.status_code === 200) {
-            session = res.result;
+        // delay updating for 1 second so we dont spam ourselves
+        clearTimeout(timeout);
+        timeout = setTimeout(async () => {
+            const res = await updateSession($UserStore, session);
+            if (res.status_code === 200) {
+                session = res.result;
+            }
+        }, 1000)
+    }
+
+    function update() {
+        let timeout;
+
+        return () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                
+            })
         }
     }
 </script>
@@ -49,7 +66,7 @@
                     <div class="overflow">
                         <p class="largest-text center-text">{session.routine_name}</p>
                         <p class="small-text center-text">total: {convertTo($SessionElapsed)}</p>
-                        <p class="small-text center-text">rested: {convertTo($RestElapsed)}</p>
+                        <p class="small-text center-text"><StopWatch /> {convertTo($RestElapsed)}</p>
                     </div>
                 </div>
                 <Kebabmenu>

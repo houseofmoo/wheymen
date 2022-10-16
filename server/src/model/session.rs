@@ -1,7 +1,6 @@
 use super::shared_types::{RoutineRef, SessionRef, UserRef, WorkoutRef};
-use serde::{Deserialize, Serialize, Deserializer, de};
+use serde::{de, Deserialize, Deserializer, Serialize};
 use serde_json::Value;
-
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Session {
@@ -46,6 +45,6 @@ fn de_weight<'de, D: Deserializer<'de>>(deserializer: D) -> Result<f32, D::Error
     Ok(match Value::deserialize(deserializer)? {
         Value::String(s) => s.parse().map_err(de::Error::custom)?,
         Value::Number(num) => num.as_f64().ok_or(de::Error::custom("Invalid number"))? as f32,
-        _ => return Err(de::Error::custom("wrong type"))
+        _ => return Err(de::Error::custom("wrong type")),
     })
 }
