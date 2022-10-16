@@ -40,7 +40,7 @@ impl DbClient {
         let t = query.clone();
         let res = self.build_request(query).send().await?;
         let res_text = res.text().await?;
-        
+
         println!("");
         println!("QUERY: {}", t);
         println!("RESULT: {}", res_text);

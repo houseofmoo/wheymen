@@ -47,6 +47,6 @@ pub struct WorkoutHistoryRow {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Set {
-    pub weight: i32,
+    pub weight: f32,
     pub reps: i32,
 }
