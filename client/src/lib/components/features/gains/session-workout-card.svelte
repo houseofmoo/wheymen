@@ -4,7 +4,7 @@
     import { fade } from "svelte/transition";
     import { flip } from 'svelte/animate';
     import type { SessionSet, SessionWorkout } from "../../../models/session";
-    import { RestTime } from "../../../stores/session-time";
+    import { RestStartTime } from "../../../stores/session-time";
     import Card from "../../display/card.svelte";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import HistoryModal from "./history-modal.svelte";
@@ -125,8 +125,8 @@
 
     function setCompleteToggle(set: SessionSet) {
         set.complete = !set.complete;
-            RestTime.reset();
-            dispatch(SET_CHANGED);
+        RestStartTime.reset();
+        dispatch(SET_CHANGED);
     }
 </script>
 

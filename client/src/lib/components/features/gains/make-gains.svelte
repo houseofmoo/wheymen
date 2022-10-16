@@ -3,18 +3,19 @@
     import { UserStore } from "../../../stores/user-store";
     import { updateSession } from "../../../api/session";
     import type { Session } from "../../../models/session";
-    import { RestElapsed, SessionLength, SessionElapsed } from "../../../stores/session-time";
+    import { RestElapsed, RestStartTime, SessionStartTime, SessionElapsed } from "../../../stores/session-time";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Title from "../../display/title.svelte";
     import StickyHeader from "./sticky-header.svelte";
     import SessionWorkoutCard from "./session-workout-card.svelte";
     import StopWatch from "../../display/icons/stop-watch.svelte"
+    import Clock from "../../display/icons/clock.svelte"
 
     export let session: Session = null;
     let timeout;
 
     onMount(() => {
-        SessionLength.setTimeSinceStart(session.duration_in_sec * 1000);
+        SessionStartTime.setTimeSinceStart(session.duration_in_sec * 1000);
     });
 
     function convertTo(time: number) {
@@ -45,15 +46,8 @@
         }, 1000)
     }
 
-    function update() {
-        let timeout;
+    async function completeSession() {
 
-        return () => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                
-            })
-        }
     }
 </script>
 
@@ -65,8 +59,14 @@
                 <div class="overflow-container">
                     <div class="overflow">
                         <p class="largest-text center-text">{session.routine_name}</p>
-                        <p class="small-text center-text">total: {convertTo($SessionElapsed)}</p>
-                        <p class="small-text center-text"><StopWatch /> {convertTo($RestElapsed)}</p>
+                        <div class="center-text small-text">
+                            <div><Clock /></div>
+                            <div>{convertTo($SessionElapsed)}</div>
+                        </div>
+                        <div class="center-text small-text" on:click={() => RestStartTime.reset()}>
+                            <div><StopWatch /></div>
+                            <div>{convertTo($RestElapsed)}</div>
+                        </div>
                     </div>
                 </div>
                 <Kebabmenu>
@@ -80,7 +80,7 @@
         {#each session.workouts as workout}
             <SessionWorkoutCard bind:workout={workout} on:set-changed={update_session} />
         {/each}
-        <button class="wide-100 margin-0">complete session</button>
+        <button class="wide-100 margin-0" on:click={completeSession}>complete session</button>
     </div>
 {/if}
 
@@ -103,9 +103,11 @@
     }
 
     .overflow {
-        display: flex;
+        display: grid;
+        grid: auto / repeat(3, 1fr);
         gap: 1em;
         place-items: center;
+        place-content: center;
         width: fit-content;
     }
 

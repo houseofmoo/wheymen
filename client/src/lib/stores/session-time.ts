@@ -23,8 +23,8 @@ function startSessionTimer() {
 	};
 }
 
-export const SessionLength = startSessionTimer();
-export const SessionElapsed = derived(SessionLength, ($sessionLength) => {
+export const SessionStartTime = startSessionTimer();
+export const SessionElapsed = derived(SessionStartTime, ($sessionLength) => {
 	return $sessionLength - sessionStartTime;
 });
 
@@ -49,7 +49,7 @@ function startRestTimer() {
 	};
 }
 
-export const RestTime = startRestTimer();
-export const RestElapsed = derived(RestTime, ($restTime) => {
+export const RestStartTime = startRestTimer();
+export const RestElapsed = derived(RestStartTime, ($restTime) => {
 	return $restTime - restStartTime;
 });
