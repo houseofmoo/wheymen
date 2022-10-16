@@ -37,8 +37,15 @@ impl DbClient {
     where
         T: DeserializeOwned,
     {
+        let t = query.clone();
         let res = self.build_request(query).send().await?;
         let res_text = res.text().await?;
+        
+        println!("");
+        println!("QUERY: {}", t);
+        println!("RESULT: {}", res_text);
+        println!("");
+
         let obj: Vec<DbResponse<T>> = serde_json::from_str(&res_text)?;
         Ok(obj)
     }

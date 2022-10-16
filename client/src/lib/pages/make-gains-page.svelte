@@ -29,12 +29,10 @@
             session = session_res.result;
         } else if (session_res.status_code === 204) {
             Alert.setMsg("Session not found, returning to profile");
-                push('/profile/routines');
-                return;
+            push('/profile/routines');
         } else {
             Alert.setMsg("Error getting session, returning to proile");
             push('/profile/routines');
-            return;
         }
     });
 

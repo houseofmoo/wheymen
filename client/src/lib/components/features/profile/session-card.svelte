@@ -25,7 +25,7 @@
 {#if session}
     <Card>
         <div class="title">
-            <p class="small-text">in-progress:</p>
+            <p class="small-text">unfinished:</p>
             <p class="name large-text center-text">{session.routine_name}</p>
             <Kebabmenu>
                 <a href={`/make-gains/${session.id}`} use:link>continue</a>

@@ -26,9 +26,8 @@ pub async fn clean_workout_history(
 
     // delete all id's that are older than 26 weeks
     let query = format!(
-        "DELETE {} WHERE user_id=\"{}\";",
-        workout_history_ids.join(", "),
-        user_id
+        "DELETE {};",
+        workout_history_ids.join(", ")
     );
     client.send_query::<WorkoutHistoryRow>(query).await?;
     Ok(None)

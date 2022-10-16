@@ -124,7 +124,7 @@ pub async fn delete_workout(
     workout_id: &String,
     client: &DbClient,
 ) -> DbResult<WorkoutRow> {
-    // to prevent a session from using a dangline reference, just delete all sessions
+    // to prevent a session from using a dangling reference, just delete all sessions
     super::session::delete_all_sessions(user_id, client).await?;
 
     // delete this workout from all routines

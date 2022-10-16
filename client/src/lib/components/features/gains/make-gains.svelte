@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import { UserStore } from "../../../stores/user-store";
     import type { Session } from "../../../models/session";
-    import { restElapsed, sessionElapsed } from "../../../stores/session-time";
+    import { RestElapsed, SessionLength, SessionElapsed } from "../../../stores/session-time";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import Title from "../../display/title.svelte";
     import StickyHeader from "./sticky-header.svelte";
@@ -10,7 +11,9 @@
 
     export let session: Session = null;
 
-    // every time the user completes a set, update the session
+    onMount(() => {
+        SessionLength.setTimeSinceStart(session.duration_in_sec * 1000);
+    });
 
     function convertTo(time: number) {
         let totalSeconds = Math.round(time / 1000);
@@ -22,6 +25,14 @@
     }
 
     async function update_session() {
+        session.duration_in_sec = Math.round($SessionElapsed / 1000);
+        session.workouts.forEach(w => {
+            w.sets.forEach(s => {
+                s.reps = Number(s.reps);
+                s.weight = Number(s.weight);
+            })
+        })
+
         const res = await updateSession($UserStore, session);
         if (res.status_code === 200) {
             session = res.result;
@@ -37,8 +48,8 @@
                 <div class="overflow-container">
                     <div class="overflow">
                         <p class="largest-text center-text">{session.routine_name}</p>
-                        <p class="small-text center-text">total: {convertTo($sessionElapsed)}</p>
-                        <p class="small-text center-text">rested: {convertTo($restElapsed)}</p>
+                        <p class="small-text center-text">total: {convertTo($SessionElapsed)}</p>
+                        <p class="small-text center-text">rested: {convertTo($RestElapsed)}</p>
                     </div>
                 </div>
                 <Kebabmenu>
@@ -52,7 +63,7 @@
         {#each session.workouts as workout}
             <SessionWorkoutCard bind:workout={workout} on:set-changed={update_session} />
         {/each}
-        <button class="wide-100 margin-0">complete workout</button>
+        <button class="wide-100 margin-0">complete session</button>
     </div>
 {/if}
 

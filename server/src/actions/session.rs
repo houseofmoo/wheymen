@@ -3,7 +3,7 @@ use crate::{
     model::{
         db::Table,
         error::LocalError,
-        session::{InsertSession, Session, SessionWorkout},
+        session::{Session, SessionWorkout},
         shared_types::DbResult,
     },
     resource::client::DbClient,
@@ -40,25 +40,6 @@ pub async fn get_session(
     }
 }
 
-pub async fn get_session_by_routine_id(
-    user_id: &String,
-    routine_id: &String,
-    client: &DbClient,
-) -> DbResult<Session> {
-    let query = format!(
-        "SELECT * FROM {} WHERE user_id=\"{}\" and routine_id=\"{}\";",
-        Table::Sessions.name(),
-        user_id,
-        routine_id
-    );
-    let result = client.send_query::<Session>(query).await?;
-
-    match get_first_result::<Session>(result) {
-        Some(r) => Ok(Some(r)),
-        None => Ok(None),
-    }
-}
-
 pub async fn start_session(
     user_id: &String,
     routine_id: &String,
@@ -74,25 +55,25 @@ pub async fn start_session(
     };
 
     // create a session from the routine
-    let json = serde_json::json!(InsertSession {
+    let json = serde_json::json!(Session {
+        id: None,
         user_id: user_id.to_string(),
         routine_id: routine.id,
         routine_name: routine.name,
         routine_note: routine.note,
         start_time: get_iso_time_now(),
         duration_in_sec: 0,
-        workouts: routine
-            .workouts
-            .into_iter()
-            .map(|w| {
-                SessionWorkout {
-                    workout_id: w.id,
-                    workout_name: w.name,
-                    workout_note: w.note,
-                    sets: vec![],
-                }
-            })
-            .collect()
+        workouts: routine.workouts
+                        .into_iter()
+                        .map(|w| {
+                            SessionWorkout {
+                                workout_id: w.id,
+                                workout_name: w.name,
+                                workout_note: w.note,
+                                sets: vec![],
+                            }
+                        })
+                        .collect()
     });
     let query = format!("INSERT INTO {} {};", Table::Sessions.name(), json);
     let result = client.send_query::<Session>(query).await?;
@@ -124,12 +105,17 @@ pub async fn delete_all_sessions(user_id: &String, client: &DbClient) -> DbResul
 }
 
 pub async fn update_session(session: &Session, client: &DbClient) -> DbResult<Session> {
-    let json = serde_json::json!(session);
-    let query = format!("UPDATE {} CONTENT {};", session.id, json);
-    let result = client.send_query::<Session>(query).await?;
-
-    match get_first_result::<Session>(result) {
-        Some(r) => Ok(Some(r)),
-        None => Ok(None),
+    match &session.id {
+        Some(id) => {
+            let json = serde_json::json!(session);
+            let query = format!("UPDATE {} CONTENT {};", id, json);
+            let result = client.send_query::<Session>(query).await?;
+        
+            match get_first_result::<Session>(result) {
+                Some(r) => Ok(Some(r)),
+                None => Ok(None),
+            }
+        },
+        None => Err(LocalError::UpdateFailed)
     }
 }

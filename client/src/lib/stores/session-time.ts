@@ -16,12 +16,15 @@ function startSessionTimer() {
 		subscribe,
 		reset: () => {
 			sessionStartTime = Date.now() - 10;
+		},
+		setTimeSinceStart: (ms_since_start) => {
+			sessionStartTime = Date.now() - ms_since_start;
 		}
 	};
 }
 
-export const sessionLength = startSessionTimer();
-export const sessionElapsed = derived(sessionLength, ($sessionLength) => {
+export const SessionLength = startSessionTimer();
+export const SessionElapsed = derived(SessionLength, ($sessionLength) => {
 	return $sessionLength - sessionStartTime;
 });
 
@@ -46,7 +49,7 @@ function startRestTimer() {
 	};
 }
 
-export const restTime = startRestTimer();
-export const restElapsed = derived(restTime, ($restTime) => {
+export const RestTime = startRestTimer();
+export const RestElapsed = derived(RestTime, ($restTime) => {
 	return $restTime - restStartTime;
 });

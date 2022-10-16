@@ -4,7 +4,7 @@
     import { fade } from "svelte/transition";
     import { flip } from 'svelte/animate';
     import type { SessionSet, SessionWorkout } from "../../../models/session";
-    import { restTime } from "../../../stores/session-time";
+    import { RestTime } from "../../../stores/session-time";
     import Card from "../../display/card.svelte";
     import Kebabmenu from "../../display/kebab-menu.svelte";
     import CheckButton from "../../display/check-button.svelte";
@@ -13,10 +13,10 @@
     export let workout: SessionWorkout = null;
     let history: SessionWorkout[] = [];
     const dispatch = createEventDispatcher();
-    const event_name = "set-changed";
+    const SET_CHANGED = "set-changed";
 
     let showHistory: () => void;
-    let hideKebab
+    let hideKebab;
 
     onMount(async () => {
         getWorkoutHistory();
@@ -109,32 +109,33 @@
             complete: false,
         }];
         hideKebab();
-        dispatch(event_name);
+        dispatch(SET_CHANGED);
     }
 
-    function removeSet(index: number) {
-        workout.sets.splice(index, 1);
-        workout.sets = [...workout.sets];
-        dispatch(event_name);
+    function removeSet() {
+        const index = workout.sets.length - 1;
+        if (index <= 0) {
+            workout.sets = [];
+        } else {
+            workout.sets.splice(index, 1);
+            workout.sets = [...workout.sets];
+        }
+        hideKebab();
+        dispatch(SET_CHANGED);
     }
 
     function skip() {
         workout.sets.forEach(s => s.complete = true);
         hideKebab();
-        dispatch(event_name);
+        dispatch(SET_CHANGED);
     }
 
-    function remove() {
-        // remove this from session object
-        // remove this workout from Routine that session is based on
-        hideKebab();
-        dispatch(event_name);
-    }
-
-    function setComplete(set: SessionSet) {
-        set.complete = true;
-        restTime.reset();
-        dispatch(event_name);
+    function setCompleteToggle(set: SessionSet) {
+        set.complete = !set.complete;
+        if (set.complete) {
+            RestTime.reset();
+            dispatch(SET_CHANGED);
+        }
     }
 </script>
 
@@ -144,24 +145,30 @@
         <p class="large-text">{workout.workout_name}</p>
         <Kebabmenu bind:hide={hideKebab}>
             <button class="link-button" on:click={addSet}>add set</button>
-            <button class="link-button" on:click={showHistory}>history</button>
+            <button class="link-button" on:click={removeSet}>remove set</button>
+            <button class="link-button" on:click={showHistory}>view history</button>
             <button class="link-button" on:click={skip}>skip</button>
-            <button class="link-button" on:click={remove}>remove</button>
         </Kebabmenu>
     </div>
     <textarea class="note" bind:value={workout.workout_note} />
     <div class="set">
-        <div class="margin-0 padding-0" />
         <p class="small-text margin-0 padding-0">weight</p>
         <p class="small-text margin-0 padding-0">reps</p>
         <div class="margin-0 padding-0" />
     </div>
     {#each workout.sets as set, i (i)}
-        <div class="set" transition:fade|local="{{duration: 150}}" animate:flip|local="{{duration: 200}}">
-            <button on:click={() => removeSet(i)}>-</button>
-            <input class="styled-input wide-100 center-text" bind:value={set.weight} />
-            <input class="styled-input wide-100 center-text" bind:value={set.reps} />
-            <CheckButton on:click={() => setComplete(set)} />
+        <div class={set.complete ? "set-complete" : "set"} transition:fade|local="{{duration: 150}}" animate:flip|local="{{duration: 200}}">
+            <input type="number" 
+                class="styled-input wide-100 center-text"
+                class:invalid={set.weight === null}
+                bind:value={set.weight}
+                disabled={set.complete} />
+            <input type="number" 
+                class="styled-input wide-100 center-text" 
+                class:invalid={set.reps === null}
+                bind:value={set.reps}
+                disabled={set.complete} />
+            <CheckButton on:click={() => setCompleteToggle(set)} />
         </div>
     {/each}
 </Card>
@@ -189,11 +196,39 @@
 
     .set {
         display: grid;
-        grid: 1fr / 1fr repeat(2, 2fr) 1fr;
+        grid: 1fr / repeat(2, 2fr) 1fr;
         grid-gap: 1em;
         width: 100%;
         place-content: center;
         place-items: center;
         margin-bottom: 1em;
+    }
+
+    .set-complete {
+        display: grid;
+        grid: 1fr / repeat(2, 2fr) 1fr;
+        grid-gap: 1em;
+        width: 100%;
+        place-content: center;
+        place-items: center;
+        margin-bottom: 1em;
+        opacity: 0.5;
+    }
+
+    .invalid {
+        color: red;
+        border-bottom: 1px solid red;
+    }
+
+    input[type=number] { 
+        -moz-appearance: textfield;
+        appearance: textfield;
+        margin: 0; 
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
     }
 </style>
