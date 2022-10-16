@@ -104,3 +104,7 @@ export async function updateSession(user: User, session: Session): Promise<DbRes
         }
     }
 }
+
+export async function completeSession(user: User, session: Session) {
+    
+}

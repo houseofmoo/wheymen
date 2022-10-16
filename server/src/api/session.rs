@@ -88,3 +88,19 @@ async fn delete_session(
         Err(e) => HttpResponse::BadRequest().body(e.to_string()),
     }
 }
+
+#[post("/complete")]
+async fn complete_session(
+    auth: Authorized,
+    db: web::Data<DbClient>,
+    session: web::Json<Session>,
+) -> impl Responder {
+    let session = session.into_inner();
+    match actions::session::complete_session(&auth.user_id, session, &db).await {
+        Ok(r) => match r {
+            Some(r) => HttpResponse::Ok().json(r),
+            None => HttpResponse::NoContent().body(""),
+        },
+        Err(e) => HttpResponse::BadRequest().body(e.to_string()),
+    }
+}

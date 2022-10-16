@@ -152,3 +152,19 @@ pub async fn remove_workout_from_all_user_routines(
     client.send_query::<RoutineRow>(query).await?;
     Ok(None)
 }
+
+pub async fn set_workouts(
+    user_id: &String,
+    routine_id: &String,
+    workout_ids: Vec<String>,
+    client: &DbClient,
+) -> DbResult<RoutineRow> {
+    let query = format!(
+        "UPDATE {} SET workouts={} WHERE user_id=\"{}\";",
+        routine_id,
+        serde_json::json!(workout_ids),
+        user_id,
+    );
+    client.send_query::<RoutineRow>(query).await?;
+    Ok(None)
+}

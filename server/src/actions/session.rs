@@ -114,3 +114,32 @@ pub async fn update_session(session: &Session, client: &DbClient) -> DbResult<Se
         None => Ok(None),
     }
 }
+
+pub async fn complete_session(user_id: &String, session: Session, client: &DbClient) -> DbResult<Session> {
+    // update the routine with the workouts in the session
+    let workout_ids: Vec<String> = session.workouts.into_iter().map(|w| w.workout_id.clone()).collect();
+    super::routine::set_workouts(user_id, &session.routine_id, workout_ids, client).await?;
+
+    // let mut workout_ids: Vec<String> = vec![];
+    // for workout in session.workouts {
+    //     workout_ids.push(workout.workout_id.clone());
+    // }
+    // super::routine::set_workouts(user_id, &session.routine_id, workout_ids, client).await?;
+
+    // create WorkoutHistory objects for each workout and store them
+    // create RoutineHistory object for routine and store it
+    // return nothing?
+
+    for workout in session.workouts {
+
+    }
+
+    let json = serde_json::json!(session);
+    let query = format!("UPDATE {} CONTENT {};", session.id, json);
+    let result = client.send_query::<Session>(query).await?;
+
+    match get_first_result::<Session>(result) {
+        Some(r) => Ok(Some(r)),
+        None => Ok(None),
+    }
+}
