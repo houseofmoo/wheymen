@@ -1,6 +1,9 @@
 use super::helper::{get_all_results, get_first_result, get_iso_time_now};
 use crate::{
-    model::{db::Table, shared_types::DbResult, workout::WorkoutHistoryRow},
+    model::{
+        db::Table, shared_types::DbResult, 
+        workout::{WorkoutHistoryRow, InsertWorkoutHistoryRow}
+    },
     resource::client::DbClient,
 };
 
@@ -30,7 +33,7 @@ pub async fn clean_workout_history(
     Ok(None)
 }
 
-pub async fn get_workout_history(
+pub async fn _get_workout_history(
     user_id: &String,
     workout_id: &String,
     client: &DbClient,
@@ -48,7 +51,7 @@ pub async fn get_workout_history(
 }
 
 pub async fn insert_workout_history(
-    workout_history_row: WorkoutHistoryRow,
+    workout_history_row: InsertWorkoutHistoryRow,
     client: &DbClient,
 ) -> DbResult<WorkoutHistoryRow> {
     let json = serde_json::json!(workout_history_row);

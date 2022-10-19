@@ -1,7 +1,9 @@
 use super::helper::{get_all_results, get_first_result, get_iso_time_now};
 use crate::{
     model::{
-        db::Table, routine::RoutineHistoryRow, shared_types::DbResult, workout::WorkoutHistoryRow,
+        db::Table, 
+        routine::{RoutineHistoryRow, InsertRoutineHistoryRow}, 
+        shared_types::DbResult, workout::WorkoutHistoryRow,
     },
     resource::client::DbClient,
 };
@@ -33,25 +35,32 @@ pub async fn clean_routine_history(
     Ok(None)
 }
 
-pub async fn get_routine_history(
-    user_id: &String,
-    routine_id: &String,
-    client: &DbClient,
-) -> DbResult<Vec<WorkoutHistoryRow>> {
+pub async fn _get_routine_history(
+    _user_id: &String,
+    _routine_id: &String,
+    _client: &DbClient,
+) -> DbResult<Vec<RoutineHistoryRow>> {
     Ok(None)
 }
 
 pub async fn insert_routine_history(
-    routine_history_row: RoutineHistoryRow,
+    routine_history_row: InsertRoutineHistoryRow,
     client: &DbClient,
-) -> DbResult<WorkoutHistoryRow> {
-    Ok(None)
+) -> DbResult<RoutineHistoryRow> {
+    let json = serde_json::json!(routine_history_row);
+    let query = format!("INSERT INTO {} {};", Table::RoutineHistory.name(), json);
+    let result = client.send_query::<RoutineHistoryRow>(query).await?;
+
+    match get_first_result::<RoutineHistoryRow>(result) {
+        Some(r) => Ok(Some(r)),
+        None => Ok(None),
+    }
 }
 
 pub async fn delete_routine_history(
-    user_id: &String,
-    routine_id: &String,
-    client: &DbClient,
+    _user_id: &String,
+    _routine_id: &String,
+    _client: &DbClient,
 ) -> DbResult<WorkoutHistoryRow> {
     Ok(None)
 }

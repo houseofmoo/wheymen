@@ -9,7 +9,6 @@ pub struct Session {
     pub routine_id: RoutineRef,
     pub routine_name: String,
     pub routine_note: String,
-    pub start_time: String,
     pub duration_in_sec: i32,
     pub workouts: Vec<SessionWorkout>,
 }
@@ -20,7 +19,6 @@ pub struct InsertSession {
     pub routine_id: RoutineRef,
     pub routine_name: String,
     pub routine_note: String,
-    pub start_time: String,
     pub duration_in_sec: i32,
     pub workouts: Vec<SessionWorkout>,
 }

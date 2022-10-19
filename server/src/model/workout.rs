@@ -1,7 +1,6 @@
-use super::shared_types::{UserRef, WorkoutHistoryRef, WorkoutRef};
+use super::shared_types::{UserRef, WorkoutHistoryRef, WorkoutRef, Set};
 use serde::{Deserialize, Serialize};
 
-pub type WorkoutRow = Workout;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Workout {
@@ -11,6 +10,7 @@ pub struct Workout {
     pub category: String,
     pub note: String,
 }
+pub type WorkoutRow = Workout;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct InsertWorkoutRow {
@@ -27,26 +27,22 @@ pub struct UpsertWorkoutRow<T> {
     pub unselected_routine_ids: Vec<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-pub struct WorkoutHistory {
-    pub id: WorkoutHistoryRef,
-    pub workout: Workout,
-    pub user_id: UserRef,
-    pub completed_on: String,
-    pub sets: Vec<Set>,
-}
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct WorkoutHistoryRow {
     pub id: WorkoutHistoryRef,
-    pub workout: WorkoutRef,
     pub user_id: UserRef,
+    pub workout_id: WorkoutRef,
+    pub name: String,
     pub completed_on: String,
     pub sets: Vec<Set>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Set {
-    pub weight: f32,
-    pub reps: i32,
+pub struct InsertWorkoutHistoryRow {
+    pub user_id: UserRef,
+    pub workout_id: WorkoutRef,
+    pub name: String,
+    pub completed_on: String,
+    pub sets: Vec<Set>,
 }

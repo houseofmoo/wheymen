@@ -4,14 +4,16 @@ use crate::{
         db::Table,
         error::LocalError,
         session::{InsertSession, Session, SessionWorkout},
-        shared_types::DbResult,
+        shared_types::{DbResult, Set},
+        workout::InsertWorkoutHistoryRow,
+        routine::{InsertRoutineHistoryRow, RoutineHistoryWorkout}
     },
     resource::client::DbClient,
 };
 
 pub async fn get_all_sessions(user_id: &String, client: &DbClient) -> DbResult<Vec<Session>> {
     let query = format!(
-        "SELECT * FROM {} WHERE user_id=\"{}\" ORDER BY start_time;",
+        "SELECT * FROM {} WHERE user_id=\"{}\";",
         Table::Sessions.name(),
         user_id
     );
@@ -60,7 +62,6 @@ pub async fn start_session(
         routine_id: routine.id,
         routine_name: routine.name,
         routine_note: routine.note,
-        start_time: get_iso_time_now(),
         duration_in_sec: 0,
         workouts: routine
             .workouts
@@ -116,30 +117,51 @@ pub async fn update_session(session: &Session, client: &DbClient) -> DbResult<Se
 }
 
 pub async fn complete_session(user_id: &String, session: Session, client: &DbClient) -> DbResult<Session> {
+    // clean up history
+    super::routine_history::clean_routine_history(user_id, client).await?;
+    super::workout_history::clean_workout_history(user_id, client).await?;
+
     // update the routine with the workouts in the session
-    let workout_ids: Vec<String> = session.workouts.into_iter().map(|w| w.workout_id.clone()).collect();
+    let workout_ids: Vec<String> = (&session.workouts).into_iter().map(|w| w.workout_id.clone()).collect();
     super::routine::set_workouts(user_id, &session.routine_id, workout_ids, client).await?;
 
-    // let mut workout_ids: Vec<String> = vec![];
-    // for workout in session.workouts {
-    //     workout_ids.push(workout.workout_id.clone());
-    // }
-    // super::routine::set_workouts(user_id, &session.routine_id, workout_ids, client).await?;
+    // create and insert history for each completed workout
+    for workout in &session.workouts {
+        super::workout_history::insert_workout_history(InsertWorkoutHistoryRow {
+            user_id: user_id.clone(),
+            workout_id: workout.workout_id.clone(),
+            name: workout.workout_name.clone(),
+            completed_on: get_iso_time_now(),
+            sets: (&workout.sets).into_iter().map(|s| {
+                Set {
+                    weight: s.weight,
+                    reps: s.reps
+                }
+            }).collect()
+        }, client).await?;
+    }
 
-    // create WorkoutHistory objects for each workout and store them
     // create RoutineHistory object for routine and store it
-    // return nothing?
+    super::routine_history::insert_routine_history(InsertRoutineHistoryRow {
+        user_id: user_id.clone(),
+        routine_id: session.routine_id,
+        name: session.routine_name,
+        completed_on: get_iso_time_now(),
+        duration_in_sec: session.duration_in_sec,
+        workouts: (&session.workouts).into_iter().map(|w| {
+            RoutineHistoryWorkout {
+                name: w.workout_name.clone(),
+                sets: (&w.sets).into_iter().map(|s| {
+                    Set {
+                        weight: s.weight,
+                        reps: s.reps
+                    }
+                }).collect()
+            }
+        }).collect()
+    }, client).await?;
 
-    for workout in session.workouts {
-
-    }
-
-    let json = serde_json::json!(session);
-    let query = format!("UPDATE {} CONTENT {};", session.id, json);
-    let result = client.send_query::<Session>(query).await?;
-
-    match get_first_result::<Session>(result) {
-        Some(r) => Ok(Some(r)),
-        None => Ok(None),
-    }
+    // delete session object
+    delete_session(user_id, &session.id, client).await?;
+    Ok(None)
 }

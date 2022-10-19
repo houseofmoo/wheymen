@@ -1,5 +1,5 @@
 use super::{
-    shared_types::{RoutineHistoryRef, RoutineRef, UserRef, WorkoutRef},
+    shared_types::{RoutineHistoryRef, RoutineRef, UserRef, WorkoutRef, Set},
     workout::Workout,
 };
 use serde::{Deserialize, Serialize};
@@ -39,18 +39,19 @@ pub struct InsertRoutineRow {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct RoutineHistoryRow {
     pub id: RoutineHistoryRef,
-    pub routine: RoutineRef,
     pub user_id: UserRef,
+    pub routine_id: RoutineRef,
+    pub name: String,
     pub completed_on: String,
     pub duration_in_sec: i32,
     pub workouts: Vec<RoutineHistoryWorkout>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct RoutineHistory {
-    pub id: RoutineHistoryRef,
-    pub routine: Routine,
+pub struct InsertRoutineHistoryRow {
     pub user_id: UserRef,
+    pub routine_id: RoutineRef,
+    pub name: String,
     pub completed_on: String,
     pub duration_in_sec: i32,
     pub workouts: Vec<RoutineHistoryWorkout>,
@@ -59,6 +60,5 @@ pub struct RoutineHistory {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct RoutineHistoryWorkout {
     pub name: String,
-    pub weight: i32,
-    pub reps: i32,
+    pub sets: Vec<Set>,
 }
