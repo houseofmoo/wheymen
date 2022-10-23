@@ -1,6 +1,6 @@
 use crate::{
     actions,
-    model::routine::{InsertRoutineRow, RoutineRow},
+    model::routine::RoutineRow,
     resource::auth::Authorized,
     resource::client::DbClient,
 };
@@ -41,7 +41,7 @@ async fn get_routine(
 async fn insert_routine(
     auth: Authorized,
     db: web::Data<DbClient>,
-    routine_row: web::Json<InsertRoutineRow>,
+    routine_row: web::Json<RoutineRow>,
 ) -> impl Responder {
     if !auth.user_id.eq(&routine_row.user_id) {
         return HttpResponse::Unauthorized().body("invalid user id".to_string());

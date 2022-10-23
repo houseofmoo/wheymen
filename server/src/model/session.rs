@@ -4,17 +4,8 @@ use serde_json::Value;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Session {
-    pub id: SessionRef,
-    pub user_id: UserRef,
-    pub routine_id: RoutineRef,
-    pub routine_name: String,
-    pub routine_note: String,
-    pub duration_in_sec: i32,
-    pub workouts: Vec<SessionWorkout>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct InsertSession {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<SessionRef>,
     pub user_id: UserRef,
     pub routine_id: RoutineRef,
     pub routine_name: String,

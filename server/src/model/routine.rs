@@ -6,7 +6,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Routine {
-    pub id: RoutineRef,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<RoutineRef>,
     pub user_id: UserRef,
     pub name: String,
     pub days: Vec<String>,
@@ -17,17 +18,8 @@ pub struct Routine {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct RoutineRow {
-    pub id: RoutineRef,
-    pub user_id: UserRef,
-    pub name: String,
-    pub days: Vec<String>,
-    pub last_completed: String,
-    pub note: String,
-    pub workouts: Vec<WorkoutRef>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct InsertRoutineRow {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<RoutineRef>,
     pub user_id: UserRef,
     pub name: String,
     pub days: Vec<String>,
@@ -38,17 +30,8 @@ pub struct InsertRoutineRow {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct RoutineHistoryRow {
-    pub id: RoutineHistoryRef,
-    pub user_id: UserRef,
-    pub routine_id: RoutineRef,
-    pub name: String,
-    pub completed_on: String,
-    pub duration_in_sec: i32,
-    pub workouts: Vec<RoutineHistoryWorkout>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct InsertRoutineHistoryRow {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<RoutineHistoryRef>,
     pub user_id: UserRef,
     pub routine_id: RoutineRef,
     pub name: String,

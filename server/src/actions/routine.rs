@@ -2,7 +2,7 @@ use super::helper::{get_all_results, get_first_result};
 use crate::model::{
     db::Table,
     error::LocalError,
-    routine::{InsertRoutineRow, Routine, RoutineRow},
+    routine::{Routine, RoutineRow},
     shared_types::DbResult,
 };
 use crate::resource::client::DbClient;
@@ -57,15 +57,15 @@ pub async fn get_routine_row(
 
 pub async fn insert_routine(
     user_id: &String,
-    routine_row: &InsertRoutineRow,
+    routine_row: &RoutineRow,
     client: &DbClient,
-) -> DbResult<Routine> {
+) -> DbResult<RoutineRow> {
     let json = serde_json::json!(routine_row);
     let query = format!("INSERT INTO {} {};", Table::Routines.name(), json);
     let result = client.send_query::<RoutineRow>(query).await?;
 
     match get_first_result::<RoutineRow>(result) {
-        Some(r) => get_routine(&user_id, &r.id, &client).await,
+        Some(r) => Ok(Some(r)),
         None => Err(LocalError::InsertFailed),
     }
 }
@@ -74,15 +74,19 @@ pub async fn update_routine(
     user_id: &String,
     routine_row: &RoutineRow,
     client: &DbClient,
-) -> DbResult<Routine> {
-    let json = serde_json::json!(routine_row);
-    let query = format!("UPDATE {} CONTENT {};", routine_row.id, json);
-    let result = client.send_query::<RoutineRow>(query).await?;
-
-    match get_first_result::<RoutineRow>(result) {
-        Some(r) => get_routine(&user_id, &r.id, &client).await,
-        None => Err(LocalError::UpdateFailed),
+) -> DbResult<RoutineRow> {
+    if let Some(routine_id) = &routine_row.id {
+        let json = serde_json::json!(routine_row);
+        let query = format!("UPDATE {} CONTENT {};", routine_id, json);
+        let result = client.send_query::<RoutineRow>(query).await?;
+    
+        match get_first_result::<RoutineRow>(result) {
+            Some(r) => return Ok(Some(r)),
+            None => return Err(LocalError::UpdateFailed),
+        }
     }
+
+    Err(LocalError::NoIDProvided)
 }
 
 pub async fn delete_routine(
