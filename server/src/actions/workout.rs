@@ -79,8 +79,8 @@ pub async fn get_workout(
 
 pub async fn insert_workout(
     workout_row: &InsertWorkoutRow,
-    selected_ids: &Vec<String>,
-    unselected_ids: &Vec<String>,
+    selected_ids: &Option<Vec<String>>,
+    unselected_ids: &Option<Vec<String>>,
     client: &DbClient,
 ) -> DbResult<WorkoutRow> {
     let json = serde_json::json!(workout_row);
@@ -92,16 +92,21 @@ pub async fn insert_workout(
         None => return Err(LocalError::InsertFailed),
     };
 
-    super::routine::add_workout_to_many_routines(&selected_ids, &workout.id, &client).await?;
-    super::routine::remove_workout_from_many_routines(&unselected_ids, &workout.id, &client)
-        .await?;
+    if selected_ids.is_some() {
+        super::routine::add_workout_to_many_routines(selected_ids.as_ref().unwrap(), &workout.id, &client).await?;
+    }
+
+    if unselected_ids.is_some() {
+        super::routine::remove_workout_from_many_routines(unselected_ids.as_ref().unwrap(), &workout.id, &client).await?;
+    }
+
     Ok(Some(workout))
 }
 
 pub async fn update_workout(
     workout_row: &WorkoutRow,
-    selected_ids: &Vec<String>,
-    unselected_ids: &Vec<String>,
+    selected_ids: &Option<Vec<String>>,
+    unselected_ids: &Option<Vec<String>>,
     client: &DbClient,
 ) -> DbResult<WorkoutRow> {
     let json = serde_json::json!(workout_row);
@@ -113,9 +118,14 @@ pub async fn update_workout(
         None => return Err(LocalError::InsertFailed),
     };
 
-    super::routine::add_workout_to_many_routines(&selected_ids, &workout.id, &client).await?;
-    super::routine::remove_workout_from_many_routines(&unselected_ids, &workout.id, &client)
-        .await?;
+    if selected_ids.is_some() {
+        super::routine::add_workout_to_many_routines(selected_ids.as_ref().unwrap(), &workout.id, &client).await?;
+    }
+
+    if unselected_ids.is_some() {
+        super::routine::remove_workout_from_many_routines(unselected_ids.as_ref().unwrap(), &workout.id, &client).await?;
+    }
+
     Ok(Some(workout))
 }
 

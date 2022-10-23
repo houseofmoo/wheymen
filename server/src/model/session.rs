@@ -28,6 +28,7 @@ pub struct SessionWorkout {
     pub workout_id: WorkoutRef,
     pub workout_name: String,
     pub workout_note: String,
+    pub workout_category: String,
     pub sets: Vec<SessionSet>,
 }
 

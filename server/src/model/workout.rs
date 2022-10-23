@@ -23,8 +23,8 @@ pub struct InsertWorkoutRow {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct UpsertWorkoutRow<T> {
     pub workout_row: T,
-    pub selected_routine_ids: Vec<String>,
-    pub unselected_routine_ids: Vec<String>,
+    pub selected_routine_ids: Option<Vec<String>>,
+    pub unselected_routine_ids: Option<Vec<String>>,
 }
 
 

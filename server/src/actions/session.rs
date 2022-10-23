@@ -71,6 +71,7 @@ pub async fn start_session(
                     workout_id: w.id,
                     workout_name: w.name,
                     workout_note: w.note,
+                    workout_category: w.category,
                     sets: vec![],
                 }
             })
@@ -120,10 +121,6 @@ pub async fn complete_session(user_id: &String, session: Session, client: &DbCli
     // clean up history
     super::routine_history::clean_routine_history(user_id, client).await?;
     super::workout_history::clean_workout_history(user_id, client).await?;
-
-    // update the routine with the workouts in the session
-    let workout_ids: Vec<String> = (&session.workouts).into_iter().map(|w| w.workout_id.clone()).collect();
-    super::routine::set_workouts(user_id, &session.routine_id, workout_ids, client).await?;
 
     // create and insert history for each completed workout
     for workout in &session.workouts {

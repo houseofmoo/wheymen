@@ -3,6 +3,8 @@
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
     import { flip } from 'svelte/animate';
+    import { UserStore } from "../../../stores/user-store";
+    import { updateWorkout } from "../../../api/workout";
     import type { SessionSet, SessionWorkout } from "../../../models/session";
     import { RestStartTime } from "../../../stores/session-time";
     import Card from "../../display/card.svelte";
@@ -55,50 +57,6 @@
     function getWorkoutHistory() {
         // todo: get this workouts history
         // do NOT show the loading screen
-
-        // temp
-        history = [
-            {
-                workout_id: workout.workout_id,
-                workout_name: workout.workout_name,
-                workout_note: workout.workout_note,
-                sets: [
-                    {
-                        weight: 35,
-                        reps: 10,
-                        complete: false,
-                    },
-                    {
-                        weight: 45,
-                        reps: 10,
-                        complete: false,
-                    }
-                ]
-            },
-            {
-                workout_id: workout.workout_id,
-                workout_name: workout.workout_name,
-                workout_note: workout.workout_note,
-                sets: [
-                    {
-                        weight: 45,
-                        reps: 10,
-                        complete: false,
-                    },
-                    {
-                        weight: 55,
-                        reps: 10,
-                        complete: false,
-                    },
-                    {
-                        weight: 65,
-                        reps: 10,
-                        complete: false,
-                    }
-                ]
-            },
-            
-        ]
     }
 
     function addSet() {
@@ -128,6 +86,17 @@
         RestStartTime.reset();
         dispatch(SET_CHANGED);
     }
+
+    async function update_workout() {
+        let w = {
+            id: workout.workout_id,
+            user_id: $UserStore.id,
+            name: workout.workout_name,
+            category: workout.workout_category,
+            note: workout.workout_note,
+        };
+        await updateWorkout($UserStore, w, null, null);
+    }
 </script>
 
 <Card>
@@ -140,7 +109,7 @@
             <button class="link-button" on:click={showHistory}>view history</button>
         </Kebabmenu>
     </div>
-    <textarea class="note" bind:value={workout.workout_note} />
+    <textarea class="note" bind:value={workout.workout_note} on:change={update_workout} />
     <div class="set">
         <p class="small-text margin-0 padding-0">weight</p>
         <p class="small-text margin-0 padding-0">reps</p>

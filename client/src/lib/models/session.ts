@@ -1,3 +1,5 @@
+import type { Category } from "./category";
+
 export class Session {
     id: string;
     user_id: string;
@@ -12,6 +14,7 @@ export class SessionWorkout {
     workout_id: string;
     workout_name: string;
     workout_note: string;
+    workout_category: Category;
     sets: SessionSet[];  
 }
 

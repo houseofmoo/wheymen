@@ -46,6 +46,31 @@
         }, 1000)
     }
 
+    async function updateRoutine() {
+        // re-generate the routine object
+        // and send the updated version tot he DB
+    }
+
+    async function sortWorkouts() {
+        // sort workouts in routine
+        updateRoutine();
+    }
+
+    async function addWorkout() {
+        // add an existing workout
+        updateRoutine();
+    }
+
+    async function createWorkout() {
+        // create a new workout and add it to the routine
+        updateRoutine();
+    }
+
+    async function cancelSession() {
+        // cancel session and return to profile
+    }
+
+
     async function completeSession() {
         
     }
@@ -70,13 +95,14 @@
                     </div>
                 </div>
                 <Kebabmenu>
-                    <button class="link-button" on:click={() => console.log("")}>sort workouts</button>
-                    <button class="link-button" on:click={() => console.log("")}>add workout</button>
-                    <button class="link-button" on:click={() => console.log("")}>create workout</button>
-                    <button class="link-button" on:click={() => console.log("")}>cancel session</button>
+                    <button class="link-button" on:click={() => sortWorkouts()}>sort workouts</button>
+                    <button class="link-button" on:click={() => addWorkout()}>add workout</button>
+                    <button class="link-button" on:click={() => createWorkout()}>create workout</button>
+                    <button class="link-button" on:click={() => cancelSession()}>cancel session</button>
                 </Kebabmenu>
             </div>
         </StickyHeader>
+        <textarea class="note" bind:value={session.routine_note} on:change={updateRoutine}/>
         {#each session.workouts as workout}
             <SessionWorkoutCard bind:workout={workout} on:set-changed={update_session} />
         {/each}
@@ -115,5 +141,17 @@
         margin: 0;
         padding: 0;
         white-space: nowrap;
+    }
+
+    .note {
+        width: 100%;
+        height: 50px;
+        padding: 0.5em;
+        box-sizing: border-box;
+        border: 1px solid black;
+        background-color: var(--primary-color-800);
+        font-size: var(--small-font-size);
+        resize: none;
+        margin-bottom: 1em;
     }
 </style>
